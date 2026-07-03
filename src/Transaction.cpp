@@ -157,3 +157,11 @@ void Transaction::setAmount(double newAmount) {
 void Transaction::setCategory(string& newCategory) {
     category = newCategory;
 }
+
+void Transaction::printTransaction() {
+    cout << "ID: " << transactionID
+         << ", Date: " << date
+         << ", Amount: " << amount
+         << ", Category: " << category
+         << ", Description: " << description << endl;
+}
