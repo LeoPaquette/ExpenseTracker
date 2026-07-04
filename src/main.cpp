@@ -1,4 +1,5 @@
 #include "../include/Transaction.h"
+#include "../include/Expense.h"
 
 #include <iostream>
 #include <string>
@@ -15,7 +16,10 @@ public:
     using Transaction::trim;
 };
 
-
+class ExpenseValidatorTester : public Expense {
+public:
+    using Expense::isValidPaymentMethod;
+};
 
 string prompt(const string& label) {
     string value;
@@ -54,10 +58,53 @@ void testTrim() {
     cout << "Trimmed: \"" << TransactionValidatorTester::trim(s) << "\"\n";
 }
 
+void testPaymentMethod() {
+    string method = prompt("Payment Method: ");
+    cout << (ExpenseValidatorTester::isValidPaymentMethod(method) ? "VALID" : "INVALID") << "\n";
+}
+
+void testCreateExpense() {
+    string id = prompt("Transaction ID: ");
+    string date = prompt("Date: ");
+    string amount = prompt("Amount: ");
+    string category = prompt("Category: ");
+    string description = prompt("Description: ");
+    string paymentMethod = prompt("Payment Method: ");
+
+    try {
+        Expense expense(id, date, amount, category, description, paymentMethod);
+        cout << "Expense created successfully.\n";
+        expense.displayTransaction();
+        cout << "computeImpact(): " << (expense.computeImpact() ? "true" : "false") << "\n";
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create Expense: " << e.what() << "\n";
+    }
+}
+
+void testSetPaymentMethod() {
+    string id = prompt("Transaction ID (for a valid base Expense): ");
+    string date = prompt("Date: ");
+    string amount = prompt("Amount: ");
+    string category = prompt("Category: ");
+    string description = prompt("Description: ");
+    string paymentMethod = prompt("Payment Method: ");
+
+    try {
+        Expense expense(id, date, amount, category, description, paymentMethod);
+        string newPaymentMethod = prompt("New Payment Method: ");
+        try {
+            expense.setPaymentMethod(newPaymentMethod);
+            cout << "Payment method updated to: " << expense.getPaymentMethod() << "\n";
+        } catch (const invalid_argument& e) {
+            cout << "setPaymentMethod rejected: " << e.what() << "\n";
+        }
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create base Expense: " << e.what() << "\n";
+    }
+}
 
 int main() {
-    cout << "=== Transaction Validator Tester ===\n";
-    cout << "Exercises the validation helpers currently implemented in Transaction.cpp.\n";
+    cout << "=== Transaction / Expense Tester ===\n";
 
     while (true) {
         cout << "\nChoose a function to test:\n"
@@ -67,6 +114,9 @@ int main() {
              << "  4) isValidCategory\n"
              << "  5) isValidDescription\n"
              << "  6) trim\n"
+             << "  7) isValidPaymentMethod (Expense)\n"
+             << "  8) Create an Expense (displayTransaction / computeImpact)\n"
+             << "  9) setPaymentMethod on an Expense\n"
              << "  0) Quit\n"
              << "> ";
 
@@ -81,6 +131,9 @@ int main() {
         else if (choice == "4") testCategory();
         else if (choice == "5") testDescription();
         else if (choice == "6") testTrim();
+        else if (choice == "7") testPaymentMethod();
+        else if (choice == "8") testCreateExpense();
+        else if (choice == "9") testSetPaymentMethod();
         else cout << "Unrecognized option.\n";
     }
 

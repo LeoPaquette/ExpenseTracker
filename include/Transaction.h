@@ -36,6 +36,6 @@ public:
     void setDescription(const string& newDescription);
 
     virtual bool computeImpact() const = 0;
-    virtual void printTransaction() const;
+    virtual void displayTransaction() const;
 };
 #endif //EXPENSETRACKER_TRANSACTION_H

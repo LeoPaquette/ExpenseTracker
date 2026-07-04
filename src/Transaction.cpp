@@ -187,7 +187,7 @@ void Transaction::setDescription(const string& newDescription) {
     description = trimmed;
 }
 
-void Transaction::printTransaction() const {
+void Transaction::displayTransaction() const {
     cout << "ID: " << transactionID
          << ", Date: " << date
          << ", Amount: " << amount
