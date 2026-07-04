@@ -1,5 +1,6 @@
 #include "../include/Transaction.h"
 #include "../include/Expense.h"
+#include "../include/Income.h"
 
 #include <iostream>
 #include <string>
@@ -19,6 +20,11 @@ public:
 class ExpenseValidatorTester : public Expense {
 public:
     using Expense::isValidPaymentMethod;
+};
+
+class IncomeValidatorTester : public Income {
+public:
+    using Income::isValidSource;
 };
 
 string prompt(const string& label) {
@@ -103,8 +109,53 @@ void testSetPaymentMethod() {
     }
 }
 
+void testSource() {
+    string source = prompt("Income Source: ");
+    cout << (IncomeValidatorTester::isValidSource(source) ? "VALID" : "INVALID") << "\n";
+}
+
+void testCreateIncome() {
+    string id = prompt("Transaction ID: ");
+    string date = prompt("Date: ");
+    string amount = prompt("Amount: ");
+    string category = prompt("Category: ");
+    string description = prompt("Description: ");
+    string source = prompt("Source: ");
+
+    try {
+        Income income(id, date, amount, category, description, source);
+        cout << "Income created successfully.\n";
+        income.displayTransaction();
+        cout << "computeImpact(): " << (income.computeImpact() ? "true" : "false") << "\n";
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create Income: " << e.what() << "\n";
+    }
+}
+
+void testSetSource() {
+    string id = prompt("Transaction ID (for a valid base Income): ");
+    string date = prompt("Date: ");
+    string amount = prompt("Amount: ");
+    string category = prompt("Category: ");
+    string description = prompt("Description: ");
+    string source = prompt("Source: ");
+
+    try {
+        Income income(id, date, amount, category, description, source);
+        string newSource = prompt("New Source: ");
+        try {
+            income.setSource(newSource);
+            cout << "Source updated to: " << income.getSource() << "\n";
+        } catch (const invalid_argument& e) {
+            cout << "setSource rejected: " << e.what() << "\n";
+        }
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create base Income: " << e.what() << "\n";
+    }
+}
+
 int main() {
-    cout << "=== Transaction / Expense Tester ===\n";
+    cout << "=== Transaction / Expense / Income Tester ===\n";
 
     while (true) {
         cout << "\nChoose a function to test:\n"
@@ -117,6 +168,9 @@ int main() {
              << "  7) isValidPaymentMethod (Expense)\n"
              << "  8) Create an Expense (displayTransaction / computeImpact)\n"
              << "  9) setPaymentMethod on an Expense\n"
+             << " 10) isValidSource (Income)\n"
+             << " 11) Create an Income (displayTransaction / computeImpact)\n"
+             << " 12) setSource on an Income\n"
              << "  0) Quit\n"
              << "> ";
 
@@ -134,6 +188,9 @@ int main() {
         else if (choice == "7") testPaymentMethod();
         else if (choice == "8") testCreateExpense();
         else if (choice == "9") testSetPaymentMethod();
+        else if (choice == "10") testSource();
+        else if (choice == "11") testCreateIncome();
+        else if (choice == "12") testSetSource();
         else cout << "Unrecognized option.\n";
     }
 
