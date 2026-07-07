@@ -107,6 +107,7 @@ string Transaction::trim(const string& s) {
     return s.substr(start, end - start + 1);
 }
 
+// Constructor validating and trimming all fields before assignment
 Transaction::Transaction(const string& id, const string& date, const string& amount,
                          const string& category, const string& description) {
     string trimmedID = trim(id);
@@ -133,29 +134,36 @@ Transaction::Transaction(const string& id, const string& date, const string& amo
     this->description = trimmedDescription;
 }
 
+// Destructor
 Transaction::~Transaction() {
 }
 
+// Getter for the transaction ID
 string Transaction::getTransactionID() const {
     return transactionID;
 }
 
+// Getter for the date
 string Transaction::getDate() const {
     return date;
 }
 
+// Getter for the amount
 double Transaction::getAmount() const {
     return amount;
 }
 
+// Getter for the category
 string Transaction::getCategory() const {
     return category;
 }
 
+// Getter for the description
 string Transaction::getDescription() const {
     return description;
 }
 
+// Setter for the date, validated before assignment
 void Transaction::setDate(const string& newDate) {
     string trimmed = trim(newDate);
     if (!isValidDate(trimmed)) {
@@ -164,6 +172,7 @@ void Transaction::setDate(const string& newDate) {
     date = trimmed;
 }
 
+// Setter for the amount, validated before assignment
 void Transaction::setAmount(double newAmount) {
     if (newAmount <= 0.0 || newAmount > 1000000.0) {
         throw invalid_argument("Invalid amount. Must be between 0 and 1,000,000.");
@@ -171,6 +180,7 @@ void Transaction::setAmount(double newAmount) {
     amount = newAmount;
 }
 
+// Setter for the category, validated before assignment
 void Transaction::setCategory(const string& newCategory) {
     string trimmed = trim(newCategory);
     if (!isValidCategory(trimmed)) {
@@ -179,6 +189,7 @@ void Transaction::setCategory(const string& newCategory) {
     category = trimmed;
 }
 
+// Setter for the description, validated before assignment
 void Transaction::setDescription(const string& newDescription) {
     string trimmed = trim(newDescription);
     if (!isValidDescription(trimmed)) {
@@ -187,6 +198,7 @@ void Transaction::setDescription(const string& newDescription) {
     description = trimmed;
 }
 
+// Prints the transaction's fields to standard output
 void Transaction::displayTransaction() const {
     cout << "ID: " << transactionID
          << ", Date: " << date

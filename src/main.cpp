@@ -7,6 +7,7 @@
 
 using namespace std;
 
+// Test helper exposing Transaction's protected validators
 class TransactionValidatorTester : public Transaction {
 public:
     using Transaction::isValidID;
@@ -17,16 +18,19 @@ public:
     using Transaction::trim;
 };
 
+// Test helper exposing Expense's protected validator
 class ExpenseValidatorTester : public Expense {
 public:
     using Expense::isValidPaymentMethod;
 };
 
+// Test helper exposing Income's protected validator
 class IncomeValidatorTester : public Income {
 public:
     using Income::isValidSource;
 };
 
+// Helper function for reading a labeled line of input from the console
 string prompt(const string& label) {
     string value;
     cout << label;
@@ -34,41 +38,49 @@ string prompt(const string& label) {
     return value;
 }
 
+// Prompts for a transaction ID and reports whether it passes validation
 void testID() {
     string id = prompt("Transaction ID: ");
     cout << (TransactionValidatorTester::isValidID(id) ? "VALID" : "INVALID") << "\n";
 }
 
+// Prompts for a date and reports whether it passes validation
 void testDate() {
     string date = prompt("Date: ");
     cout << (TransactionValidatorTester::isValidDate(date) ? "VALID" : "INVALID") << "\n";
 }
 
+// Prompts for an amount and reports whether it passes validation
 void testAmount() {
     string amount = prompt("Amount: ");
     cout << (TransactionValidatorTester::isValidAmount(amount) ? "VALID" : "INVALID") << "\n";
 }
 
+// Prompts for a category and reports whether it passes validation
 void testCategory() {
     string category = prompt("Category (must be unique, case-insensitive): ");
     cout << (TransactionValidatorTester::isValidCategory(category) ? "VALID" : "INVALID") << "\n";
 }
 
+// Prompts for a description and reports whether it passes validation
 void testDescription() {
     string description = prompt("Description: ");
     cout << (TransactionValidatorTester::isValidDescription(description) ? "VALID" : "INVALID") << "\n";
 }
 
+// Prompts for a string and prints its trimmed result
 void testTrim() {
     string s = prompt("String to trim: ");
     cout << "Trimmed: \"" << TransactionValidatorTester::trim(s) << "\"\n";
 }
 
+// Prompts for a payment method and reports whether it passes validation
 void testPaymentMethod() {
     string method = prompt("Payment Method: ");
     cout << (ExpenseValidatorTester::isValidPaymentMethod(method) ? "VALID" : "INVALID") << "\n";
 }
 
+// Prompts for all Expense fields, constructs one, and displays the result
 void testCreateExpense() {
     string id = prompt("Transaction ID: ");
     string date = prompt("Date: ");
@@ -87,6 +99,7 @@ void testCreateExpense() {
     }
 }
 
+// Builds a base Expense, then prompts for and applies a new payment method
 void testSetPaymentMethod() {
     string id = prompt("Transaction ID (for a valid base Expense): ");
     string date = prompt("Date: ");
@@ -109,11 +122,13 @@ void testSetPaymentMethod() {
     }
 }
 
+// Prompts for an income source and reports whether it passes validation
 void testSource() {
     string source = prompt("Income Source: ");
     cout << (IncomeValidatorTester::isValidSource(source) ? "VALID" : "INVALID") << "\n";
 }
 
+// Prompts for all Income fields, constructs one, and displays the result
 void testCreateIncome() {
     string id = prompt("Transaction ID: ");
     string date = prompt("Date: ");
@@ -132,6 +147,7 @@ void testCreateIncome() {
     }
 }
 
+// Builds a base Income, then prompts for and applies a new source
 void testSetSource() {
     string id = prompt("Transaction ID (for a valid base Income): ");
     string date = prompt("Date: ");
@@ -193,7 +209,5 @@ int main() {
         else if (choice == "12") testSetSource();
         else cout << "Unrecognized option.\n";
     }
-
-    cout << "Goodbye.\n";
     return 0;
 }
