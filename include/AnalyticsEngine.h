@@ -12,7 +12,7 @@ public:
 
     T computeTotalIncome() const {
 
-        return computeTotalIncomeT{};
+        return computeTotalIncome(T{});
     }
     T computeSavings() const {
 
