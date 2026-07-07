@@ -12,7 +12,7 @@ add_executable(ExpenseTracker
         include/Income.h
         include/Category.h
         include/TransactionManager.h
-        include/Analytics.h
+        include/AnalyticsEngine.h
         include/DataManager.h
         src/Transaction.cpp
         src/Expense.cpp
