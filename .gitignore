@@ -1,1 +1,3 @@
 cmake-build-debug/
+.idea/editor.xml
+.idea/QtSettings.xml
