@@ -5,7 +5,12 @@
 template <typename T = double>
 class AnalyticsEngine {
 public:
+
+    /*
+     * Find each unique transactionID from the Teansaction
+     */
     T computeTotalExpenses() const {
+
 
         return computeTotalExpenses(T{});
     }
