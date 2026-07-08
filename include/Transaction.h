@@ -56,5 +56,10 @@ public:
     virtual bool computeImpact() const = 0;
     // Prints the transaction's fields to standard output
     virtual void displayTransaction() const;
+
+    // Equality compares all shared fields
+    bool operator==(const Transaction& other) const;
+    // Friend so it can write the protected fields directly to any stream
+    friend ostream& operator<<(ostream& os, const Transaction& t);
 };
 #endif //EXPENSETRACKER_TRANSACTION_H
