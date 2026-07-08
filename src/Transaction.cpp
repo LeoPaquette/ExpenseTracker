@@ -217,3 +217,22 @@ void Transaction::displayTransaction() const {
          << ", Category: " << category
          << ", Description: " << description << endl;
 }
+
+// Equality compares all shared fields
+bool Transaction::operator==(const Transaction& other) const {
+    return transactionID == other.transactionID
+        && date == other.date
+        && amount == other.amount
+        && category == other.category
+        && description == other.description;
+}
+
+// Friend function writing a transaction's fields to the given stream
+ostream& operator<<(ostream& os, const Transaction& t) {
+    os << "ID: " << t.transactionID
+       << ", Date: " << t.date
+       << ", Amount: " << t.amount
+       << ", Category: " << t.category
+       << ", Description: " << t.description;
+    return os;
+}

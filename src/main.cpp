@@ -170,6 +170,36 @@ void testSetSource() {
     }
 }
 
+// Prompts for two Expenses, prints each via operator<<, then compares them with operator==
+void testCompareTransactions() {
+    cout << "-- First transaction --\n";
+    string id1 = prompt("Transaction ID: ");
+    string date1 = prompt("Date: ");
+    string amount1 = prompt("Amount: ");
+    string category1 = prompt("Category: ");
+    string description1 = prompt("Description: ");
+    string paymentMethod1 = prompt("Payment Method: ");
+
+    cout << "-- Second transaction --\n";
+    string id2 = prompt("Transaction ID: ");
+    string date2 = prompt("Date: ");
+    string amount2 = prompt("Amount: ");
+    string category2 = prompt("Category: ");
+    string description2 = prompt("Description: ");
+    string paymentMethod2 = prompt("Payment Method: ");
+
+    try {
+        Expense first(id1, date1, amount1, category1, description1, paymentMethod1);
+        Expense second(id2, date2, amount2, category2, description2, paymentMethod2);
+
+        cout << "First:  " << first << "\n";
+        cout << "Second: " << second << "\n";
+        cout << (first == second ? "EQUAL" : "NOT EQUAL") << "\n";
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create transaction: " << e.what() << "\n";
+    }
+}
+
 int main() {
     cout << "=== Transaction / Expense / Income Tester ===\n";
 
@@ -187,6 +217,7 @@ int main() {
              << " 10) isValidSource (Income)\n"
              << " 11) Create an Income (displayTransaction / computeImpact)\n"
              << " 12) setSource on an Income\n"
+             << " 13) Compare two transactions (operator== / operator<<)\n"
              << "  0) Quit\n"
              << "> ";
 
@@ -207,6 +238,7 @@ int main() {
         else if (choice == "10") testSource();
         else if (choice == "11") testCreateIncome();
         else if (choice == "12") testSetSource();
+        else if (choice == "13") testCompareTransactions();
         else cout << "Unrecognized option.\n";
     }
     return 0;
