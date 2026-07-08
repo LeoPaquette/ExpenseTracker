@@ -27,6 +27,7 @@ bool Transaction::isValidDate(const string& date) {
         return false;
     }
 
+    // Days per month, adjusted for leap years
     static const int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     bool isLeapYear = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     int maxDays = daysInMonth[month - 1];
@@ -37,6 +38,7 @@ bool Transaction::isValidDate(const string& date) {
         return false;
     }
 
+    // Reject future dates by comparing against today's date
     time_t currentTime = time(nullptr);
     tm* now = localtime(&currentTime);
     int currentYear = now->tm_year + 1900;
@@ -56,6 +58,7 @@ bool Transaction::isValidAmount(const string& amount) {
         return false;
     }
 
+    // Only digits and a single decimal point are allowed
     size_t i = 0;
     bool hasDigit = false;
     bool hasDecimalPoint = false;
@@ -73,6 +76,7 @@ bool Transaction::isValidAmount(const string& amount) {
         return false;
     }
 
+    // Enforce the allowed transaction amount range
     double value = stod(trimmed);
     return value > 0.0 && value <= 1000000.0;
 }
@@ -89,6 +93,7 @@ bool Transaction::isValidDescription(const string& description) {
     if (trimmedDescription.length() < 5 || trimmedDescription.length() > 100) {
         return false;
     }
+    // Require at least one letter so purely numeric/symbolic text is rejected
     bool hasAlphabetic = false;
     for (char c : trimmedDescription) {
         if (isalpha(c)) {
@@ -101,8 +106,9 @@ bool Transaction::isValidDescription(const string& description) {
 
 // Helper function for trimming strings
 string Transaction::trim(const string& s) {
+    // Locate first and last non-whitespace characters
     size_t start = s.find_first_not_of(" \t\n\r");
-    if (start == std::string::npos) return "";
+    if (start == std::string::npos) return ""; // string is all whitespace
     size_t end = s.find_last_not_of(" \t\n\r");
     return s.substr(start, end - start + 1);
 }
@@ -116,17 +122,22 @@ Transaction::Transaction(const string& id, const string& date, const string& amo
     string trimmedCategory = trim(category);
     string trimmedDescription = trim(description);
 
-    if (!isValidID(trimmedID))
+    // Validate each field individually so the error message identifies which one failed
+    if (!isValidID(trimmedID)) {
         throw invalid_argument("Invalid transaction ID. Expected format TRX-0000.");
-    if (!isValidDate(trimmedDate))
+    }
+    if (!isValidDate(trimmedDate)) {
         throw invalid_argument("Invalid date. Expected a real, non-future date in YYYY-MM-DD.");
-    if (!isValidAmount(trimmedAmount))
+    }
+    if (!isValidAmount(trimmedAmount)) {
         throw invalid_argument("Invalid amount. Must be a number between 0 and 1,000,000.");
-    if (!isValidCategory(trimmedCategory))
+    }
+    if (!isValidCategory(trimmedCategory)) {
         throw invalid_argument("Invalid category. Must be 1-30 characters.");
-    if (!isValidDescription(trimmedDescription))
+    }
+    if (!isValidDescription(trimmedDescription)) {
         throw invalid_argument("Invalid description. Must be 5-100 characters and contain a letter.");
-
+    }
     transactionID = trimmedID;
     this->date = trimmedDate;
     this->amount = stod(trimmedAmount);
