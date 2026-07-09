@@ -56,14 +56,20 @@
         </item>
        </layout>
       </widget>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="labelHeaderMain">
        <property name="geometry">
         <rect>
-         <x>300</x>
+         <x>10</x>
          <y>10</y>
-         <width>211</width>
-         <height>21</height>
+         <width>811</width>
+         <height>41</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>Expense Tracker - Home</string>
@@ -253,14 +259,20 @@
         </item>
        </layout>
       </widget>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="labelHeaderTransactionForm">
        <property name="geometry">
         <rect>
-         <x>310</x>
+         <x>10</x>
          <y>10</y>
-         <width>211</width>
-         <height>21</height>
+         <width>811</width>
+         <height>41</height>
         </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
        </property>
        <property name="text">
         <string>Expense Tracker - Transaction Form</string>
@@ -274,11 +286,55 @@
       <attribute name="title">
        <string>Category/Budget Form</string>
       </attribute>
+      <widget class="QLabel" name="labelHeaderCategoryBudget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>811</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Expense Tracker - Categories &amp; Budgets</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
      </widget>
      <widget class="QWidget" name="tab_Analytics">
       <attribute name="title">
        <string>Analytics</string>
       </attribute>
+      <widget class="QLabel" name="labelHeaderAnalytics">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>10</y>
+         <width>811</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="text">
+        <string>Expense Tracker - Analytics</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
      </widget>
     </widget>
    </item>
