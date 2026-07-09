@@ -1,6 +1,7 @@
 #include "../include/GUI.h"
-
 #include "ui_GUI.h"
+#include <QHeaderView>
+
 
 // builds the widget tree
 GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
@@ -9,6 +10,11 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     // dont allow future dated transactions
     ui->inputDate->setMaximumDate(QDate::currentDate());
     ui->inputDate->setDate(QDate::currentDate());
+
+    // stretch table columns evenly across the full table width
+    ui->tableTransactions->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableCategories->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableBudgetUsage->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
     // https://forum.qt.io/topic/139637/how-to-create-a-button-and-place-it-where-i-want-and-then-run-a-function-when-the-button-is-clicked-c-qt/3
     // connect(myButton, &QPushButton::clicked, this, &MyClass::myFunction);

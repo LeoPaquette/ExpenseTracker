@@ -59,9 +59,9 @@
       <widget class="QTableWidget" name="tableTransactions">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>30</x>
          <y>150</y>
-         <width>711</width>
+         <width>781</width>
          <height>491</height>
         </rect>
        </property>
