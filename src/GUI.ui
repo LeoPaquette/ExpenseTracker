@@ -72,7 +72,7 @@
         <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
       </widget>
-      <widget class="QTableWidget" name="tableWidget">
+      <widget class="QTableWidget" name="tableTransactions">
        <property name="geometry">
         <rect>
          <x>40</x>
@@ -92,11 +92,6 @@
        </property>
        <column>
         <property name="text">
-         <string>New Column</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
          <string>ID</string>
         </property>
        </column>
@@ -108,6 +103,11 @@
        <column>
         <property name="text">
          <string>Amount</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Category</string>
         </property>
        </column>
        <column>
@@ -149,7 +149,18 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="comboType"/>
+         <widget class="QComboBox" name="comboType">
+          <item>
+           <property name="text">
+            <string>Expense</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Income</string>
+           </property>
+          </item>
+         </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="labelTransactionID">
@@ -162,44 +173,79 @@
          <widget class="QLineEdit" name="inputTransactionID"/>
         </item>
         <item row="2" column="0">
+         <widget class="QLabel" name="labelDate">
+          <property name="text">
+           <string>Date:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QDateEdit" name="inputDate">
+          <property name="calendarPopup">
+           <bool>true</bool>
+          </property>
+          <property name="displayFormat">
+           <string>yyyy-MM-dd</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
          <widget class="QLabel" name="labelAmount">
           <property name="text">
            <string>Amount:</string>
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QLineEdit" name="inputAmount"/>
         </item>
-        <item row="3" column="0">
+        <item row="4" column="0">
          <widget class="QLabel" name="labelCategory">
           <property name="text">
            <string>Category:</string>
           </property>
          </widget>
         </item>
-        <item row="3" column="1">
+        <item row="4" column="1">
          <widget class="QLineEdit" name="inputCategory"/>
         </item>
-        <item row="4" column="0">
+        <item row="5" column="0">
          <widget class="QLabel" name="labelDescription">
           <property name="text">
            <string>Description:</string>
           </property>
          </widget>
         </item>
-        <item row="4" column="1">
+        <item row="5" column="1">
          <widget class="QLineEdit" name="inputDescription"/>
         </item>
-        <item row="5" column="0">
+        <item row="6" column="0">
          <widget class="QLabel" name="labelExtra">
           <property name="text">
            <string>Payment Method:</string>
           </property>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="6" column="1">
          <widget class="QLineEdit" name="inputExtra"/>
+        </item>
+        <item row="7" column="1">
+         <layout class="QHBoxLayout" name="layoutFormButtons">
+          <item>
+           <widget class="QPushButton" name="btnSaveTransaction">
+            <property name="text">
+             <string>Save</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnCancelTransaction">
+            <property name="text">
+             <string>Cancel</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
