@@ -14,10 +14,10 @@
    <string>Expense Tracker</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="1">
+   <item row="0" column="0">
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="Tab_Main">
       <attribute name="title">
@@ -26,7 +26,7 @@
       <widget class="QWidget" name="verticalLayoutWidget">
        <property name="geometry">
         <rect>
-         <x>130</x>
+         <x>140</x>
          <y>70</y>
          <width>541</width>
          <height>92</height>
@@ -59,9 +59,9 @@
       <widget class="QLabel" name="labelHeaderMain">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>60</x>
          <y>10</y>
-         <width>811</width>
+         <width>711</width>
          <height>41</height>
         </rect>
        </property>
@@ -81,9 +81,9 @@
       <widget class="QTableWidget" name="tableTransactions">
        <property name="geometry">
         <rect>
-         <x>40</x>
+         <x>60</x>
          <y>190</y>
-         <width>761</width>
+         <width>711</width>
          <height>461</height>
         </rect>
        </property>
@@ -143,7 +143,7 @@
          <x>10</x>
          <y>120</y>
          <width>811</width>
-         <height>221</height>
+         <height>254</height>
         </rect>
        </property>
        <layout class="QFormLayout" name="formLayout">
@@ -191,11 +191,11 @@
         </item>
         <item row="2" column="1">
          <widget class="QDateEdit" name="inputDate">
-          <property name="calendarPopup">
-           <bool>true</bool>
-          </property>
           <property name="displayFormat">
            <string>yyyy-MM-dd</string>
+          </property>
+          <property name="calendarPopup">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -307,6 +307,93 @@
        <property name="alignment">
         <set>Qt::AlignmentFlag::AlignCenter</set>
        </property>
+      </widget>
+      <widget class="QWidget" name="formLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>80</y>
+         <width>781</width>
+         <height>81</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout_2">
+        <item row="0" column="0">
+         <widget class="QLabel" name="labelCategoryName">
+          <property name="text">
+           <string>Category Name:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QLineEdit" name="inputCategoryName"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="labelMonthlyBudget">
+          <property name="text">
+           <string>Monthly Budget:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="inputMonthlyBudget"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="horizontalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>170</y>
+         <width>781</width>
+         <height>31</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <widget class="QPushButton" name="btnSaveCategory">
+          <property name="text">
+           <string>Save</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnCancelCategory">
+          <property name="text">
+           <string>Cancel</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QTableWidget" name="tableCategories">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>230</y>
+         <width>781</width>
+         <height>421</height>
+        </rect>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+       </property>
+       <column>
+        <property name="text">
+         <string>Category</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Monthly Budget</string>
+        </property>
+       </column>
       </widget>
      </widget>
      <widget class="QWidget" name="tab_Analytics">
