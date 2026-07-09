@@ -7,7 +7,8 @@ class AnalyticsEngine {
 public:
 
     /*
-     * Find each unique transactionID from the Teansaction
+     * Find each unique transactionID from the Transaction.cpp class, grab each amount associated to the transactions,
+     * then compute the total.
      */
     T computeTotalExpenses() const {
 

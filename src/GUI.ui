@@ -6,129 +6,233 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>575</width>
-    <height>548</height>
+    <width>859</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Expense Tracker</string>
   </property>
-  <widget class="QTabWidget" name="tabWidget">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>0</y>
-     <width>551</width>
-     <height>501</height>
-    </rect>
-   </property>
-   <property name="currentIndex">
-    <number>1</number>
-   </property>
-   <widget class="QWidget" name="Tab_Main">
-    <attribute name="title">
-     <string>Main</string>
-    </attribute>
-    <widget class="QWidget" name="verticalLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>521</width>
-       <height>91</height>
-      </rect>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="1">
+    <widget class="QTabWidget" name="tabWidget">
+     <property name="currentIndex">
+      <number>1</number>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout">
-      <item>
-       <widget class="QPushButton" name="btnAddTransaction">
+     <widget class="QWidget" name="Tab_Main">
+      <attribute name="title">
+       <string>Main</string>
+      </attribute>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>130</x>
+         <y>70</y>
+         <width>541</width>
+         <height>92</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QPushButton" name="btnAddTransaction">
+          <property name="text">
+           <string>Add Transaction(s)</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnEditTransaction">
+          <property name="text">
+           <string>Edit Transactions</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="btnDeleteTransaction">
+          <property name="text">
+           <string>Delete Transactions</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QLabel" name="label">
+       <property name="geometry">
+        <rect>
+         <x>300</x>
+         <y>10</y>
+         <width>211</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Expense Tracker - Home</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QTableWidget" name="tableWidget">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>190</y>
+         <width>761</width>
+         <height>461</height>
+        </rect>
+       </property>
+       <property name="editTriggers">
+        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+       </property>
+       <property name="selectionMode">
+        <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+       </property>
+       <property name="selectionBehavior">
+        <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+       </property>
+       <column>
         <property name="text">
-         <string>Add Transaction(s)</string>
+         <string>New Column</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnEditTransaction">
+       </column>
+       <column>
         <property name="text">
-         <string>Edit Transactions</string>
+         <string>ID</string>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btnDeleteTransaction">
+       </column>
+       <column>
         <property name="text">
-         <string>Delete Transactions</string>
+         <string>Date</string>
         </property>
-       </widget>
-      </item>
-     </layout>
+       </column>
+       <column>
+        <property name="text">
+         <string>Amount</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Description</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Type</string>
+        </property>
+       </column>
+       <column>
+        <property name="text">
+         <string>Payment Method</string>
+        </property>
+       </column>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="Tab_TransactionForm">
+      <attribute name="title">
+       <string>Transaction Form</string>
+      </attribute>
+      <widget class="QWidget" name="formLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>120</y>
+         <width>811</width>
+         <height>221</height>
+        </rect>
+       </property>
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QLabel" name="typeLabel">
+          <property name="text">
+           <string>Type:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QComboBox" name="comboType"/>
+        </item>
+        <item row="1" column="0">
+         <widget class="QLabel" name="labelTransactionID">
+          <property name="text">
+           <string>Transaction ID:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
+         <widget class="QLineEdit" name="inputTransactionID"/>
+        </item>
+        <item row="2" column="0">
+         <widget class="QLabel" name="labelAmount">
+          <property name="text">
+           <string>Amount:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QLineEdit" name="inputAmount"/>
+        </item>
+        <item row="3" column="0">
+         <widget class="QLabel" name="labelCategory">
+          <property name="text">
+           <string>Category:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1">
+         <widget class="QLineEdit" name="inputCategory"/>
+        </item>
+        <item row="4" column="0">
+         <widget class="QLabel" name="labelDescription">
+          <property name="text">
+           <string>Description:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QLineEdit" name="inputDescription"/>
+        </item>
+        <item row="5" column="0">
+         <widget class="QLabel" name="labelExtra">
+          <property name="text">
+           <string>Payment Method:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="5" column="1">
+         <widget class="QLineEdit" name="inputExtra"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>310</x>
+         <y>10</y>
+         <width>211</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Expense Tracker - Transaction Form</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignmentFlag::AlignCenter</set>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="tab_CategoryBudgetForm">
+      <attribute name="title">
+       <string>Category/Budget Form</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="tab_Analytics">
+      <attribute name="title">
+       <string>Analytics</string>
+      </attribute>
+     </widget>
     </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>0</y>
-       <width>211</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Expense Tracker - Home</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="Tab_TransactionForm">
-    <attribute name="title">
-     <string>Transaction Form</string>
-    </attribute>
-    <widget class="QWidget" name="formLayoutWidget">
-     <property name="geometry">
-      <rect>
-       <x>300</x>
-       <y>50</y>
-       <width>160</width>
-       <height>381</height>
-      </rect>
-     </property>
-     <layout class="QFormLayout" name="formLayout"/>
-    </widget>
-    <widget class="QCalendarWidget" name="calendarWidget">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>60</y>
-       <width>200</width>
-       <height>144</height>
-      </rect>
-     </property>
-    </widget>
-    <widget class="Line" name="line">
-     <property name="geometry">
-      <rect>
-       <x>250</x>
-       <y>50</y>
-       <width>20</width>
-       <height>381</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QWidget" name="tab_CategoryBudgetForm">
-    <attribute name="title">
-     <string>Category/Budget Form</string>
-    </attribute>
-   </widget>
-   <widget class="QWidget" name="tab_Analytics">
-    <attribute name="title">
-     <string>Analytics</string>
-    </attribute>
-   </widget>
-  </widget>
+   </item>
+  </layout>
  </widget>
  <resources/>
  <connections/>
