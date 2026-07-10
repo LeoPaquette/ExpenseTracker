@@ -4,6 +4,7 @@
 #include <expected>
 #include <memory>
 #include <optional>
+#include <ranges>
 #include <vector>
 
 #include "include/Category.h"
@@ -123,15 +124,14 @@ public:
      *          <p>
      *          On failure, one @c SearchError describing the first rejected input.
      */
-    template <typename T>
     std::expected<
-        std::vector<std::reference_wrapper<const T>>,
+        std::vector<const Transaction*>,
         SearchError
     > searchTransactions(
-        std::optional<const string&> date,
-        std::optional<const Category&> category,
+        std::optional<const string*> date,
+        std::optional<const Category*> category,
         std::optional<double> amount
-    );
+    ) const;
 
     /**
      * @brief Returns the stored transactions from the provided category.
@@ -140,10 +140,7 @@ public:
      *
      * @return A vector of const references to the matching transactions, or empty if nothing matched.
      */
-    template <typename T>
-    std::vector<std::reference_wrapper<const T>> filterByCategory(
-        const Category& category
-    );
+    std::vector<const Transaction*> filterByCategory(const Category& category) const;
 
     /**
      * @brief Returns the stored transactions that are within the provided range inclusive.
@@ -159,11 +156,10 @@ public:
      *
      * @return A vector of const references to the matching transactions, or empty if nothing matched.
      */
-    template <typename T>
-    std::vector<std::reference_wrapper<const T>> filterByDateRange(
-        std::optional<const string&> startDate,
-        std::optional<const string&> endDate
-    );
+    std::vector<const Transaction*> filterByDateRange(
+        std::optional<const string*> startDate,
+        std::optional<const string*> endDate
+    ) const;
 
     std::expected<int, DataManager::DataReadWriteError> load(const DataManager& dataManager);
 

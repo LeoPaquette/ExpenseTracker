@@ -15,8 +15,6 @@ protected:
 
     // Helper function for checking ID
     static bool isValidID(const string& id);
-    // Helper function for checking dates
-    static bool isValidDate(const string& date);
     // Helper function for checking amount limits
     static bool isValidAmount(const string& amount);
     // Helper function for checking category
@@ -31,6 +29,9 @@ public:
     Transaction(const string& id, const string& date, const string& amount, const string& category, const string& description);
     // Destructor
     virtual ~Transaction();
+
+    // Helper function for checking dates
+    static bool isValidDate(const string& date);
 
     // Getter for the transaction ID
     string getTransactionID() const;

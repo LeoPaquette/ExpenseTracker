@@ -1,6 +1,8 @@
 #include "include/TransactionManager.h"
 
 #include <algorithm>
+#include <ranges>
+#include <regex>
 
 #include "include/Expense.h"
 #include "include/Income.h"
@@ -24,7 +26,7 @@ static bool insensitive_equals(std::string a, std::string b) {
 
 
 void TransactionManager::updateStoredCategories() {
-    std::erase_if(this->categories, [this](const std::unique_ptr<Category>& c) {
+    std::erase_if(this->categories, [this](const auto& c) {
         /* check if no transaction has the current category */
         return nullptr == this->tryGetFirstTransactionByCategory(c->getName());
     });
@@ -240,4 +242,70 @@ void TransactionManager::deleteTransaction(const string& transactionId) {
     if (0 < count) {
         this->updateStoredCategories();
     }
+}
+
+
+std::expected<
+    std::vector<const Transaction*>,
+    TransactionManager::SearchError
+> TransactionManager::searchTransactions(
+    const std::optional<const string*> date,
+    const std::optional<const Category*> category,
+    const std::optional<double> amount
+) const {
+    if (date.has_value() && Transaction::isValidDate(*date.value())) {
+        static const std::regex pattern(R"(^(\d{4})-(\d{2})-(\d{2})$)");
+
+        if (smatch match; !std::regex_match(*date.value(), match, pattern)) {
+            return std::unexpected(SearchError::INVALID_DATE_FORMAT);
+        }
+
+        return std::unexpected(SearchError::INVALID_DATE_FUTURE);
+    }
+
+    if (amount.has_value() && 0 > amount.value()) {
+        return std::unexpected(SearchError::INVALID_AMOUNT_NEGATIVE);
+    }
+
+    if (amount.has_value() && 1000000.0 < amount.value()) {
+        return std::unexpected(SearchError::INVALID_AMOUNT_EXCEEDS_MAX);
+    }
+
+    std::vector<const Transaction*> filtered;
+
+    for (const auto& t : this->transactions) {
+        const bool matches = t
+                && (!date.has_value() || *date.value() == t->getDate())
+                && (!category.has_value() || insensitive_equals(category.value()->getName(), t->getCategory()))
+                && (!amount.has_value() || amount.value() == t->getAmount())
+                ;
+
+        if (matches) {
+            filtered.push_back(t.get());
+        }
+    }
+
+    return filtered;
+}
+
+
+std::vector<const Transaction*> TransactionManager::filterByCategory(
+    const Category& category
+) const {
+    std::vector<const Transaction*> filtered;
+
+    for (const auto& t : this->transactions) {
+        if (insensitive_equals(category.getName(), t->getCategory())) {
+            filtered.push_back(t.get());
+        }
+    }
+
+    return filtered;
+}
+
+std::vector<const Transaction*> TransactionManager::filterByDateRange(
+    std::optional<const string*> startDate,
+    std::optional<const string*> endDate
+) const {
+    throw std::runtime_error("fuck off");
 }
