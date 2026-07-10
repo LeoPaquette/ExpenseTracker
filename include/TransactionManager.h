@@ -7,11 +7,27 @@
 #include <vector>
 
 #include "include/Category.h"
+#include "include/DataManager.h"
 #include "include/Transaction.h"
 
 class TransactionManager {
     std::vector<std::unique_ptr<Transaction>> transactions;
     std::vector<std::unique_ptr<Category>> categories;
+
+    /**
+     * \brief   Updates the categories vector ensuring only those referenced
+     *          by transactions are stored.
+     */
+    void updateStoredCategories();
+
+    Category* tryGetCategoryById(const string& id);
+
+    Category* tryGetCategoryByName(const string& name);
+
+    Transaction* tryGetTransactionById(const string& id);
+
+    Transaction* tryGetFirstTransactionByCategory(const string& category);
+
 
 public:
     /**
@@ -39,7 +55,28 @@ public:
     /*
      * No destructor, copy, or copy assignment needed, vectors
      * are handled by the compiler generated defaults
+    */
+
+    /**
+     * @brief Stores a copy of the provided category in memory.
+     *
+     * @param category The category to store.
      */
+    void addCategory(const Category& category);
+
+    /**
+     * @brief Updates the provided category based on its ID.
+     *
+     * @param category The category to update.
+     */
+    void editCategory(const Category& category);
+
+    /**
+     * @brief Deletes the category with the provided ID.
+     *
+     * @param categoryId The category to update.
+     */
+    void deleteCategory(const string& categoryId);
 
     /**
      * @brief Stores a copy of the provided transaction in memory.
@@ -55,7 +92,7 @@ public:
      * @param transaction The transaction to update.
      */
     template <typename T>
-    void editTransaction(T& transaction);
+    void editTransaction(const T& transaction);
 
     /**
      * @brief Deletes the transaction with the provided ID.
@@ -127,6 +164,10 @@ public:
         std::optional<const string&> startDate,
         std::optional<const string&> endDate
     );
+
+    std::expected<int, DataManager::DataReadWriteError> load(const DataManager& dataManager);
+
+    std::expected<int, DataManager::DataReadWriteError> save(const DataManager& dataManager);
 };
 
 #endif //EXPENSETRACKER_TRANSACTIONMANAGER_H

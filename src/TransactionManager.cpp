@@ -12,9 +12,150 @@
     )
 
 
+static bool insensitive_equals(std::string a, std::string b) {
+    return std::ranges::equal(
+        a,
+        b,
+        [](const auto c1, const auto c2) {
+            return std::tolower(c1) == std::tolower(c2);
+        }
+    );
+}
+
+
+void TransactionManager::updateStoredCategories() {
+    std::erase_if(this->categories, [this](const std::unique_ptr<Category>& c) {
+        /* check if no transaction has the current category */
+        return nullptr == this->tryGetFirstTransactionByCategory(c->getName());
+    });
+}
+
+
+Category* TransactionManager::tryGetCategoryById(const string& id) {
+    /* Find matching element */
+    const auto elem = std::ranges::find_if(
+        this->categories,
+        [id](const auto& c) {
+            return c && id == c->getCategoryID();
+        }
+    );
+
+
+    /* If no element matches */
+    if (elem == this->categories.end()) {
+        return nullptr;
+    }
+
+    return elem->get();
+}
+
+
+Category* TransactionManager::tryGetCategoryByName(const string& name) {
+    /* Find matching element */
+    const auto elem = std::ranges::find_if(
+        this->categories,
+        [name](const auto& c) {
+            return c && name == c->getName();
+        }
+    );
+
+
+    /* If no element matches */
+    if (elem == this->categories.end()) {
+        return nullptr;
+    }
+
+    return elem->get();
+}
+
+
+Transaction* TransactionManager::tryGetTransactionById(const string& id) {
+    /* Find matching element */
+    const auto elem = std::ranges::find_if(
+        this->transactions,
+        [id](const auto& t) {
+            return t && id == t->getTransactionID();
+        }
+    );
+
+
+    /* If no element matches */
+    if (elem == this->transactions.end()) {
+        return nullptr;
+    }
+
+    return elem->get();
+}
+
+
+Transaction* TransactionManager::tryGetFirstTransactionByCategory(
+    const string& category
+) {
+    /* Find matching element */
+    const auto elem = std::ranges::find_if(
+        this->transactions,
+        [category](const auto& t) {
+            return t && insensitive_equals(category, t->getCategory());
+        }
+    );
+
+
+    /* If no element matches */
+    if (elem == this->transactions.end()) {
+        return nullptr;
+    }
+
+    return elem->get();
+}
+
+
+
 TransactionManager::TransactionManager() {
     this->transactions = std::vector<std::unique_ptr<Transaction>>();
     this->categories = std::vector<std::unique_ptr<Category>>();
+}
+
+
+void TransactionManager::addCategory(const Category& category) {
+    /* check for duped id */
+    if (nullptr != this->tryGetCategoryById(category.getCategoryID())) {
+        return;
+    }
+
+    /* check for duped name */
+    if (nullptr != this->tryGetCategoryByName(category.getName())) {
+        return;
+    }
+
+    this->categories.push_back(std::make_unique<std::decay_t<Category>>(category));
+}
+
+
+void TransactionManager::editCategory(const Category& category) {
+    /* Find matching category */
+    const auto stored = this->tryGetCategoryById(category.getCategoryID());
+
+
+    /* If no transaction matches, add it */
+    if (nullptr == stored) {
+        this->addCategory(category);
+        return;
+    }
+
+
+    /* Update the stored data */
+    stored->setName(category.getName());
+    stored->setMonthlyBudget(category.getMonthlyBudget());
+}
+
+
+void TransactionManager::deleteCategory(const string& categoryId) {
+    std::erase_if(
+        this->categories,
+        [categoryId](const auto& c) {
+            return c && c->getCategoryID() == categoryId;
+        }
+    );
 }
 
 
@@ -29,7 +170,7 @@ void TransactionManager::addTransaction(const T& transaction) {
 
 
 template <typename T>
-void TransactionManager::editTransaction(T& transaction) {
+void TransactionManager::editTransaction(const T& transaction) {
     assert_template_derives_transaction();
 
     const string targetTransactionId = transaction.getTransactionID();
@@ -70,7 +211,7 @@ void TransactionManager::editTransaction(T& transaction) {
 
         storedPtr->setSource(providedPtr.getSource());
 
-        return;
+        goto update_categories_and_return;
     }
 
     if (const auto storedPtr = dynamic_cast<Expense*>(storedTransaction.get())) {
@@ -78,6 +219,25 @@ void TransactionManager::editTransaction(T& transaction) {
 
         storedPtr->setPaymentMethod(providedPtr.getPaymentMethod());
 
-        return;
+        goto update_categories_and_return;
+    }
+
+    throw std::runtime_error("Transaction type handling unimplemented!");
+
+update_categories_and_return:
+    this->updateStoredCategories();
+}
+
+
+void TransactionManager::deleteTransaction(const string& transactionId) {
+    const auto count = std::erase_if(
+        this->transactions,
+        [transactionId](const auto& t) {
+            return t && t->getTransactionID() == transactionId;
+        }
+    );
+
+    if (0 < count) {
+        this->updateStoredCategories();
     }
 }
