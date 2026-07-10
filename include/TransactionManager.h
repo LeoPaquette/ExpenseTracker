@@ -133,6 +133,11 @@ public:
         std::optional<double> amount
     ) const;
 
+    inline std::expected<
+        std::vector<const Transaction*>,
+        SearchError
+    > getAllTransactions() const;
+
     /**
      * @brief Returns the stored transactions from the provided category.
      *
