@@ -1,6 +1,8 @@
 #ifndef EXPENSETRACKER_CATEGORY_H
 #define EXPENSETRACKER_CATEGORY_H
 
-class Category;
+class Category {
+    
+};
 
 #endif //EXPENSETRACKER_CATEGORY_H

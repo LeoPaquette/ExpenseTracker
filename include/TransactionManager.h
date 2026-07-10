@@ -6,14 +6,12 @@
 #include <optional>
 #include <vector>
 
-#include "Category.h"
-#include "Transaction.h"
-
-using namespace std;
+#include "include/Category.h"
+#include "include/Transaction.h"
 
 class TransactionManager {
-    vector<unique_ptr<Transaction>> transactions;
-    vector<unique_ptr<Category>> categories;
+    std::vector<std::unique_ptr<Transaction>> transactions;
+    std::vector<std::unique_ptr<Category>> categories;
 
 public:
     /**
@@ -37,23 +35,27 @@ public:
     };
 
     TransactionManager();
-    ~TransactionManager();
-    TransactionManager(const TransactionManager&);
-    TransactionManager& operator=(const TransactionManager&);
+
+    /*
+     * No destructor, copy, or copy assignment needed, vectors
+     * are handled by the compiler generated defaults
+     */
 
     /**
      * @brief Stores a copy of the provided transaction in memory.
      *
      * @param transaction The transaction to store.
      */
-    void addTransaction(const Transaction& transaction);
+    template <typename T>
+    void addTransaction(const T& transaction);
 
     /**
      * @brief Updates the provided transaction based on its ID.
      *
      * @param transaction The transaction to update.
      */
-    void editTransaction(Transaction& transaction);
+    template <typename T>
+    void editTransaction(T& transaction);
 
     /**
      * @brief Deletes the transaction with the provided ID.
@@ -84,10 +86,14 @@ public:
      *          <p>
      *          On failure, one @c SearchError describing the first rejected input.
      */
-    expected<vector<reference_wrapper<const Transaction>>, SearchError> searchTransactions(
-        optional<const string&> date,
-        optional<const Category&> category,
-        optional<double> amount
+    template <typename T>
+    std::expected<
+        std::vector<std::reference_wrapper<const T>>,
+        SearchError
+    > searchTransactions(
+        std::optional<const string&> date,
+        std::optional<const Category&> category,
+        std::optional<double> amount
     );
 
     /**
@@ -97,7 +103,10 @@ public:
      *
      * @return A vector of const references to the matching transactions, or empty if nothing matched.
      */
-    vector<reference_wrapper<const Transaction>> filterByCategory(const Category& category);
+    template <typename T>
+    std::vector<std::reference_wrapper<const T>> filterByCategory(
+        const Category& category
+    );
 
     /**
      * @brief Returns the stored transactions that are within the provided range inclusive.
@@ -113,9 +122,10 @@ public:
      *
      * @return A vector of const references to the matching transactions, or empty if nothing matched.
      */
-    vector<reference_wrapper<const Transaction>> filterByDateRange(
-        optional<const string&> startDate,
-        optional<const string&> endDate
+    template <typename T>
+    std::vector<std::reference_wrapper<const T>> filterByDateRange(
+        std::optional<const string&> startDate,
+        std::optional<const string&> endDate
     );
 };
 
