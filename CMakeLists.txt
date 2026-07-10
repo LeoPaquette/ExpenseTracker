@@ -25,6 +25,7 @@ add_executable(ExpenseTracker
         src/GUI.ui)
 
 target_link_libraries(ExpenseTracker Qt6::Widgets)
+target_include_directories(ExpenseTracker PRIVATE .)
 
 # moved the Leo's tests from main to its own test run config.
 add_executable(ValidatorTester
