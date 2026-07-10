@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="Tab_Main">
       <attribute name="title">
@@ -409,8 +409,11 @@
           <property name="toolTip">
            <string>5 to 100 characters, must contain at least one letter</string>
           </property>
+          <property name="whatsThis">
+           <string/>
+          </property>
           <property name="placeholderText">
-           <string>What was this for? (min 5 characters)</string>
+           <string/>
           </property>
          </widget>
         </item>
@@ -427,7 +430,10 @@
            <string>Payment method for expenses, source for income</string>
           </property>
           <property name="placeholderText">
-           <string>e.g. Credit Card</string>
+           <string>e.g. Debit, Credit, Cash</string>
+          </property>
+          <property name="clearButtonEnabled">
+           <bool>false</bool>
           </property>
          </widget>
         </item>

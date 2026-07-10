@@ -1,4 +1,4 @@
-#include "../include/GUI.h"
+#include "include/GUI.h"
 #include "ui_GUI.h"
 #include <QHeaderView>
 
