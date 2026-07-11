@@ -19,6 +19,7 @@ add_executable(ExpenseTracker
         src/Transaction.cpp
         src/Expense.cpp
         src/Income.cpp
+        src/Category.cpp
         src/TransactionManager.cpp
         src/DataManager.cpp
         src/GUI.cpp
@@ -33,6 +34,8 @@ add_executable(ValidatorTester
         include/Transaction.h
         include/Expense.h
         include/Income.h
+        include/Category.h
         src/Transaction.cpp
         src/Expense.cpp
-        src/Income.cpp)
+        src/Income.cpp
+        src/Category.cpp)

@@ -1,0 +1,143 @@
+#include "../include/Category.h"
+
+#include <regex>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+// Helper function for checking category ID
+bool Category::isValidID(const string& id) {
+    static const regex pattern(R"(^CAT-\d{4}$)");
+    return !id.empty() && regex_match(id, pattern);
+}
+
+// Helper function for checking name
+bool Category::isValidName(const string& name) {
+    string trimmed = trim(name);
+    return !trimmed.empty() && trimmed.length() <= 30;
+}
+
+// Helper function for checking monthly budget
+bool Category::isValidBudget(const string& budget) {
+    string trimmed = trim(budget);
+    if (trimmed.empty()) {
+        return false;
+    }
+
+    // Only digits and a single decimal point are allowed
+    bool hasDigit = false;
+    bool hasDecimalPoint = false;
+    for (char c : trimmed) {
+        if (isdigit(c)) {
+            hasDigit = true;
+        } else if (c == '.' && !hasDecimalPoint) {
+            hasDecimalPoint = true;
+        } else {
+            return false;
+        }
+    }
+    if (!hasDigit) {
+        return false;
+    }
+
+    // Enforce the allowed budget range
+    double value = stod(trimmed);
+    return value > 0.0 && value <= 1000000.0;
+}
+
+// Helper function for trimming strings
+string Category::trim(const string& s) {
+    size_t start = s.find_first_not_of(" \t\n\r");
+    if (start == string::npos) return ""; // string is all whitespace
+    size_t end = s.find_last_not_of(" \t\n\r");
+    return s.substr(start, end - start + 1);
+}
+
+// Constructor validating and trimming all fields before assignment
+Category::Category(const string& categoryID, const string& name, const string& monthlyBudget) {
+    string trimmedID = trim(categoryID);
+    string trimmedName = trim(name);
+    string trimmedBudget = trim(monthlyBudget);
+
+    // Validate each field individually so the error message identifies which one failed
+    if (!isValidID(trimmedID)) {
+        throw invalid_argument("Invalid category ID. Expected format CAT-0000.");
+    }
+    if (!isValidName(trimmedName)) {
+        throw invalid_argument("Invalid category name. Must be 1-30 characters.");
+    }
+    if (!isValidBudget(trimmedBudget)) {
+        throw invalid_argument("Invalid monthly budget. Must be a number between 0 and 1,000,000.");
+    }
+
+    this->categoryID = trimmedID;
+    this->name = trimmedName;
+    this->monthlyBudget = stod(trimmedBudget);
+}
+
+// Destructor
+Category::~Category() {
+}
+
+// Getter for the category ID
+string Category::getCategoryID() const {
+    return categoryID;
+}
+
+// Getter for the name
+string Category::getName() const {
+    return name;
+}
+
+// Getter for the monthly budget
+double Category::getMonthlyBudget() const {
+    return monthlyBudget;
+}
+
+// Setter for the name, validated and trimmed before assignment
+void Category::setName(std::string name) {
+    string trimmed = trim(name);
+    if (!isValidName(trimmed)) {
+        throw invalid_argument("Invalid category name. Must be 1-30 characters.");
+    }
+    this->name = trimmed;
+}
+
+// Setter for the monthly budget, validated before assignment
+void Category::setMonthlyBudget(double monthlyBudget) {
+    if (monthlyBudget <= 0.0 || monthlyBudget > 1000000.0) {
+        throw invalid_argument("Invalid monthly budget. Must be between 0 and 1,000,000.");
+    }
+    this->monthlyBudget = monthlyBudget;
+}
+
+// Replaces the monthly budget with a newly validated value
+void Category::updateBudget(double newMonthlyBudget) {
+    setMonthlyBudget(newMonthlyBudget);
+}
+
+// Prints the category's fields plus a spending summary given the amount spent so far
+void Category::displayCategorySummary(double amountSpent) const {
+    cout << "Category ID: " << categoryID
+         << ", Name: " << name
+         << ", Monthly Budget: " << monthlyBudget
+         << ", Spent: " << amountSpent
+         << ", Remaining: " << (monthlyBudget - amountSpent);
+
+    // Guard against dividing by a zero budget rather than crashing or printing garbage
+    if (monthlyBudget <= 0.0) {
+        cout << ", Usage: N/A (no budget set)" << endl;
+        cout << "Warning: This category has no budget set." << endl;
+        return;
+    }
+
+    double usagePercent = (amountSpent / monthlyBudget) * 100.0;
+    cout << ", Usage: " << fixed << setprecision(1) << usagePercent << "%" << defaultfloat << endl;
+
+    if (usagePercent > 100.0) {
+        cout << "Warning: Budget usage has exceeded 100% for category \"" << name << "\"." << endl;
+    } else if (usagePercent > 80.0) {
+        cout << "Warning: Budget usage has exceeded 80% for category \"" << name << "\"." << endl;
+    }
+}

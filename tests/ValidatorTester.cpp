@@ -1,6 +1,7 @@
 #include "../include/Transaction.h"
 #include "../include/Expense.h"
 #include "../include/Income.h"
+#include "../include/Category.h"
 
 #include <iostream>
 #include <string>
@@ -28,6 +29,15 @@ public:
 class IncomeValidatorTester : public Income {
 public:
     using Income::isValidSource;
+};
+
+// Test helper exposing Category's protected validators
+class CategoryValidatorTester : public Category {
+public:
+    using Category::isValidID;
+    using Category::isValidName;
+    using Category::isValidBudget;
+    using Category::trim;
 };
 
 // Helper function for reading a labeled line of input from the console
@@ -170,6 +180,102 @@ void testSetSource() {
     }
 }
 
+// Prompts for a category ID and reports whether it passes validation
+void testCategoryID() {
+    string id = prompt("Category ID: ");
+    cout << (CategoryValidatorTester::isValidID(id) ? "VALID" : "INVALID") << "\n";
+}
+
+// Prompts for a category name and reports whether it passes validation
+void testCategoryName() {
+    string name = prompt("Category Name (must be unique, case-insensitive): ");
+    cout << (CategoryValidatorTester::isValidName(name) ? "VALID" : "INVALID") << "\n";
+}
+
+// Prompts for a monthly budget and reports whether it passes validation
+void testCategoryBudget() {
+    string budget = prompt("Monthly Budget: ");
+    cout << (CategoryValidatorTester::isValidBudget(budget) ? "VALID" : "INVALID") << "\n";
+}
+
+// Prompts for all Category fields, constructs one, and displays the result
+void testCreateCategory() {
+    string id = prompt("Category ID: ");
+    string name = prompt("Category Name: ");
+    string budget = prompt("Monthly Budget: ");
+
+    try {
+        Category category(id, name, budget);
+        cout << "Category created successfully.\n";
+        cout << category << "\n";
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create Category: " << e.what() << "\n";
+    }
+}
+
+// Builds a base Category, then prompts for and applies a new monthly budget
+void testUpdateBudget() {
+    string id = prompt("Category ID (for a valid base Category): ");
+    string name = prompt("Category Name: ");
+    string budget = prompt("Monthly Budget: ");
+
+    try {
+        Category category(id, name, budget);
+        string newBudget = prompt("New Monthly Budget: ");
+        try {
+            category.updateBudget(stod(newBudget));
+            cout << "Monthly budget updated to: " << category.getMonthlyBudget() << "\n";
+        } catch (const exception& e) {
+            cout << "updateBudget rejected: " << e.what() << "\n";
+        }
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create base Category: " << e.what() << "\n";
+    }
+}
+
+// Builds a Category, then prompts for an amount spent and displays its budget summary
+void testDisplayCategorySummary() {
+    string id = prompt("Category ID: ");
+    string name = prompt("Category Name: ");
+    string budget = prompt("Monthly Budget: ");
+
+    try {
+        Category category(id, name, budget);
+        string amountSpent = prompt("Amount Spent So Far: ");
+        try {
+            category.displayCategorySummary(stod(amountSpent));
+        } catch (const exception& e) {
+            cout << "Invalid amount spent: " << e.what() << "\n";
+        }
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create Category: " << e.what() << "\n";
+    }
+}
+
+// Prompts for two Categories, prints each via operator<<, then compares them with operator==
+void testCompareCategories() {
+    cout << "-- First category --\n";
+    string id1 = prompt("Category ID: ");
+    string name1 = prompt("Category Name: ");
+    string budget1 = prompt("Monthly Budget: ");
+
+    cout << "-- Second category --\n";
+    string id2 = prompt("Category ID: ");
+    string name2 = prompt("Category Name: ");
+    string budget2 = prompt("Monthly Budget: ");
+
+    try {
+        Category first(id1, name1, budget1);
+        Category second(id2, name2, budget2);
+
+        cout << "First:  " << first << "\n";
+        cout << "Second: " << second << "\n";
+        cout << (first == second ? "EQUAL" : "NOT EQUAL") << "\n";
+    } catch (const invalid_argument& e) {
+        cout << "Failed to create category: " << e.what() << "\n";
+    }
+}
+
 // Prompts for two Expenses, prints each via operator<<, then compares them with operator==
 void testCompareTransactions() {
     cout << "-- First transaction --\n";
@@ -218,6 +324,13 @@ int main() {
              << " 11) Create an Income (displayTransaction / computeImpact)\n"
              << " 12) setSource on an Income\n"
              << " 13) Compare two transactions (operator== / operator<<)\n"
+             << " 14) isValidID (Category)\n"
+             << " 15) isValidName (Category)\n"
+             << " 16) isValidBudget (Category)\n"
+             << " 17) Create a Category\n"
+             << " 18) updateBudget on a Category\n"
+             << " 19) displayCategorySummary on a Category\n"
+             << " 20) Compare two categories (operator== / operator<<)\n"
              << "  0) Quit\n"
              << "> ";
 
@@ -239,6 +352,13 @@ int main() {
         else if (choice == "11") testCreateIncome();
         else if (choice == "12") testSetSource();
         else if (choice == "13") testCompareTransactions();
+        else if (choice == "14") testCategoryID();
+        else if (choice == "15") testCategoryName();
+        else if (choice == "16") testCategoryBudget();
+        else if (choice == "17") testCreateCategory();
+        else if (choice == "18") testUpdateBudget();
+        else if (choice == "19") testDisplayCategorySummary();
+        else if (choice == "20") testCompareCategories();
         else cout << "Unrecognized option.\n";
     }
     return 0;
