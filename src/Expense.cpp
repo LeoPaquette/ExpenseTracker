@@ -49,3 +49,58 @@ void Expense::displayTransaction() const{
          << ", Description: " << description
          << ", Payment Method: " << paymentMethod << endl;
 }
+
+
+std::unique_ptr<Expense> Expense::fromJSON(const json& json) {
+    if (const auto type = json.at("__type"); !type.is_number()) {
+        throw invalid_argument("Invalid type. Must be a number.");
+    }
+
+    const auto transactionId = json.at("transactionId");
+    if (!transactionId.is_string()) {
+        throw invalid_argument("Invalid transaction ID. Must be a string.");
+    }
+
+    const auto date = json.at("date");
+    if (!date.is_string()) {
+        throw invalid_argument("Invalid date. Must be a string.");
+    }
+
+    const auto amount = json.at("amount");
+    if (!amount.is_number_float()) {
+        throw invalid_argument("Invalid amount. Must be a float/double.");
+    }
+
+    const auto category = json.at("category");
+    if (!category.is_string()) {
+        throw invalid_argument("Invalid category. Must be a string.");
+    }
+
+    const auto description = json.at("description");
+    if (!description.is_string()) {
+        throw invalid_argument("Invalid description. Must be a string.");
+    }
+
+    const auto paymentMethod = json.at("paymentMethod");
+    if (!paymentMethod.is_string()) {
+        throw invalid_argument("Invalid payment method. Must be a string.");
+    }
+
+    return std::unique_ptr<Expense>(new Expense(
+        transactionId,
+        date,
+        amount,
+        category,
+        description,
+        paymentMethod
+    ));
+}
+
+json Expense::toJSON() const {
+    json json = Transaction::toJSON();
+
+    json.at("__type") = 1;
+    json.at("paymentMethod") = this->paymentMethod;
+
+    return json;
+}

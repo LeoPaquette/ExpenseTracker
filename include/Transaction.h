@@ -3,6 +3,9 @@
 
 #include <string>
 #include <iostream>
+
+#include "JSON.h"
+
 using namespace std;
 
 class Transaction {
@@ -62,5 +65,9 @@ public:
     bool operator==(const Transaction& other) const;
     // Friend so it can write the protected fields directly to any stream
     friend ostream& operator<<(ostream& os, const Transaction& t);
+
+    static std::unique_ptr<Transaction> fromJSON(const json& json);
+
+    virtual json toJSON() const;
 };
 #endif //EXPENSETRACKER_TRANSACTION_H

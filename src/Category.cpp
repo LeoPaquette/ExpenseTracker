@@ -141,3 +141,33 @@ void Category::displayCategorySummary(double amountSpent) const {
         cout << "Warning: Budget usage has exceeded 80% for category \"" << name << "\"." << endl;
     }
 }
+
+
+std::unique_ptr<Category> Category::fromJSON(const json& json) {
+    const auto categoryId = json.at("categoryId");
+    if (!categoryId.is_string()) {
+        throw invalid_argument("Invalid category ID. Must be a string.");
+    }
+
+    const auto name = json.at("name");
+    if (!name.is_string()) {
+        throw invalid_argument("Invalid name. Must be a string.");
+    }
+
+    const auto monthlyBudget = json.at("monthlyBudget");
+    if (!categoryId.is_number_float()) {
+        throw invalid_argument("Invalid monthly budget. Must be a float/double.");
+    }
+
+    return std::unique_ptr<Category>(new Category(categoryId, name, monthlyBudget));
+}
+
+json Category::toJSON() const {
+    json json;
+
+    json.at("categoryId") = this->categoryID;
+    json.at("name") = this->name;
+    json.at("monthlyBudget") = this->monthlyBudget;
+
+    return json;
+}

@@ -6,6 +6,10 @@ set(CMAKE_AUTOMOC ON) # qt
 set(CMAKE_AUTOUIC ON) # qt
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
+include(FetchContent)
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
+FetchContent_MakeAvailable(json)
+
 add_executable(ExpenseTracker
         src/main.cpp
         include/Transaction.h
@@ -23,9 +27,10 @@ add_executable(ExpenseTracker
         src/TransactionManager.cpp
         src/DataManager.cpp
         src/GUI.cpp
-        src/GUI.ui)
+        src/GUI.ui
+        include/JSON.h)
 
-target_link_libraries(ExpenseTracker Qt6::Widgets)
+target_link_libraries(ExpenseTracker Qt6::Widgets nlohmann_json::nlohmann_json)
 target_include_directories(ExpenseTracker PRIVATE .)
 
 # moved the Leo's tests from main to its own test run config.

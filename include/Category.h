@@ -3,6 +3,9 @@
 
 #include <string>
 #include <iostream>
+
+#include "JSON.h"
+
 using namespace std;
 
 class Category {
@@ -42,5 +45,9 @@ public:
     void updateBudget(double newMonthlyBudget);
     // Prints the category's fields plus a spending summary given the amount spent so far
     void displayCategorySummary(double amountSpent) const;
+
+    static std::unique_ptr<Category> fromJSON(const json& json);
+
+    json toJSON() const;
 };
 #endif //EXPENSETRACKER_CATEGORY_H

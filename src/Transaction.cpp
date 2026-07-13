@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <cctype>
 
+#include "include/Expense.h"
+#include "include/Income.h"
+
 using namespace std;
 
 
@@ -235,4 +238,35 @@ ostream& operator<<(ostream& os, const Transaction& t) {
        << ", Category: " << t.category
        << ", Description: " << t.description;
     return os;
+}
+
+
+std::unique_ptr<Transaction> Transaction::fromJSON(const json& json) {
+    const auto type = json.at("__type");
+    if (!type.is_number()) {
+        throw invalid_argument("Invalid type. Must be a number.");
+    }
+
+    if (1 == type) {
+        return Expense::fromJSON(json);
+    }
+
+    if (2 == type) {
+        return Income::fromJSON(json);
+    }
+
+    return nullptr;
+}
+
+
+json Transaction::toJSON() const {
+    json json;
+
+    json.at("transactionId") = this->transactionID;
+    json.at("date") = this->date;
+    json.at("amount") = this->amount;
+    json.at("category") = this->category;
+    json.at("description") = this->description;
+
+    return json;
 }

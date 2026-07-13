@@ -1,8 +1,11 @@
 #ifndef EXPENSETRACKER_INCOME_H
 #define EXPENSETRACKER_INCOME_H
 
-#include "Transaction.h"
 #include <string>
+
+#include "Transaction.h"
+#include "JSON.h"
+
 using namespace std;
 
 class Income : public Transaction {
@@ -26,5 +29,9 @@ public:
     bool computeImpact() const override;
     // Prints the income's fields to standard output
     void displayTransaction() const override;
+
+    static std::unique_ptr<Income> fromJSON(const json& json);
+
+    json toJSON() const override;
 };
 #endif //EXPENSETRACKER_INCOME_H
