@@ -14,6 +14,80 @@
     )
 
 
+static const regex DATE_PATTERN(R"(^(\d{4})-(\d{2})-(\d{2})$)");
+static const int DAYS_IN_MONTH[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+static constexpr bool isYearLeapYear(const int year) {
+    return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
+}
+
+static bool parseDate(const std::string& value, int* outYear, int* outMonth, int* outDay) {
+    smatch match;
+    if (value.empty() || !regex_match(value, match, DATE_PATTERN)) {
+        return false;
+    }
+
+    const int year = stoi(match[1].str());
+    const int month = stoi(match[2].str());
+    const int day = stoi(match[3].str());
+
+    int maxDays = DAYS_IN_MONTH[month - 1];
+    if (2 == month && isYearLeapYear(year)) {
+        maxDays = 29;
+    }
+
+    if (1 > day || day > maxDays) {
+        return false;
+    }
+
+    *outYear = year;
+    *outMonth = month;
+    *outDay = day;
+    return true;
+}
+
+static int compareDates(const std::string& a, const std::string& b) {
+    int aYear = 0;
+    int aMonth = 0;
+    int aDay = 0;
+    if (!parseDate(a, &aYear, &aMonth, &aDay)) {
+        throw std::runtime_error("a is not a valid date");
+    }
+
+    int bYear = 0;
+    int bMonth = 0;
+    int bDay = 0;
+    if (!parseDate(b, &bYear, &bMonth, &bDay)) {
+        throw std::runtime_error("b is not a valid date");
+    }
+
+    if (aYear < bYear) {
+        return -1;
+    }
+
+    if (aYear > bYear) {
+        return 1;
+    }
+
+    if (aMonth < bMonth) {
+        return -1;
+    }
+
+    if (aMonth > bMonth) {
+        return 1;
+    }
+
+    if (aDay < bDay) {
+        return -1;
+    }
+
+    if (aDay > bDay) {
+        return 1;
+    }
+
+    return 0;
+}
+
 static bool insensitive_equals(std::string a, std::string b) {
     return std::ranges::equal(
         a,
@@ -254,9 +328,7 @@ std::expected<
     const std::optional<double> amount
 ) const {
     if (date.has_value() && Transaction::isValidDate(*date.value())) {
-        static const std::regex pattern(R"(^(\d{4})-(\d{2})-(\d{2})$)");
-
-        if (smatch match; !std::regex_match(*date.value(), match, pattern)) {
+        if (smatch match; !std::regex_match(*date.value(), match, DATE_PATTERN)) {
             return std::unexpected(SearchError::INVALID_DATE_FORMAT);
         }
 
@@ -312,8 +384,48 @@ std::vector<const Transaction*> TransactionManager::filterByCategory(
 }
 
 std::vector<const Transaction*> TransactionManager::filterByDateRange(
-    std::optional<const string*> startDate,
-    std::optional<const string*> endDate
+    const std::optional<const string*> startDate,
+    const std::optional<const string*> endDate
 ) const {
-    throw std::runtime_error("fuck off");
+    std::vector<const Transaction*> filtered;
+
+    if (!startDate.has_value() && !endDate.has_value()) {
+        goto no_start_end;
+    }
+
+    if (!startDate.has_value() && endDate.has_value()) {
+        goto no_start;
+    }
+
+    if (startDate.has_value() && !endDate.has_value()) {
+        goto no_end;
+    }
+
+    throw std::runtime_error("Illegal state encountered!");
+
+no_start:
+    for (const auto& t : this->transactions) {
+        if (1 != compareDates(t->getDate(), *endDate.value())) {
+            filtered.push_back(t.get());
+        }
+    }
+
+    goto exit;
+
+no_end:
+    for (const auto& t : this->transactions) {
+        if (-1 != compareDates(t->getDate(), *startDate.value())) {
+            filtered.push_back(t.get());
+        }
+    }
+
+    goto exit;
+
+no_start_end:
+    for (const auto& t : this->transactions) {
+        filtered.push_back(t.get());
+    }
+
+exit:
+    return filtered;
 }

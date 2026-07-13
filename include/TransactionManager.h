@@ -133,6 +133,9 @@ public:
         std::optional<double> amount
     ) const;
 
+    /**
+     * Shorthand for a call to @c searchTransactions with no provided filters
+     */
     inline std::expected<
         std::vector<const Transaction*>,
         SearchError
