@@ -1,7 +1,7 @@
 #include "include/GUI.h"
 #include "ui_GUI.h"
 #include <QHeaderView>
-
+#include <QFileDialog>
 
 // builds the widget tree
 GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
@@ -22,6 +22,8 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     connect(ui->btnAddTransaction, &QPushButton::clicked, this, &GUI::onAddTransactionClicked);
     connect(ui->btnCancelTransaction, &QPushButton::clicked, this, &GUI::onCancelTransactionClicked);
     connect(ui->comboType, &QComboBox::currentTextChanged, this, &GUI::onTypeChanged);
+    connect(ui->btnBrowseTransactionsFile, &QPushButton::clicked, this, &GUI::onBrowseTransactionsClicked);
+    connect(ui->btnBrowseCategoriesFile, &QPushButton::clicked, this, &GUI::onBrowseCategoriesClicked);
 }
 
 // free ui class mem
@@ -43,3 +45,18 @@ void GUI::onCancelTransactionClicked() {
 void GUI::onTypeChanged(const QString& type) {
     ui->labelExtra->setText(type == "Income" ? "Source:" : "Payment Method:");
 }
+
+
+void GUI::onBrowseTransactionsClicked() {
+    QString path = QFileDialog::getOpenFileName(this, "Select Transactions File", QString(), "JSON files (*.json);;All Files (*)");
+    if (!path.isEmpty()) {
+        ui->inputTransactionsFilePath->setText(path);
+    }
+}
+
+void GUI::onBrowseCategoriesClicked() {
+        QString path = QFileDialog::getOpenFileName(this, "Select Categories File", QString(), "JSON files (*.json);;All Files (*)");
+        if (!path.isEmpty()) {
+            ui->inputCategoriesFilePath->setText(path);
+        }
+    }

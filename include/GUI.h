@@ -2,6 +2,7 @@
 #define EXPENSETRACKER_GUI_H
 
 #include <QWidget>
+#include <QLineEdit>
 
 // GUI.cpp needs the generated header
 QT_BEGIN_NAMESPACE
@@ -27,6 +28,10 @@ private slots:
     void onCancelTransactionClicked();
     // relabels the extra field to match the selected transaction type
     void onTypeChanged(const QString& type);
+    // wiring the Browse files button for Transactions in the main tab
+    void onBrowseTransactionsClicked();
+    // wiring the Browse files button for Categories in the main tab
+    void onBrowseCategoriesClicked();
 
 private:
     Ui::ExpenseTrackerWindow* ui;
