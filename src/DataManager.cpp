@@ -1,8 +1,6 @@
-#include <iostream>
-#include <fstream>
-
 #include "include/DataManager.h"
 
+#include <fstream>
 #include <iomanip>
 
 #include "include/JSON.h"
