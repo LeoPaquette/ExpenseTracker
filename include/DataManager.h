@@ -31,14 +31,14 @@ public:
     DataManager(const std::string &transactionFilePath, const std::string &categoriesFilePath)
         : transactionFilePath(transactionFilePath), categoriesFilePath(categoriesFilePath) {}
 
-    std::optional<DataReadWriteError> saveData(
-        std::vector<std::unique_ptr<Transaction>> transactions,
-        std::vector<std::unique_ptr<Category>> categories
-    ) const;
-
     std::optional<DataReadWriteError> loadData(
         std::vector<std::unique_ptr<Transaction>>& outTransactions,
         std::vector<std::unique_ptr<Category>>& outCategories
+    ) const;
+
+    std::optional<DataReadWriteError> saveData(
+        const std::vector<std::unique_ptr<Transaction>>& transactions,
+        const std::vector<std::unique_ptr<Category>>& categories
     ) const;
 };
 

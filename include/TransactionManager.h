@@ -169,9 +169,23 @@ public:
         std::optional<const string*> endDate
     ) const;
 
+    /**
+     * Uses the provided data manager to load data into the transaction manager.
+     *
+     * @param dataManager The instance of data manager to use to load data.
+     *
+     * @return Returns either the total number of records loaded, or an error.
+     */
     std::expected<int, DataManager::DataReadWriteError> load(const DataManager& dataManager);
 
-    std::expected<int, DataManager::DataReadWriteError> save(const DataManager& dataManager);
+    /**
+     * Uses the provided data manager to save data into the transaction manager.
+     *
+     * @param dataManager The instance of data manager to use to save data.
+     *
+     * @return Returns either the total number of records saved, or an error.
+     */
+    std::expected<int, DataManager::DataReadWriteError> save(const DataManager& dataManager) const;
 };
 
 #endif //EXPENSETRACKER_TRANSACTIONMANAGER_H

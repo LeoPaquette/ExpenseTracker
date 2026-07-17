@@ -429,3 +429,27 @@ no_start_end:
 exit:
     return filtered;
 }
+
+
+std::expected<int, DataManager::DataReadWriteError> TransactionManager::load(const DataManager& dataManager) {
+    if (
+        const auto status = dataManager.loadData(transactions, categories);
+        status.has_value()
+    ) {
+        return std::unexpected(status.value());
+    }
+
+    return transactions.size() + categories.size();
+}
+
+
+std::expected<int, DataManager::DataReadWriteError> TransactionManager::save(const DataManager& dataManager) const {
+    if (
+        const auto status = dataManager.saveData(transactions, categories);
+        status.has_value()
+    ) {
+        return std::unexpected(status.value());
+    }
+
+    return transactions.size() + categories.size();
+}

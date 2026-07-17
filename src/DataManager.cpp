@@ -5,41 +5,6 @@
 
 #include "include/JSON.h"
 
-std::optional<DataManager::DataReadWriteError> DataManager::saveData(
-        std::vector<std::unique_ptr<Transaction>> transactions,
-        std::vector<std::unique_ptr<Category>> categories
-) const {
-    std::ofstream transactionsFile(this->transactionFilePath);
-    if (!transactionsFile.is_open()) {
-        return DataReadWriteError::CANNOT_OPEN_FILE;
-    }
-
-    std::ofstream categoriesFile(this->categoriesFilePath);
-    if (!categoriesFile.is_open()) {
-        transactionsFile.close();
-        return DataReadWriteError::CANNOT_OPEN_FILE;
-    }
-
-    json transactionsJson;
-    for (int i = 0; i < transactions.size(); i++) {
-        transactionsJson.at(i) = transactions.at(i)->toJSON();
-    }
-
-    json categoriesJson;
-    for (int i = 0; i < categories.size(); i++) {
-        categoriesJson.at(i) = categories.at(i)->toJSON();
-    }
-
-    transactionsFile << std::setw(4) << transactionsJson << std::endl;
-    categoriesFile << std::setw(4) << categoriesJson << std::endl;
-
-    transactionsFile.close();
-    categoriesFile.close();
-
-    return std::nullopt;
-}
-
-
 std::optional<DataManager::DataReadWriteError> DataManager::loadData(
         std::vector<std::unique_ptr<Transaction>>& outTransactions,
         std::vector<std::unique_ptr<Category>>& outCategories
@@ -73,5 +38,39 @@ std::optional<DataManager::DataReadWriteError> DataManager::loadData(
     categoriesFile.close();
 
     return std::nullopt;
+}
 
+
+std::optional<DataManager::DataReadWriteError> DataManager::saveData(
+         const std::vector<std::unique_ptr<Transaction>>& transactions,
+         const std::vector<std::unique_ptr<Category>>& categories
+) const {
+    std::ofstream transactionsFile(this->transactionFilePath);
+    if (!transactionsFile.is_open()) {
+        return DataReadWriteError::CANNOT_OPEN_FILE;
+    }
+
+    std::ofstream categoriesFile(this->categoriesFilePath);
+    if (!categoriesFile.is_open()) {
+        transactionsFile.close();
+        return DataReadWriteError::CANNOT_OPEN_FILE;
+    }
+
+    json transactionsJson;
+    for (int i = 0; i < transactions.size(); i++) {
+        transactionsJson.at(i) = transactions.at(i)->toJSON();
+    }
+
+    json categoriesJson;
+    for (int i = 0; i < categories.size(); i++) {
+        categoriesJson.at(i) = categories.at(i)->toJSON();
+    }
+
+    transactionsFile << std::setw(4) << transactionsJson << std::endl;
+    categoriesFile << std::setw(4) << categoriesJson << std::endl;
+
+    transactionsFile.close();
+    categoriesFile.close();
+
+    return std::nullopt;
 }
