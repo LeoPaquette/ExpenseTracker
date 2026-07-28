@@ -4,6 +4,9 @@
 #include <QWidget>
 #include <QLineEdit>
 
+#include "include/TransactionManager.h"
+#include "include/AnalyticsEngine.h"
+
 // GUI.cpp needs the generated header
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -32,9 +35,13 @@ private slots:
     void onBrowseTransactionsClicked();
     // wiring the Browse files button for Categories in the main tab
     void onBrowseCategoriesClicked();
+    // recalculates the analytics tab from the currently loaded data
+    void onRefreshAnalyticsClicked();
 
 private:
     Ui::ExpenseTrackerWindow* ui;
+    TransactionManager transactionManager;
+    AnalyticsEngine<> analyticsEngine;
 };
 
 #endif //EXPENSETRACKER_GUI_H
