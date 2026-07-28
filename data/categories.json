@@ -1,0 +1,17 @@
+[
+  {
+    "categoryId": "CAT-0001",
+    "name": "Food",
+    "monthlyBudget": 500.00
+  },
+  {
+    "categoryId": "CAT-0002",
+    "name": "Rent",
+    "monthlyBudget": 675.00
+  },
+  {
+    "categoryId": "CAT-0003",
+    "name": "Anthropic",
+    "monthlyBudget": 200.00
+  }
+]

@@ -9,6 +9,20 @@ static QString formatCurrency(double value) {
     return QString("$%1").arg(value, 0, 'f', 2);
 }
 
+// turns a data manager error code into something worth showing the user
+static QString dataErrorMessage(DataManager::DataReadWriteError error) {
+    switch (error) {
+        case DataManager::DataReadWriteError::NO_SUCH_TRANSACTION_FILE:
+            return "The transactions file could not be found.";
+        case DataManager::DataReadWriteError::NO_SUCH_CATEGORY_FILE:
+            return "The categories file could not be found.";
+        case DataManager::DataReadWriteError::CANNOT_OPEN_FILE:
+            return "The file couldn't be opened.";
+        default:
+            return "An unknown error occurred while reading the data.";
+    }
+}
+
 // builds the widget tree
 GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     ui->setupUi(this);
@@ -31,9 +45,7 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     connect(ui->btnBrowseTransactionsFile, &QPushButton::clicked, this, &GUI::onBrowseTransactionsClicked);
     connect(ui->btnBrowseCategoriesFile, &QPushButton::clicked, this, &GUI::onBrowseCategoriesClicked);
     connect(ui->btnRefreshAnalytics, &QPushButton::clicked, this, &GUI::onRefreshAnalyticsClicked);
-    // TEMPORARY: seed categories so the analytics tab has something to show
-    transactionManager.addCategory(Category("CAT-0001", "Food", "500"));
-    transactionManager.addCategory(Category("CAT-0002", "Rent", "1500"));
+    connect(ui->btnLoadData, &QPushButton::clicked, this, &GUI::onLoadDataClicked);
 }
 
 // free ui class mem
@@ -97,4 +109,35 @@ void GUI::onRefreshAnalyticsClicked() {
         ui->tableBudgetUsage->setItem(i, 2, new QTableWidgetItem(formatCurrency(row.spent)));
         ui->tableBudgetUsage->setItem(i, 3, new QTableWidgetItem(QString::number(row.usagePercent, 'f', 1) + "%"));
     }
+}
+
+// reads both data files listed on the main tab into the transaction manager
+void GUI::onLoadDataClicked() {
+    const QString transactionsPath = ui->inputTransactionsFilePath->text();
+    const QString categoriesPath = ui->inputCategoriesFilePath->text();
+
+    if (transactionsPath.isEmpty() || categoriesPath.isEmpty()) {
+        QMessageBox::warning(this, "Load Data",
+            "Select both a transactions file and a categories file first.");
+        return;
+    }
+
+    const DataManager dataManager(transactionsPath.toStdString(), categoriesPath.toStdString());
+    try {
+        const auto result = transactionManager.load(dataManager);
+        if (!result.has_value()) {
+            QMessageBox::warning(this, "Load Data", dataErrorMessage(result.error()));
+            return;
+        }
+
+        QMessageBox::information(this, "Load Data",
+                                 QString("Loaded %1 records.").arg(result.value()));
+    } catch (const std::exception& e) {
+        QMessageBox::critical(this, "Load Data",
+                              QString("Failed to read the data files:\n%1").arg(e.what()));
+        return;
+    }
+
+
+    onRefreshAnalyticsClicked();
 }

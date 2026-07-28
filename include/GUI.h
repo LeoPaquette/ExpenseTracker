@@ -37,6 +37,8 @@ private slots:
     void onBrowseCategoriesClicked();
     // recalculates the analytics tab from the currently loaded data
     void onRefreshAnalyticsClicked();
+    // reads both data files listed on the main tab into the transaction manager
+    void onLoadDataClicked();
 
 private:
     Ui::ExpenseTrackerWindow* ui;
