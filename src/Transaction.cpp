@@ -1,4 +1,5 @@
 #include "../include/Transaction.h"
+#include <array>
 #include <regex>
 #include <string>
 #include <cctype>
