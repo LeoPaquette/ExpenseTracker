@@ -139,7 +139,9 @@ public:
     inline std::expected<
         std::vector<const Transaction*>,
         SearchError
-    > getAllTransactions() const;
+    > getAllTransactions() const {
+        return this->searchTransactions(std::nullopt, std::nullopt, std::nullopt);
+    }
 
     /**
      * Returns a vector of all known Categories.

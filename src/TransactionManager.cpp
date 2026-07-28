@@ -361,14 +361,6 @@ std::expected<
 }
 
 
-inline std::expected<
-        std::vector<const Transaction*>,
-        TransactionManager::SearchError
-> TransactionManager::getAllTransactions() const {
-    return this->searchTransactions(std::nullopt, std::nullopt, std::nullopt);
-}
-
-
 std::vector<const Category*> TransactionManager::getAllCategories() const {
     std::vector<const Category*> out(this->categories.size());
 
