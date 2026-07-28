@@ -369,6 +369,17 @@ inline std::expected<
 }
 
 
+std::vector<const Category*> TransactionManager::getAllCategories() const {
+    std::vector<const Category*> out(this->categories.size());
+
+    for (const auto& c : this->categories) {
+        out.push_back(c.get());
+    }
+
+    return out;
+}
+
+
 std::vector<const Transaction*> TransactionManager::filterByCategory(
     const Category& category
 ) const {

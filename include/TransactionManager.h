@@ -142,6 +142,11 @@ public:
     > getAllTransactions() const;
 
     /**
+     * Returns a vector of all known Categories.
+     */
+    std::vector<const Category*> getAllCategories() const;
+
+    /**
      * @brief Returns the stored transactions from the provided category.
      *
      * @param category The category of transactions to retrieve.
