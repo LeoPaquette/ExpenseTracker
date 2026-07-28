@@ -48,6 +48,11 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     connect(ui->btnBrowseCategoriesFile, &QPushButton::clicked, this, &GUI::onBrowseCategoriesClicked);
     connect(ui->btnRefreshAnalytics, &QPushButton::clicked, this, &GUI::onRefreshAnalyticsClicked);
     connect(ui->btnLoadData, &QPushButton::clicked, this, &GUI::onLoadDataClicked);
+    connect(ui->btnCancelCategory, &QPushButton::clicked, this, &GUI::onCancelCategoryClicked);
+    connect(ui->btnClearFilters, &QPushButton::clicked, this, &GUI::onClearFiltersClicked);
+    // the date filter is opt in so we check for a toggled signal, then enable the date slot.
+    connect(ui->chkFilterDate, &QCheckBox::toggled, ui->inputFilterDate, &QDateEdit::setEnabled);
+    ui->inputFilterDate->setEnabled(false);
 }
 
 // free ui class mem
@@ -60,9 +65,26 @@ void GUI::onAddTransactionClicked() const {
     ui->tabWidget->setCurrentWidget(ui->Tab_TransactionForm);
 }
 
-// returns to the main tab without saving
+// returns to the main tab without saving, discarding whatever was typed
 void GUI::onCancelTransactionClicked() const {
+    clearTransactionForm();
     ui->tabWidget->setCurrentWidget(ui->Tab_Main);
+}
+
+// resets the transaction form back to its default state
+void GUI::clearTransactionForm() const {
+    ui->inputTransactionID->clear();
+    ui->inputDate->setDate(QDate::currentDate());
+    ui->inputAmount->clear();
+    ui->inputCategory->clear();
+    ui->inputDescription->clear();
+    ui->inputExtra->clear();
+}
+
+// resets the category form back to its default state
+void GUI::clearCategoryForm() const {
+    ui->inputCategoryName->clear();
+    ui->inputMonthlyBudget->clear();
 }
 
 // relabels the extra field to match the selected transaction type
@@ -70,6 +92,19 @@ void GUI::onTypeChanged(const QString& type) const {
     ui->labelExtra->setText(type == "Income" ? "Source:" : "Payment Method:");
 }
 
+// returns to the main tab without saving the category, discarding whatever was typed
+void GUI::onCancelCategoryClicked() const {
+    clearCategoryForm();
+    ui->tabWidget->setCurrentWidget(ui->Tab_Main);
+}
+
+// clears the filters on the main tab
+void GUI::onClearFiltersClicked() const {
+    ui->chkFilterDate->setChecked(false);
+    ui->inputFilterDate->setDate(QDate::currentDate());
+    ui->inputFilterCategory->clear();
+    ui->inputFilterAmount->clear();
+}
 
 void GUI::onBrowseTransactionsClicked() {
     QString path = QFileDialog::getOpenFileName(this, "Select Transactions File", QString(), "JSON files (*.json);;All Files (*)");

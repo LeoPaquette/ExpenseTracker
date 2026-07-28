@@ -39,10 +39,18 @@ private slots:
     void onRefreshAnalyticsClicked();
     // reads both data files listed on the main tab into the transaction manager
     void onLoadDataClicked();
+    // returns to the main tab WITHOUT saving the category
+    void onCancelCategoryClicked() const;
+    // empties every search/filter input on the main tab
+    void onClearFiltersClicked() const;
 
 private:
     // fills the main tab table from everything currently loaded
     void refreshTransactionsTable();
+    // resets the transaction form back to its default state
+    void clearTransactionForm() const;
+    // resets the category form back to its default state
+    void clearCategoryForm() const;
 
     Ui::ExpenseTrackerWindow* ui;
     TransactionManager transactionManager;
