@@ -147,3 +147,18 @@ json Category::toJSON() const {
 
     return json;
 }
+
+// Equality compares all fields
+bool Category::operator==(const Category& other) const {
+    return categoryID == other.categoryID
+        && name == other.name
+        && monthlyBudget == other.monthlyBudget;
+}
+
+// Friend function writing a category's fields to the given stream
+ostream& operator<<(ostream& os, const Category& c) {
+    os << "Category ID: " << c.categoryID
+       << ", Name: " << c.name
+       << ", Monthly Budget: " << c.monthlyBudget;
+    return os;
+}
