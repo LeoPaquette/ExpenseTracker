@@ -3,6 +3,8 @@
 #include <QHeaderView>
 #include <QFileDialog>
 #include <QMessageBox>
+#include "include/Expense.h"
+#include "include/Income.h"
 
 // formats a monetary value the way the analytics tab displays it
 static QString formatCurrency(double value) {
@@ -111,10 +113,46 @@ void GUI::onRefreshAnalyticsClicked() {
     }
 }
 
+// fills the main tab table from everything currently loaded. private helper so theres no slot that ->
+// needs to be allocated for it since its called through onLoadDataClicked
+void GUI::refreshTransactionsTable() {
+    const auto searchResult = transactionManager.getAllTransactions();
+    if (!searchResult.has_value()) {
+        QMessageBox::warning(this, "Transactions", "Could not read the loaded transactions.");
+        return;
+    }
+    const std::vector<const Transaction*>& transactions = searchResult.value();
+
+    ui->tableTransactions->setRowCount(static_cast<int>(transactions.size())); // allocate the correct amount of rows based on our transactions
+    for (int i = 0; i < static_cast<int>(transactions.size()); i++) {
+        const Transaction* t = transactions.at(i);
+
+        QString type;
+        QString extra; // wheere extra is just the payment method
+        if (const auto* expense = dynamic_cast<const Expense*>(t)) { //downcast, find out if transaction* is actually pointing at an expense
+            type = "Expense";
+            extra = QString::fromStdString(expense->getPaymentMethod());
+        } else if (const auto* income = dynamic_cast<const Income*>(t)) {
+            type = "Income";
+            extra = QString::fromStdString(income->getSource());
+        }
+
+        // populate data in each visible column in the main tab
+        ui->tableTransactions->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(t->getTransactionID())));
+        ui->tableTransactions->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(t->getDate())));
+        ui->tableTransactions->setItem(i, 2, new QTableWidgetItem(formatCurrency(t->getAmount())));
+        ui->tableTransactions->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(t->getCategory())));
+        ui->tableTransactions->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(t->getDescription())));
+        ui->tableTransactions->setItem(i, 5, new QTableWidgetItem(type));
+        ui->tableTransactions->setItem(i, 6, new QTableWidgetItem(extra));
+    }
+}
+
+
 // reads both data files listed on the main tab into the transaction manager
 void GUI::onLoadDataClicked() {
-    const QString transactionsPath = ui->inputTransactionsFilePath->text();
-    const QString categoriesPath = ui->inputCategoriesFilePath->text();
+    const QString transactionsPath = ui->inputTransactionsFilePath->text(); // load transaction file from this location
+    const QString categoriesPath = ui->inputCategoriesFilePath->text(); // load category file from this location
 
     if (transactionsPath.isEmpty() || categoriesPath.isEmpty()) {
         QMessageBox::warning(this, "Load Data",
@@ -130,14 +168,13 @@ void GUI::onLoadDataClicked() {
             return;
         }
 
-        QMessageBox::information(this, "Load Data",
-                                 QString("Loaded %1 records.").arg(result.value()));
+        QMessageBox::information(this, "Load Data", QString("Loaded %1 records.").arg(result.value())); // total num of transactions & categories
     } catch (const std::exception& e) {
-        QMessageBox::critical(this, "Load Data",
-                              QString("Failed to read the data files:\n%1").arg(e.what()));
+        QMessageBox::critical(this, "Load Data", QString("Failed to read the data files:\n%1").arg(e.what()));
         return;
     }
 
 
+    refreshTransactionsTable();
     onRefreshAnalyticsClicked();
 }

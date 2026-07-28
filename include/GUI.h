@@ -41,6 +41,9 @@ private slots:
     void onLoadDataClicked();
 
 private:
+    // fills the main tab table from everything currently loaded
+    void refreshTransactionsTable();
+
     Ui::ExpenseTrackerWindow* ui;
     TransactionManager transactionManager;
     AnalyticsEngine<> analyticsEngine;

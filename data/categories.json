@@ -13,5 +13,10 @@
     "categoryId": "CAT-0003",
     "name": "Anthropic",
     "monthlyBudget": 200.00
+  },
+  {
+    "categoryId": "CAT-0004",
+    "name": "Travel",
+    "monthlyBudget": 400.00
   }
 ]
