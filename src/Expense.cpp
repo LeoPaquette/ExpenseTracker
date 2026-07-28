@@ -11,7 +11,7 @@ bool Expense::isValidPaymentMethod(const string& method) {
 }
 
 // Constructor validating the payment method before delegating to Transaction
-Expense::Expense(const string &id, const string &date, const string &amount, const string &category, const string &description, const string &paymentMethod)
+Expense::Expense(const string &id, const string &date, double amount, const string &category, const string &description, const string &paymentMethod)
     :Transaction(id, date, amount, category, description) {
     if (!isValidPaymentMethod(paymentMethod)) {
         throw invalid_argument("Invalid payment method");
@@ -89,7 +89,7 @@ std::unique_ptr<Expense> Expense::fromJSON(const json& json) {
     return std::unique_ptr<Expense>(new Expense(
         transactionId,
         date,
-        amount,
+        amount.get<double>(),
         category,
         description,
         paymentMethod

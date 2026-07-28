@@ -19,7 +19,7 @@ protected:
     // Helper function for checking ID
     static bool isValidID(const string& id);
     // Helper function for checking amount limits
-    static bool isValidAmount(const string& amount);
+    static bool isValidAmount(double amount);
     // Helper function for checking category
     static bool isValidCategory(const string& category);
     // Helper function for checking description
@@ -29,7 +29,7 @@ protected:
 
 public:
     // Constructor validating and trimming all fields before assignment
-    Transaction(const string& id, const string& date, const string& amount, const string& category, const string& description);
+    Transaction(const string& id, const string& date, double amount, const string& category, const string& description);
     // Destructor
     virtual ~Transaction();
 

@@ -16,7 +16,7 @@ protected:
 
 public:
     // Constructor validating the source before delegating to Transaction
-    Income(const string& id, const string& date, const string& amount, const string& category, const string& description, const string& source);
+    Income(const string& id, const string& date, double amount, const string& category, const string& description, const string& source);
     // Destructor
     ~Income() override;
 

@@ -15,7 +15,7 @@ protected:
     static bool isValidPaymentMethod(const string& method);
 public:
     // Constructor validating the payment method before delegating to Transaction
-    Expense(const string& id, const string& date, const string& amount, const string& category, const string& description, const string& paymentMethod);
+    Expense(const string& id, const string& date, double amount, const string& category, const string& description, const string& paymentMethod);
     // Destructor
     ~Expense() override;
 

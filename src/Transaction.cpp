@@ -1,11 +1,10 @@
 #include "../include/Transaction.h"
 #include <regex>
 #include <string>
-#include <algorithm>
 #include <cctype>
 
-#include "include/Expense.h"
-#include "include/Income.h"
+#include "../include/Expense.h"
+#include "../include/Income.h"
 
 using namespace std;
 
@@ -55,33 +54,8 @@ bool Transaction::isValidDate(const string& date) {
 }
 
 // Helper function for checking amount limits
-bool Transaction::isValidAmount(const string& amount) {
-    string trimmed = trim(amount);
-    if (trimmed.empty()) {
-        return false;
-    }
-
-    // Only digits and a single decimal point are allowed
-    size_t i = 0;
-    bool hasDigit = false;
-    bool hasDecimalPoint = false;
-    for (; i < trimmed.length(); i++) {
-        char c = trimmed[i];
-        if (isdigit(c)) {
-            hasDigit = true;
-        } else if (c == '.' && !hasDecimalPoint) {
-            hasDecimalPoint = true;
-        } else {
-            return false;
-        }
-    }
-    if (!hasDigit) {
-        return false;
-    }
-
-    // Enforce the allowed transaction amount range
-    double value = stod(trimmed);
-    return value > 0.0 && value <= 1000000.0;
+bool Transaction::isValidAmount(double amount) {
+    return amount > 0.0 && amount <= 1000000.0;
 }
 
 // Helper function for checking category
@@ -117,11 +91,10 @@ string Transaction::trim(const string& s) {
 }
 
 // Constructor validating and trimming all fields before assignment
-Transaction::Transaction(const string& id, const string& date, const string& amount,
+Transaction::Transaction(const string& id, const string& date, double amount,
                          const string& category, const string& description) {
     string trimmedID = trim(id);
     string trimmedDate = trim(date);
-    string trimmedAmount = trim(amount);
     string trimmedCategory = trim(category);
     string trimmedDescription = trim(description);
 
@@ -132,7 +105,7 @@ Transaction::Transaction(const string& id, const string& date, const string& amo
     if (!isValidDate(trimmedDate)) {
         throw invalid_argument("Invalid date. Expected a real, non-future date in YYYY-MM-DD.");
     }
-    if (!isValidAmount(trimmedAmount)) {
+    if (!isValidAmount(amount)) {
         throw invalid_argument("Invalid amount. Must be a number between 0 and 1,000,000.");
     }
     if (!isValidCategory(trimmedCategory)) {
@@ -143,7 +116,7 @@ Transaction::Transaction(const string& id, const string& date, const string& amo
     }
     transactionID = trimmedID;
     this->date = trimmedDate;
-    this->amount = stod(trimmedAmount);
+    this->amount = amount;
     this->category = trimmedCategory;
     this->description = trimmedDescription;
 }

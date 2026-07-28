@@ -11,7 +11,7 @@ bool Income::isValidSource(const string& src) {
 }
 
 // Constructor validating the source before delegating to Transaction
-Income::Income(const string& id, const string& date, const string& amount, const string& category, const string& description, const string& source)
+Income::Income(const string& id, const string& date, double amount, const string& category, const string& description, const string& source)
     : Transaction(id, date, amount, category, description) {
     if (!isValidSource(source)) {
         throw invalid_argument("Invalid income source. Must be 1-30 characters.");
@@ -91,7 +91,7 @@ std::unique_ptr<Income> Income::fromJSON(const json& json) {
     return std::unique_ptr<Income>(new Income(
         transactionId,
         date,
-        amount,
+        amount.get<double>(),
         category,
         description,
         source
