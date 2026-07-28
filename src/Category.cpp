@@ -19,31 +19,8 @@ bool Category::isValidName(const string& name) {
 }
 
 // Helper function for checking monthly budget
-bool Category::isValidBudget(const string& budget) {
-    string trimmed = trim(budget);
-    if (trimmed.empty()) {
-        return false;
-    }
-
-    // Only digits and a single decimal point are allowed
-    bool hasDigit = false;
-    bool hasDecimalPoint = false;
-    for (char c : trimmed) {
-        if (isdigit(c)) {
-            hasDigit = true;
-        } else if (c == '.' && !hasDecimalPoint) {
-            hasDecimalPoint = true;
-        } else {
-            return false;
-        }
-    }
-    if (!hasDigit) {
-        return false;
-    }
-
-    // Enforce the allowed budget range
-    double value = stod(trimmed);
-    return value > 0.0 && value <= 1000000.0;
+bool Category::isValidBudget(double budget) {
+    return budget > 0.0 && budget <= 1000000.0;
 }
 
 // Helper function for trimming strings
@@ -55,10 +32,9 @@ string Category::trim(const string& s) {
 }
 
 // Constructor validating and trimming all fields before assignment
-Category::Category(const string& categoryID, const string& name, const string& monthlyBudget) {
+Category::Category(const string& categoryID, const string& name, double monthlyBudget) {
     string trimmedID = trim(categoryID);
     string trimmedName = trim(name);
-    string trimmedBudget = trim(monthlyBudget);
 
     // Validate each field individually so the error message identifies which one failed
     if (!isValidID(trimmedID)) {
@@ -67,13 +43,13 @@ Category::Category(const string& categoryID, const string& name, const string& m
     if (!isValidName(trimmedName)) {
         throw invalid_argument("Invalid category name. Must be 1-30 characters.");
     }
-    if (!isValidBudget(trimmedBudget)) {
+    if (!isValidBudget(monthlyBudget)) {
         throw invalid_argument("Invalid monthly budget. Must be a number between 0 and 1,000,000.");
     }
 
     this->categoryID = trimmedID;
     this->name = trimmedName;
-    this->monthlyBudget = stod(trimmedBudget);
+    this->monthlyBudget = monthlyBudget;
 }
 
 // Destructor
@@ -159,7 +135,7 @@ std::unique_ptr<Category> Category::fromJSON(const json& json) {
         throw invalid_argument("Invalid monthly budget. Must be a float/double.");
     }
 
-    return std::unique_ptr<Category>(new Category(categoryId, name, monthlyBudget));
+    return std::unique_ptr<Category>(new Category(categoryId, name, monthlyBudget.get<double>()));
 }
 
 json Category::toJSON() const {

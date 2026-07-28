@@ -19,13 +19,13 @@ protected:
     // Helper function for checking name
     static bool isValidName(const string& name);
     // Helper function for checking monthly budget
-    static bool isValidBudget(const string& budget);
+    static bool isValidBudget(double budget);
     // Helper function for trimming strings
     static string trim(const string& s);
 
 public:
     // Constructor validating and trimming all fields before assignment
-    Category(const string& categoryID, const string& name, const string& monthlyBudget);
+    Category(const string& categoryID, const string& name, double monthlyBudget);
     // Destructor
     ~Category();
 
