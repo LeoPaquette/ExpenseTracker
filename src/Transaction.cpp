@@ -30,7 +30,7 @@ bool Transaction::isValidDate(const string& date) {
     }
 
     // Days per month, adjusted for leap years
-    static const int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    static const std::array daysInMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     bool isLeapYear = (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     int maxDays = daysInMonth[month - 1];
     if (isLeapYear && month == 2) {
