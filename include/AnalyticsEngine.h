@@ -1,7 +1,6 @@
 #ifndef EXPENSETRACKER_ANALYTICSENGINE_H
 #define EXPENSETRACKER_ANALYTICSENGINE_H
 
-#include <functional>
 #include <vector>
 
 #include "Transaction.h"
@@ -19,27 +18,38 @@ public:
      * anything where computeImpact() is true counts as an expense.
      * feed it whatever searchTransactions() or filterByDateRange() gives back.
      */
-    T computeTotalExpenses(const vector<reference_wrapper<const Transaction>>& transactions) const {
+    T computeTotalExpenses(const std::vector<const Transaction*>& transactions) const {
         T total{};
-        for (const Transaction& t : transactions) {
-            if (t.computeImpact()) {
-                total += static_cast<T>(t.getAmount());
+        for (const Transaction* t : transactions) {
+            if (t->computeImpact()) {
+                total += (t->getAmount());
             }
         }
         return total;
     }
 
-    T computeTotalIncome() const {
-
-        return computeTotalIncome(T{});
+    T computeTotalIncome(const std::vector<const Transaction*>& transactions) const {
+        T total{};
+        for (const Transaction* t : transactions) {
+            if (!t->computeImpact()) {
+                total += (t->getAmount());
+            }
+        }
+        return total;
     }
-    T computeSavings() const {
 
-        return computeSavings(T{});
+    T computeSavings(const std::vector<const Transaction*>& transactions) const {
+    return computeTotalIncome(transactions) - computeTotalExpenses(transactions);
     }
-    void computeCategorySpending() const {
 
-        return computeCategorySpending(T{});
+    std::map<std::string, T> computeCategorySpending(const std::vector<const Transaction*>& transactions) const {
+        std::map<std::string, T> spending;
+        for (const Transaction* t : transactions) {
+            if (t->computeImpact()) {
+                spending[t->getCategory()] += static_cast<T>(t->getAmount());
+            }
+        }
+        return spending;
     }
     void computeBudgetUsage() const {
 
