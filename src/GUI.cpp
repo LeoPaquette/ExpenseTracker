@@ -42,17 +42,17 @@ GUI::~GUI() {
 }
 
 // jumps to the transaction form tab
-void GUI::onAddTransactionClicked() {
+void GUI::onAddTransactionClicked() const {
     ui->tabWidget->setCurrentWidget(ui->Tab_TransactionForm);
 }
 
 // returns to the main tab without saving
-void GUI::onCancelTransactionClicked() {
+void GUI::onCancelTransactionClicked() const {
     ui->tabWidget->setCurrentWidget(ui->Tab_Main);
 }
 
 // relabels the extra field to match the selected transaction type
-void GUI::onTypeChanged(const QString& type) {
+void GUI::onTypeChanged(const QString& type) const {
     ui->labelExtra->setText(type == "Income" ? "Source:" : "Payment Method:");
 }
 
@@ -73,7 +73,7 @@ void GUI::onBrowseCategoriesClicked() {
 
 // recalculates the analytics tab from the currently loaded data
 void GUI::onRefreshAnalyticsClicked() {
-    const auto searchResult = transactionManager.searchTransactions(std::nullopt, std::nullopt, std::nullopt);
+    const auto searchResult = transactionManager.getAllTransactions();
     if (!searchResult.has_value()) {
         QMessageBox::warning(this, "Analytics", "Could not read the loaded transactions.");
         return;

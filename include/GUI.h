@@ -26,11 +26,11 @@ public:
 
 private slots:
     // jumps to the transaction form tab
-    void onAddTransactionClicked();
+    void onAddTransactionClicked() const;
     // returns to the main tab WITHOUT saving
-    void onCancelTransactionClicked();
+    void onCancelTransactionClicked() const;
     // relabels the extra field to match the selected transaction type
-    void onTypeChanged(const QString& type);
+    void onTypeChanged(const QString& type) const;
     // wiring the Browse files button for Transactions in the main tab
     void onBrowseTransactionsClicked();
     // wiring the Browse files button for Categories in the main tab
