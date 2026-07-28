@@ -155,7 +155,7 @@ std::unique_ptr<Category> Category::fromJSON(const json& json) {
     }
 
     const auto monthlyBudget = json.at("monthlyBudget");
-    if (!categoryId.is_number_float()) {
+    if (!monthlyBudget.is_number_float()) {
         throw invalid_argument("Invalid monthly budget. Must be a float/double.");
     }
 
