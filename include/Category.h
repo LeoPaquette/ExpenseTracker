@@ -49,5 +49,10 @@ public:
     static std::unique_ptr<Category> fromJSON(const json& json);
 
     json toJSON() const;
+
+    // Equality compares all fields
+    bool operator==(const Category& other) const;
+    // Friend so it can write the private fields directly to any stream
+    friend ostream& operator<<(ostream& os, const Category& c);
 };
 #endif //EXPENSETRACKER_CATEGORY_H
