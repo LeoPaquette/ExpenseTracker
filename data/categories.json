@@ -1,27 +1,27 @@
 [
-  {
-    "categoryId": "CAT-0001",
-    "name": "Food",
-    "monthlyBudget": 500.00
-  },
-  {
-    "categoryId": "CAT-0002",
-    "name": "Rent",
-    "monthlyBudget": 675.00
-  },
-  {
-    "categoryId": "CAT-0003",
-    "name": "Anthropic",
-    "monthlyBudget": 200.00
-  },
-  {
-    "categoryId": "CAT-0004",
-    "name": "Travel",
-    "monthlyBudget": 400.00
-  },
-  {
-    "categoryId": "CAT-0005",
-    "name": "Adult",
-    "monthlyBudget": 1200.00
-  }
+    {
+        "categoryId": "CAT-0001",
+        "monthlyBudget": 500.0,
+        "name": "Food"
+    },
+    {
+        "categoryId": "CAT-0002",
+        "monthlyBudget": 675.0,
+        "name": "Rent"
+    },
+    {
+        "categoryId": "CAT-0003",
+        "monthlyBudget": 200.0,
+        "name": "Anthropic"
+    },
+    {
+        "categoryId": "CAT-0004",
+        "monthlyBudget": 400.0,
+        "name": "Travel"
+    },
+    {
+        "categoryId": "CAT-0005",
+        "monthlyBudget": 1200.0,
+        "name": "Adult"
+    }
 ]

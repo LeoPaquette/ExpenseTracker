@@ -39,6 +39,8 @@ private slots:
     void onRefreshAnalyticsClicked();
     // reads both data files listed on the main tab into the transaction manager
     void onLoadDataClicked();
+    // writes everything currently in memory out to both data files listed on the main tab
+    void onSaveDataClicked();
     // returns to the main tab WITHOUT saving the category
     void onCancelCategoryClicked() const;
     // empties every search/filter input on the main tab

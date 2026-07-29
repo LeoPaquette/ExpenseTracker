@@ -1,56 +1,56 @@
 [
-  {
-    "__type": 1,
-    "transactionId": "TRX-0001",
-    "date": "2026-07-01",
-    "amount": 120.50,
-    "category": "Food",
-    "description": "groceries",
-    "paymentMethod": "Debit"
-  },
-  {
-    "__type": 1,
-    "transactionId": "TRX-0002",
-    "date": "2026-07-05",
-    "amount": 100.69,
-    "category": "Food",
-    "description": "Dinner with wife",
-    "paymentMethod": "Credit"
-  },
-  {
-    "__type": 1,
-    "transactionId": "TRX-0003",
-    "date": "2026-07-01",
-    "amount": 675.00,
-    "category": "Rent",
-    "description": "July rent payment",
-    "paymentMethod": "Bank Transfer"
-  },
-  {
-    "__type": 2,
-    "transactionId": "TRX-0004",
-    "date": "2026-07-01",
-    "amount": 2553.67,
-    "category": "Salary",
-    "description": "Monthly stimmy cheque",
-    "source": "Government"
-  },
-  {
-    "__type": 1,
-    "transactionId": "TRX-0004",
-    "date": "2026-07-26",
-    "amount": 167.54,
-    "category": "Anthropic",
-    "description": "August second hand thinking payment so I can complete schoolwork",
-    "paymentMethod": "Credit"
-  },
-  {
-    "__type": 1,
-    "transactionId": "TRX-0005",
-    "date": "2026-07-26",
-    "amount": 667.69,
-    "category": "Adult",
-    "description": "Monthly OnlyFans subscriptions",
-    "paymentMethod": "Credit"
-  }
+    {
+        "__type": 1,
+        "amount": 120.5,
+        "category": "Food",
+        "date": "2026-07-01",
+        "description": "groceries",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0001"
+    },
+    {
+        "__type": 1,
+        "amount": 100.69,
+        "category": "Food",
+        "date": "2026-07-05",
+        "description": "Dinner with wife",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0002"
+    },
+    {
+        "__type": 1,
+        "amount": 675.0,
+        "category": "Rent",
+        "date": "2026-07-01",
+        "description": "July rent payment",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0003"
+    },
+    {
+        "__type": 2,
+        "amount": 2553.67,
+        "category": "Salary",
+        "date": "2026-07-01",
+        "description": "Monthly stimmy cheque",
+        "source": "Government",
+        "transactionId": "TRX-0004"
+    },
+    {
+        "__type": 1,
+        "amount": 167.54,
+        "category": "Anthropic",
+        "date": "2026-07-26",
+        "description": "August second hand thinking payment so I can complete schoolwork",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0004"
+    },
+    {
+        "__type": 1,
+        "amount": 667.69,
+        "category": "Adult",
+        "date": "2026-07-26",
+        "description": "Monthly OnlyFans subscriptions",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0005"
+    }
 ]

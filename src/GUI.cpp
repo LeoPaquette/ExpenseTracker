@@ -48,6 +48,7 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     connect(ui->btnBrowseCategoriesFile, &QPushButton::clicked, this, &GUI::onBrowseCategoriesClicked);
     connect(ui->btnRefreshAnalytics, &QPushButton::clicked, this, &GUI::onRefreshAnalyticsClicked);
     connect(ui->btnLoadData, &QPushButton::clicked, this, &GUI::onLoadDataClicked);
+    connect(ui->btnSaveData, &QPushButton::clicked, this, &GUI::onSaveDataClicked);
     connect(ui->btnCancelCategory, &QPushButton::clicked, this, &GUI::onCancelCategoryClicked);
     connect(ui->btnClearFilters, &QPushButton::clicked, this, &GUI::onClearFiltersClicked);
     // the date filter is opt in so we check for a toggled signal, then enable the date slot.
@@ -212,4 +213,30 @@ void GUI::onLoadDataClicked() {
 
     refreshTransactionsTable();
     onRefreshAnalyticsClicked();
+}
+
+// writes everything currently in memory out to both data files listed on the main tab
+void GUI::onSaveDataClicked() {
+    const QString transactionsPath = ui->inputTransactionsFilePath->text(); // write transactions to this location
+    const QString categoriesPath = ui->inputCategoriesFilePath->text(); // write categories to this location
+
+    if (transactionsPath.isEmpty() || categoriesPath.isEmpty()) {
+        QMessageBox::warning(this, "Save Data",
+            "Select both a transactions file and a categories file first.");
+        return;
+    }
+
+    const DataManager dataManager(transactionsPath.toStdString(), categoriesPath.toStdString());
+    try {
+        const auto result = transactionManager.save(dataManager);
+        if (!result.has_value()) {
+            // a read only or locked file lands here as CANNOT_OPEN_FILE
+            QMessageBox::warning(this, "Save Data", dataErrorMessage(result.error()));
+            return;
+        }
+
+        QMessageBox::information(this, "Save Data", QString("Saved %1 records.").arg(result.value())); // total num of transactions & categories
+    } catch (const std::exception& e) {
+        QMessageBox::critical(this, "Save Data", QString("Failed to write the data files:\n%1").arg(e.what()));
+    }
 }
