@@ -31,12 +31,24 @@ public:
     void displayTransaction() const override;
 
     /**
-     * TODO: Document
+     * @brief Constructs an @c Income from its JSON representation.
+     *
+     * Validates the type of each expected field before building the object.
+     *
+     * @param json The JSON object to deserialize.
+     *
+     * @return A newly created @c Income.
+     *
+     * @throws std::invalid_argument If any field is missing or has the wrong type.
      */
     static std::unique_ptr<Income> fromJSON(const json& json);
 
     /**
-     * TODO: Document
+     * @brief Serializes this income into a JSON object.
+     *
+     * Extends @c Transaction::toJSON with the @c __type discriminator (@c 2) and the source.
+     *
+     * @return A JSON object representing this income.
      */
     json toJSON() const override;
 };

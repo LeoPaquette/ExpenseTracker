@@ -10,7 +10,10 @@
 #include "include/Transaction.h"
 
 /**
- * TODO: Document
+ * @brief Persists transactions and categories to and from JSON files.
+ *
+ * Reads and writes the two configured files (one for transactions, one for categories),
+ * serializing each record via its @c toJSON / @c fromJSON methods.
  */
 class DataManager {
     const std::string transactionFilePath;
@@ -18,7 +21,7 @@ class DataManager {
 
 public:
     /**
-     * TODO: Document
+     * @brief The errors which can occur while reading or writing the data files.
      */
     enum class DataReadWriteError {
         /** @brief Indicates an unknown, unexpected internal error. */
@@ -35,13 +38,24 @@ public:
     };
 
     /**
-     * TODO: Document
+     * @brief Constructs a data manager bound to the given file paths.
+     *
+     * @param transactionFilePath The path to the JSON file used for transactions.
+     * @param categoriesFilePath  The path to the JSON file used for categories.
      */
     DataManager(const std::string& transactionFilePath, const std::string& categoriesFilePath)
         : transactionFilePath(transactionFilePath), categoriesFilePath(categoriesFilePath) {}
 
     /**
-     * TODO: Document
+     * @brief Loads transactions and categories from the configured files.
+     *
+     * Both output vectors are cleared and repopulated from the parsed JSON. On failure the
+     * outputs are left unchanged.
+     *
+     * @param outTransactions Destination vector for the loaded transactions.
+     * @param outCategories   Destination vector for the loaded categories.
+     *
+     * @return @c std::nullopt on success, or a @c DataReadWriteError describing the failure.
      */
     std::optional<DataReadWriteError> loadData(
         std::vector<std::unique_ptr<Transaction>>& outTransactions,
@@ -49,7 +63,14 @@ public:
     ) const;
 
     /**
-     * TODO: Document
+     * @brief Saves the given transactions and categories to the configured files.
+     *
+     * Each record is serialized via its @c toJSON method and written as pretty-printed JSON.
+     *
+     * @param transactions The transactions to write.
+     * @param categories   The categories to write.
+     *
+     * @return @c std::nullopt on success, or a @c DataReadWriteError describing the failure.
      */
     std::optional<DataReadWriteError> saveData(
         const std::vector<std::unique_ptr<Transaction>>& transactions,

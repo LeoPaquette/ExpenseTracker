@@ -23,36 +23,58 @@
     )
 
 /**
- * TODO: Document
+ * @brief Owns and manages the application's transactions and categories.
+ *
+ * Acts as the central in-memory store for the expense tracker. It provides operations to add,
+ * edit, delete, search and filter transactions and categories, and delegates persistence to a
+ * @c DataManager via @c load and @c save.
  */
 class TransactionManager {
     /**
-     * TODO: Document
+     * @brief The transactions currently held in memory, each uniquely owned.
      */
     std::vector<std::unique_ptr<Transaction>> transactions;
 
     /**
-     * TODO: Document
+     * @brief The categories currently held in memory, each uniquely owned.
      */
     std::vector<std::unique_ptr<Category>> categories;
 
     /**
-     * TODO: Document
+     * @brief Finds a stored category by its ID.
+     *
+     * @param id The ID of the category to find.
+     *
+     * @return A non-owning pointer to the matching category, or @c nullptr if none matched.
      */
     Category* tryGetCategoryById(const string& id);
 
     /**
-     * TODO: Document
+     * @brief Finds a stored category by its name.
+     *
+     * @param name The name of the category to find.
+     *
+     * @return A non-owning pointer to the matching category, or @c nullptr if none matched.
      */
     Category* tryGetCategoryByName(const string& name);
 
     /**
-     * TODO: Document
+     * @brief Finds a stored transaction by its ID.
+     *
+     * @param id The ID of the transaction to find.
+     *
+     * @return A non-owning pointer to the matching transaction, or @c nullptr if none matched.
      */
     Transaction* tryGetTransactionById(const string& id);
 
     /**
-     * TODO: Document
+     * @brief Finds the first stored transaction belonging to the given category.
+     *
+     * The category name is compared case-insensitively.
+     *
+     * @param category The category name to match against.
+     *
+     * @return A non-owning pointer to the first matching transaction, or @c nullptr if none matched.
      */
     Transaction* tryGetFirstTransactionByCategory(const string& category);
 
@@ -78,22 +100,22 @@ public:
     };
 
     /**
-     * TODO: Document
+     * @brief Constructs an empty manager with no transactions or categories.
      */
     TransactionManager();
 
     /**
-     * TODO: Document
+     * @brief Destroys the manager, releasing all owned transactions and categories.
      */
     ~TransactionManager() = default;
 
     /**
-     * TODO: Document (copy)
+     * @brief Copy-constructs a manager from another (compiler-generated member-wise copy).
      */
     TransactionManager(const TransactionManager&) = default;
 
     /**
-     * TODO: Document (copy assignment)
+     * @brief Copy-assigns from another manager (compiler-generated member-wise copy).
      */
     TransactionManager& operator=(const TransactionManager&) = default;
 
@@ -190,7 +212,6 @@ public:
             return;
         }
 
-        // TODO: This
         throw std::runtime_error("Transaction type handling unimplemented!");
     }
 

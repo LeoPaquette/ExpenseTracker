@@ -30,12 +30,25 @@ public:
     void displayTransaction() const override;
 
     /**
-     * TODO: Document
+     * @brief Constructs an @c Expense from its JSON representation.
+     *
+     * Validates the type of each expected field before building the object.
+     *
+     * @param json The JSON object to deserialize.
+     *
+     * @return A newly created @c Expense.
+     *
+     * @throws std::invalid_argument If any field is missing or has the wrong type.
      */
     static std::unique_ptr<Expense> fromJSON(const json& json);
 
     /**
-     * TODO: Document
+     * @brief Serializes this expense into a JSON object.
+     *
+     * Extends @c Transaction::toJSON with the @c __type discriminator (@c 1) and the
+     * payment method.
+     *
+     * @return A JSON object representing this expense.
      */
     json toJSON() const override;
 };

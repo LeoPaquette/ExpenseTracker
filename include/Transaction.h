@@ -67,12 +67,27 @@ public:
     friend ostream& operator<<(ostream& os, const Transaction& t);
 
     /**
-     * TODO: Document
+     * @brief Constructs a concrete transaction from its JSON representation.
+     *
+     * Reads the @c __type discriminator and dispatches to the matching subclass factory:
+     * @c 1 produces an @c Expense, @c 2 produces an @c Income.
+     *
+     * @param json The JSON object to deserialize.
+     *
+     * @return A newly created transaction of the appropriate type, or @c nullptr if the
+     *         type is unrecognized.
+     *
+     * @throws std::invalid_argument If @c __type is missing or not a number.
      */
     static std::unique_ptr<Transaction> fromJSON(const json& json);
 
     /**
-     * TODO: Document
+     * @brief Serializes the shared transaction fields into a JSON object.
+     *
+     * Writes the transaction ID, date, amount, category and description. Subclasses override
+     * this to append their own fields and the @c __type discriminator.
+     *
+     * @return A JSON object representing this transaction.
      */
     virtual json toJSON() const;
 };

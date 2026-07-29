@@ -47,12 +47,24 @@ public:
     void displayCategorySummary(double amountSpent) const;
 
     /**
-     * TODO: Document
+     * @brief Constructs a @c Category from its JSON representation.
+     *
+     * Validates the type of each expected field before building the object.
+     *
+     * @param json The JSON object to deserialize.
+     *
+     * @return A newly created @c Category.
+     *
+     * @throws std::invalid_argument If any field is missing or has the wrong type.
      */
     static std::unique_ptr<Category> fromJSON(const json& json);
 
     /**
-     * TODO: Document
+     * @brief Serializes this category into a JSON object.
+     *
+     * Writes the category ID, name and monthly budget.
+     *
+     * @return A JSON object representing this category.
      */
     json toJSON() const;
 
