@@ -185,6 +185,20 @@ void GUI::refreshTransactionsTable() {
 }
 
 
+// fills the category tab table from everything currently loaded
+void GUI::refreshCategoriesTable() {
+    const std::vector<const Category*> categories = transactionManager.getAllCategories();
+
+    ui->tableCategories->setRowCount(static_cast<int>(categories.size())); // allocate the correct amount of rows based on our categories
+    for (int i = 0; i < static_cast<int>(categories.size()); i++) {
+        const Category* c = categories.at(i);
+
+        ui->tableCategories->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(c->getName())));
+        ui->tableCategories->setItem(i, 1, new QTableWidgetItem(formatCurrency(c->getMonthlyBudget())));
+    }
+}
+
+
 // reads both data files listed on the main tab into the transaction manager
 void GUI::onLoadDataClicked() {
     const QString transactionsPath = ui->inputTransactionsFilePath->text(); // load transaction file from this location
@@ -212,6 +226,7 @@ void GUI::onLoadDataClicked() {
 
 
     refreshTransactionsTable();
+    refreshCategoriesTable();
     onRefreshAnalyticsClicked();
 }
 

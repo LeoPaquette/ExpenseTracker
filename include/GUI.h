@@ -49,6 +49,8 @@ private slots:
 private:
     // fills the main tab table from everything currently loaded
     void refreshTransactionsTable();
+    // fills the category tab table from everything currently loaded
+    void refreshCategoriesTable();
     // resets the transaction form back to its default state
     void clearTransactionForm() const;
     // resets the category form back to its default state
