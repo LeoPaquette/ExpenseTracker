@@ -66,8 +66,14 @@ public:
     // Friend so it can write the protected fields directly to any stream
     friend ostream& operator<<(ostream& os, const Transaction& t);
 
+    /**
+     * TODO: Document
+     */
     static std::unique_ptr<Transaction> fromJSON(const json& json);
 
+    /**
+     * TODO: Document
+     */
     virtual json toJSON() const;
 };
 #endif //EXPENSETRACKER_TRANSACTION_H

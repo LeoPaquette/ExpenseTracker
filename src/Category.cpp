@@ -141,9 +141,9 @@ std::unique_ptr<Category> Category::fromJSON(const json& json) {
 json Category::toJSON() const {
     json json;
 
-    json.at("categoryId") = this->categoryID;
-    json.at("name") = this->name;
-    json.at("monthlyBudget") = this->monthlyBudget;
+    json["categoryId"] = this->categoryID;
+    json["name"] = this->name;
+    json["monthlyBudget"] = this->monthlyBudget;
 
     return json;
 }

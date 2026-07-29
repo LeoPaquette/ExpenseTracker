@@ -99,8 +99,8 @@ std::unique_ptr<Expense> Expense::fromJSON(const json& json) {
 json Expense::toJSON() const {
     json json = Transaction::toJSON();
 
-    json.at("__type") = 1;
-    json.at("paymentMethod") = this->paymentMethod;
+    json["__type"] = 1;
+    json["paymentMethod"] = this->paymentMethod;
 
     return json;
 }

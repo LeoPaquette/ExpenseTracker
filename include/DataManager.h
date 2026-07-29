@@ -9,11 +9,17 @@
 #include "include/Category.h"
 #include "include/Transaction.h"
 
+/**
+ * TODO: Document
+ */
 class DataManager {
     const std::string transactionFilePath;
     const std::string categoriesFilePath;
 
 public:
+    /**
+     * TODO: Document
+     */
     enum class DataReadWriteError {
         /** @brief Indicates an unknown, unexpected internal error. */
         UNKNOWN_ERROR,
@@ -28,14 +34,23 @@ public:
         NO_SUCH_CATEGORY_FILE,
     };
 
-    DataManager(const std::string &transactionFilePath, const std::string &categoriesFilePath)
+    /**
+     * TODO: Document
+     */
+    DataManager(const std::string& transactionFilePath, const std::string& categoriesFilePath)
         : transactionFilePath(transactionFilePath), categoriesFilePath(categoriesFilePath) {}
 
+    /**
+     * TODO: Document
+     */
     std::optional<DataReadWriteError> loadData(
         std::vector<std::unique_ptr<Transaction>>& outTransactions,
         std::vector<std::unique_ptr<Category>>& outCategories
     ) const;
 
+    /**
+     * TODO: Document
+     */
     std::optional<DataReadWriteError> saveData(
         const std::vector<std::unique_ptr<Transaction>>& transactions,
         const std::vector<std::unique_ptr<Category>>& categories

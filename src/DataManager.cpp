@@ -58,12 +58,12 @@ std::optional<DataManager::DataReadWriteError> DataManager::saveData(
 
     json transactionsJson;
     for (int i = 0; i < transactions.size(); i++) {
-        transactionsJson.at(i) = transactions.at(i)->toJSON();
+        transactionsJson[i] = transactions.at(i)->toJSON();
     }
 
     json categoriesJson;
     for (int i = 0; i < categories.size(); i++) {
-        categoriesJson.at(i) = categories.at(i)->toJSON();
+        categoriesJson[i] = categories.at(i)->toJSON();
     }
 
     transactionsFile << std::setw(4) << transactionsJson << std::endl;

@@ -101,8 +101,8 @@ std::unique_ptr<Income> Income::fromJSON(const json& json) {
 json Income::toJSON() const {
     json json = Transaction::toJSON();
 
-    json.at("__type") = 2;
-    json.at("source") = this->source;
+    json["__type"] = 2;
+    json["source"] = this->source;
 
     return json;
 }

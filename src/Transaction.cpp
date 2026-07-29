@@ -236,11 +236,11 @@ std::unique_ptr<Transaction> Transaction::fromJSON(const json& json) {
 json Transaction::toJSON() const {
     json json;
 
-    json.at("transactionId") = this->transactionID;
-    json.at("date") = this->date;
-    json.at("amount") = this->amount;
-    json.at("category") = this->category;
-    json.at("description") = this->description;
+    json["transactionId"] = this->transactionID;
+    json["date"] = this->date;
+    json["amount"] = this->amount;
+    json["category"] = this->category;
+    json["description"] = this->description;
 
     return json;
 }

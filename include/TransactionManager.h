@@ -1,34 +1,60 @@
 #ifndef EXPENSETRACKER_TRANSACTIONMANAGER_H
 #define EXPENSETRACKER_TRANSACTIONMANAGER_H
 
+#include <algorithm>
 #include <expected>
 #include <memory>
 #include <optional>
 #include <ranges>
 #include <vector>
 
+#include "Expense.h"
+#include "Income.h"
 #include "include/Category.h"
 #include "include/DataManager.h"
 #include "include/Transaction.h"
 
+
+
+#define assert_template_derives_transaction() \
+    static_assert( \
+        std::is_base_of_v<Transaction, std::decay_t<T>>, \
+        "Template argument must derive class Transaction" \
+    )
+
+/**
+ * TODO: Document
+ */
 class TransactionManager {
+    /**
+     * TODO: Document
+     */
     std::vector<std::unique_ptr<Transaction>> transactions;
+
+    /**
+     * TODO: Document
+     */
     std::vector<std::unique_ptr<Category>> categories;
 
     /**
-     * \brief   Updates the categories vector ensuring only those referenced
-     *          by transactions are stored.
+     * TODO: Document
      */
-    void updateStoredCategories();
-
     Category* tryGetCategoryById(const string& id);
 
+    /**
+     * TODO: Document
+     */
     Category* tryGetCategoryByName(const string& name);
 
+    /**
+     * TODO: Document
+     */
     Transaction* tryGetTransactionById(const string& id);
 
+    /**
+     * TODO: Document
+     */
     Transaction* tryGetFirstTransactionByCategory(const string& category);
-
 
 public:
     /**
@@ -51,12 +77,25 @@ public:
         INVALID_AMOUNT_NEGATIVE,
     };
 
+    /**
+     * TODO: Document
+     */
     TransactionManager();
 
-    /*
-     * No destructor, copy, or copy assignment needed, vectors
-     * are handled by the compiler generated defaults
-    */
+    /**
+     * TODO: Document
+     */
+    ~TransactionManager() = default;
+
+    /**
+     * TODO: Document (copy)
+     */
+    TransactionManager(const TransactionManager&) = default;
+
+    /**
+     * TODO: Document (copy assignment)
+     */
+    TransactionManager& operator=(const TransactionManager&) = default;
 
     /**
      * @brief Stores a copy of the provided category in memory.
@@ -85,7 +124,13 @@ public:
      * @param transaction The transaction to store.
      */
     template <typename T>
-    void addTransaction(const T& transaction);
+    void addTransaction(const T& transaction) {
+        assert_template_derives_transaction();
+
+        this->transactions.push_back(
+            std::make_unique<std::decay_t<T>>(std::forward<T>(transaction))
+        );
+    }
 
     /**
      * @brief Updates the provided transaction based on its ID.
@@ -93,7 +138,61 @@ public:
      * @param transaction The transaction to update.
      */
     template <typename T>
-    void editTransaction(const T& transaction);
+    void editTransaction(const T& transaction) {
+        assert_template_derives_transaction();
+
+        const string targetTransactionId = transaction.getTransactionID();
+
+        /* Find matching transaction */
+        auto iter = std::find_if(
+            this->transactions.begin(),
+            this->transactions.end(),
+            [&targetTransactionId](const std::unique_ptr<Transaction>& t) {
+                return targetTransactionId == t->getTransactionID();
+            }
+        );
+
+
+        /* If no transaction matches, add it */
+        if (iter == this->transactions.end()) {
+            this->addTransaction(transaction);
+            return;
+        }
+
+        const std::unique_ptr<Transaction>& storedTransaction = *iter;
+
+
+        /* Check if the type of the provided item matches the stored one */
+        if (const auto& stored = *storedTransaction; typeid(stored) != typeid(transaction)) {
+            throw std::invalid_argument("Type mismatch when editing transaction");
+        }
+
+
+        /* Update the stored data */
+        storedTransaction->setDate(transaction.getDate());
+        storedTransaction->setAmount(transaction.getAmount());
+        storedTransaction->setCategory(transaction.getCategory());
+        storedTransaction->setDescription(transaction.getDescription());
+
+        if (const auto storedPtr = dynamic_cast<Income*>(storedTransaction.get())) {
+            const auto providedPtr = dynamic_cast<Income&>(transaction);
+
+            storedPtr->setSource(providedPtr.getSource());
+
+            return;
+        }
+
+        if (const auto storedPtr = dynamic_cast<Expense*>(storedTransaction.get())) {
+            const auto providedPtr = dynamic_cast<Expense&>(transaction);
+
+            storedPtr->setPaymentMethod(providedPtr.getPaymentMethod());
+
+            return;
+        }
+
+        // TODO: This
+        throw std::runtime_error("Transaction type handling unimplemented!");
+    }
 
     /**
      * @brief Deletes the transaction with the provided ID.

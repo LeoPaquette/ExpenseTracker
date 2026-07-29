@@ -46,8 +46,14 @@ public:
     // Prints the category's fields plus a spending summary given the amount spent so far
     void displayCategorySummary(double amountSpent) const;
 
+    /**
+     * TODO: Document
+     */
     static std::unique_ptr<Category> fromJSON(const json& json);
 
+    /**
+     * TODO: Document
+     */
     json toJSON() const;
 
     // Equality compares all fields

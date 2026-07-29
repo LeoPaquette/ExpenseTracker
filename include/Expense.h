@@ -29,8 +29,14 @@ public:
     // Prints the expense's fields to standard output
     void displayTransaction() const override;
 
+    /**
+     * TODO: Document
+     */
     static std::unique_ptr<Expense> fromJSON(const json& json);
 
+    /**
+     * TODO: Document
+     */
     json toJSON() const override;
 };
 #endif //EXPENSETRACKER_EXPENSE_H

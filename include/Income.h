@@ -30,8 +30,14 @@ public:
     // Prints the income's fields to standard output
     void displayTransaction() const override;
 
+    /**
+     * TODO: Document
+     */
     static std::unique_ptr<Income> fromJSON(const json& json);
 
+    /**
+     * TODO: Document
+     */
     json toJSON() const override;
 };
 #endif //EXPENSETRACKER_INCOME_H
