@@ -133,8 +133,8 @@ void GUI::onRefreshAnalyticsClicked() {
 
     ui->valueTotalIncome->setText(formatCurrency(analyticsEngine.computeTotalIncome(transactions)));
     ui->valueTotalExpenses->setText(formatCurrency(analyticsEngine.computeTotalExpenses(transactions)));
-    ui->valueSavings->setText(formatCurrency(analyticsEngine.computeSavings(transactions)));
-
+    const QString color = (analyticsEngine.computeSavings(transactions) < 0) ? "#FF0000" : "#008000";
+    ui->valueSavings->setText("<font color='" + color + "'>" + formatCurrency(analyticsEngine.computeSavings(transactions)) + "</font>");
     const auto rows = analyticsEngine.computeBudgetUsage(transactions, categories);
 
     ui->tableBudgetUsage->setRowCount(static_cast<int>(rows.size()));

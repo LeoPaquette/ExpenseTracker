@@ -43,5 +43,14 @@
     "category": "Anthropic",
     "description": "August second hand thinking payment so I can complete schoolwork",
     "paymentMethod": "Credit"
+  },
+  {
+    "__type": 1,
+    "transactionId": "TRX-0005",
+    "date": "2026-07-26",
+    "amount": 667.69,
+    "category": "Adult",
+    "description": "Monthly OnlyFans subscriptions",
+    "paymentMethod": "Credit"
   }
 ]

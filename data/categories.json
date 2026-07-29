@@ -18,5 +18,10 @@
     "categoryId": "CAT-0004",
     "name": "Travel",
     "monthlyBudget": 400.00
+  },
+  {
+    "categoryId": "CAT-0005",
+    "name": "Adult",
+    "monthlyBudget": 1200.00
   }
 ]
