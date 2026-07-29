@@ -25,6 +25,22 @@ static QString dataErrorMessage(DataManager::DataReadWriteError error) {
     }
 }
 
+// turns a search error code into something worth showing the user
+static QString searchErrorMessage(TransactionManager::SearchError error) {
+    switch (error) {
+        case TransactionManager::SearchError::INVALID_DATE_FORMAT:
+            return "The date filter isn't in YYYY-MM-DD format.";
+        case TransactionManager::SearchError::INVALID_DATE_FUTURE:
+            return "The date filter can't be in the future.";
+        case TransactionManager::SearchError::INVALID_AMOUNT_EXCEEDS_MAX:
+            return "The amount filter is above the $1,000,000 maximum.";
+        case TransactionManager::SearchError::INVALID_AMOUNT_NEGATIVE:
+            return "The amount filter can't be negative.";
+        default:
+            return "An unknown error occurred while searching.";
+    }
+}
+
 // builds the widget tree
 GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     ui->setupUi(this);
@@ -51,9 +67,11 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     connect(ui->btnSaveData, &QPushButton::clicked, this, &GUI::onSaveDataClicked);
     connect(ui->btnCancelCategory, &QPushButton::clicked, this, &GUI::onCancelCategoryClicked);
     connect(ui->btnClearFilters, &QPushButton::clicked, this, &GUI::onClearFiltersClicked);
+    connect(ui->btnSearchTransactions, &QPushButton::clicked, this, &GUI::onSearchTransactionsClicked);
     // the date filter is opt in so we check for a toggled signal, then enable the date slot.
     connect(ui->chkFilterDate, &QCheckBox::toggled, ui->inputFilterDate, &QDateEdit::setEnabled);
     ui->inputFilterDate->setEnabled(false);
+    ui->inputFilterDate->setDate(QDate::currentDate());
 }
 
 // free ui class mem
@@ -99,12 +117,61 @@ void GUI::onCancelCategoryClicked() const {
     ui->tabWidget->setCurrentWidget(ui->Tab_Main);
 }
 
-// clears the filters on the main tab
-void GUI::onClearFiltersClicked() const {
+// clears the filters on the main tab and puts every transaction back in the table
+void GUI::onClearFiltersClicked() {
     ui->chkFilterDate->setChecked(false);
     ui->inputFilterDate->setDate(QDate::currentDate());
     ui->inputFilterCategory->clear();
     ui->inputFilterAmount->clear();
+
+    refreshTransactionsTable();
+}
+
+// filters the main tab table down to the transactions matching whichever filters are filled in
+void GUI::onSearchTransactionsClicked() {
+    // a filter left blank stays as nullopt, which searchTransactions treats as "dont filter on this"
+    const std::string date = ui->inputFilterDate->date().toString("yyyy-MM-dd").toStdString();
+    const std::optional<const std::string*> dateFilter =
+        ui->chkFilterDate->isChecked() ? std::optional(&date) : std::nullopt;
+
+    std::optional<const Category*> categoryFilter = std::nullopt;
+    if (const QString categoryName = ui->inputFilterCategory->text().trimmed(); !categoryName.isEmpty()) {
+        // searchTransactions wants a real Category, and we cant invent one because the Category
+        // constructor demands a valid CAT-0000 id and a positive budget. so we look the name up
+        const std::vector<const Category*> categories = transactionManager.getAllCategories();
+        for (const Category* c : categories) {
+            if (QString::fromStdString(c->getName()).compare(categoryName, Qt::CaseInsensitive) == 0) {
+                categoryFilter = c;
+                break;
+            }
+        }
+
+        if (!categoryFilter.has_value()) {
+            QMessageBox::warning(this, "Search", QString("There's no category named \"%1\".").arg(categoryName));
+            return;
+        }
+    }
+
+    std::optional<double> amountFilter = std::nullopt;
+    if (const QString amountText = ui->inputFilterAmount->text().trimmed(); !amountText.isEmpty()) {
+        // toDouble reports failure through ok rather than throwing, and searchTransactions cant
+        // catch this for us because a non number comes through as a perfectly valid looking 0
+        bool ok = false;
+        const double amount = amountText.toDouble(&ok);
+        if (!ok) {
+            QMessageBox::warning(this, "Search", "The amount filter has to be a number.");
+            return;
+        }
+        amountFilter = amount;
+    }
+
+    const auto searchResult = transactionManager.searchTransactions(dateFilter, categoryFilter, amountFilter);
+    if (!searchResult.has_value()) {
+        QMessageBox::warning(this, "Search", searchErrorMessage(searchResult.error()));
+        return;
+    }
+
+    populateTransactionsTable(searchResult.value());
 }
 
 void GUI::onBrowseTransactionsClicked() {
@@ -157,8 +224,13 @@ void GUI::refreshTransactionsTable() {
         QMessageBox::warning(this, "Transactions", "Could not read the loaded transactions.");
         return;
     }
-    const std::vector<const Transaction*>& transactions = searchResult.value();
 
+    populateTransactionsTable(searchResult.value());
+}
+
+// fills the main tab table with whichever transactions it gets handed, so a full refresh and a
+// filtered search can share the same row building code
+void GUI::populateTransactionsTable(const std::vector<const Transaction*>& transactions) const {
     ui->tableTransactions->setRowCount(static_cast<int>(transactions.size())); // allocate the correct amount of rows based on our transactions
     for (int i = 0; i < static_cast<int>(transactions.size()); i++) {
         const Transaction* t = transactions.at(i);

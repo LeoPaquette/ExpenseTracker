@@ -43,12 +43,16 @@ private slots:
     void onSaveDataClicked();
     // returns to the main tab WITHOUT saving the category
     void onCancelCategoryClicked() const;
-    // empties every search/filter input on the main tab
-    void onClearFiltersClicked() const;
+    // empties every search/filter input on the main tab and restores the full table
+    void onClearFiltersClicked();
+    // filters the main tab table down to the transactions matching the filled in filters
+    void onSearchTransactionsClicked();
 
 private:
     // fills the main tab table from everything currently loaded
     void refreshTransactionsTable();
+    // fills the main tab table with whichever transactions it gets handed
+    void populateTransactionsTable(const std::vector<const Transaction*>& transactions) const;
     // fills the category tab table from everything currently loaded
     void refreshCategoriesTable();
     // resets the transaction form back to its default state
