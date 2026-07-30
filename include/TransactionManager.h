@@ -150,7 +150,7 @@ public:
         assert_template_derives_transaction();
 
         this->transactions.push_back(
-            std::make_unique<std::decay_t<T>>(std::forward<T>(transaction))
+            std::make_unique<std::decay_t<T>>(transaction)
         );
     }
 
@@ -197,7 +197,7 @@ public:
         storedTransaction->setDescription(transaction.getDescription());
 
         if (const auto storedPtr = dynamic_cast<Income*>(storedTransaction.get())) {
-            const auto providedPtr = dynamic_cast<Income&>(transaction);
+            const auto providedPtr = dynamic_cast<const Income&>(transaction);
 
             storedPtr->setSource(providedPtr.getSource());
 
@@ -205,7 +205,7 @@ public:
         }
 
         if (const auto storedPtr = dynamic_cast<Expense*>(storedTransaction.get())) {
-            const auto providedPtr = dynamic_cast<Expense&>(transaction);
+            const auto providedPtr = dynamic_cast<const Expense&>(transaction);
 
             storedPtr->setPaymentMethod(providedPtr.getPaymentMethod());
 
