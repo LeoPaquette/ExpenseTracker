@@ -41,15 +41,9 @@ bool Income::computeImpact() const {
     return false;
 }
 
-// Prints the income's fields to standard output
-void Income::displayTransaction() const {
-    cout << "[Income]  "
-         << "ID: " << transactionID
-         << ", Date: " << date
-         << ", Amount: +" << amount
-         << ", Category: " << category
-         << ", Source: " << source
-         << ", Description: " << description << endl;
+// Returns a human-readable summary of the income's fields, built from Transaction::displayTransaction
+string Income::displayTransaction() const {
+    return "[Income]  " + Transaction::displayTransaction() + ", Source: " + source;
 }
 
 

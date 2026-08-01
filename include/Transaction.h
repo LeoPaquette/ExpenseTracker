@@ -58,8 +58,8 @@ public:
 
     // Computes whether this transaction reduces the budget; overridden per transaction type
     virtual bool computeImpact() const = 0;
-    // Prints the transaction's fields to standard output
-    virtual void displayTransaction() const;
+    // Returns a human-readable summary of the transaction's fields, built from operator<<
+    virtual string displayTransaction() const;
 
     // Equality compares all shared fields
     bool operator==(const Transaction& other) const;

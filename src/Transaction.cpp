@@ -1,6 +1,7 @@
 #include "../include/Transaction.h"
 #include <array>
 #include <regex>
+#include <sstream>
 #include <string>
 #include <cctype>
 
@@ -186,13 +187,11 @@ void Transaction::setDescription(const string& newDescription) {
     description = trimmed;
 }
 
-// Prints the transaction's fields to standard output
-void Transaction::displayTransaction() const {
-    cout << "ID: " << transactionID
-         << ", Date: " << date
-         << ", Amount: " << amount
-         << ", Category: " << category
-         << ", Description: " << description << endl;
+// Returns a human-readable summary of the transaction's fields, built from operator<<
+string Transaction::displayTransaction() const {
+    ostringstream oss;
+    oss << *this;
+    return oss.str();
 }
 
 // Equality compares all shared fields

@@ -26,8 +26,8 @@ public:
 
     // Expenses always reduce the budget
     bool computeImpact() const override;
-    // Prints the expense's fields to standard output
-    void displayTransaction() const override;
+    // Returns a human-readable summary of the expense's fields, built from Transaction::displayTransaction
+    string displayTransaction() const override;
 
     /**
      * @brief Constructs an @c Expense from its JSON representation.

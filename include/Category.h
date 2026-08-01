@@ -43,8 +43,8 @@ public:
 
     // Replaces the monthly budget with a newly validated value
     void updateBudget(double newMonthlyBudget);
-    // Prints the category's fields plus a spending summary given the amount spent so far
-    void displayCategorySummary(double amountSpent) const;
+    // Returns the category's fields plus a spending summary and any budget warning, built from operator<<
+    string displayCategorySummary(double amountSpent) const;
 
     /**
      * @brief Constructs a @c Category from its JSON representation.

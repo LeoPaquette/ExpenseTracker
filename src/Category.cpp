@@ -1,6 +1,7 @@
 #include "../include/Category.h"
 
 #include <regex>
+#include <sstream>
 #include <string>
 #include <iomanip>
 
@@ -93,29 +94,30 @@ void Category::updateBudget(double newMonthlyBudget) {
     setMonthlyBudget(newMonthlyBudget);
 }
 
-// Prints the category's fields plus a spending summary given the amount spent so far
-void Category::displayCategorySummary(double amountSpent) const {
-    cout << "Category ID: " << categoryID
-         << ", Name: " << name
-         << ", Monthly Budget: " << monthlyBudget
-         << ", Spent: " << amountSpent
-         << ", Remaining: " << (monthlyBudget - amountSpent);
+// Returns the category's fields plus a spending summary and any budget warning, built from operator<<
+string Category::displayCategorySummary(double amountSpent) const {
+    ostringstream oss;
+    oss << *this
+        << ", Spent: " << amountSpent
+        << ", Remaining: " << (monthlyBudget - amountSpent);
 
     // Guard against dividing by a zero budget rather than crashing or printing garbage
     if (monthlyBudget <= 0.0) {
-        cout << ", Usage: N/A (no budget set)" << endl;
-        cout << "Warning: This category has no budget set." << endl;
-        return;
+        oss << ", Usage: N/A (no budget set)"
+            << "\nWarning: This category has no budget set.";
+        return oss.str();
     }
 
-    double usagePercent = (amountSpent / monthlyBudget) * 100.0;
-    cout << ", Usage: " << fixed << setprecision(1) << usagePercent << "%" << defaultfloat << endl;
+    const double usagePercent = (amountSpent / monthlyBudget) * 100.0;
+    oss << ", Usage: " << fixed << setprecision(1) << usagePercent << "%" << defaultfloat;
 
     if (usagePercent > 100.0) {
-        cout << "Warning: Budget usage has exceeded 100% for category \"" << name << "\"." << endl;
+        oss << "\nWarning: Budget usage has exceeded 100% for category \"" << name << "\".";
     } else if (usagePercent > 80.0) {
-        cout << "Warning: Budget usage has exceeded 80% for category \"" << name << "\"." << endl;
+        oss << "\nWarning: Budget usage has exceeded 80% for category \"" << name << "\".";
     }
+
+    return oss.str();
 }
 
 

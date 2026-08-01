@@ -1,7 +1,6 @@
 #include "../include/Expense.h"
 
 #include <string>
-#include <iostream>
 using namespace std;
 
 // Helper function for checking payment method
@@ -40,14 +39,9 @@ bool Expense::computeImpact() const{
     return true;
 }
 
-// Prints the expense's fields to standard output
-void Expense::displayTransaction() const{
-    cout << "ID: " << transactionID
-         << ", Date: " << date
-         << ", Amount: " << amount
-         << ", Category: " << category
-         << ", Description: " << description
-         << ", Payment Method: " << paymentMethod << endl;
+// Returns a human-readable summary of the expense's fields, built from Transaction::displayTransaction
+string Expense::displayTransaction() const {
+    return Transaction::displayTransaction() + ", Payment Method: " + paymentMethod;
 }
 
 

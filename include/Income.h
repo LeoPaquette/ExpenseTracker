@@ -27,8 +27,8 @@ public:
 
     // Income never reduces the budget
     bool computeImpact() const override;
-    // Prints the income's fields to standard output
-    void displayTransaction() const override;
+    // Returns a human-readable summary of the income's fields, built from Transaction::displayTransaction
+    string displayTransaction() const override;
 
     /**
      * @brief Constructs an @c Income from its JSON representation.
