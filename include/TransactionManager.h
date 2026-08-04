@@ -31,6 +31,16 @@
  */
 class TransactionManager {
     /**
+     * TODO: Document
+     */
+    std::vector<unsigned int> usedCategoryIds = std::vector<unsigned int>();
+
+    /**
+     * TODO: Document
+     */
+    unsigned int nextCategoryId = 0;
+
+    /**
      * @brief The transactions currently held in memory, each uniquely owned.
      */
     std::vector<std::unique_ptr<Transaction>> transactions;
@@ -118,6 +128,11 @@ public:
      * @brief Copy-assigns from another manager (compiler-generated member-wise copy).
      */
     TransactionManager& operator=(const TransactionManager&) = default;
+
+    /**
+     * TODO: Document
+     */
+    unsigned int getNextCategoryId();
 
     /**
      * @brief Stores a copy of the provided category in memory.

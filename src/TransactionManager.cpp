@@ -177,6 +177,19 @@ TransactionManager::TransactionManager() {
 }
 
 
+unsigned int TransactionManager::getNextCategoryId() {
+    unsigned int i = this->nextCategoryId;
+
+    while (std::ranges::contains(this->usedCategoryIds, i)) {
+        i++;
+    }
+
+    this->nextCategoryId = i + 1;
+
+    return i;
+}
+
+
 void TransactionManager::addCategory(const Category& category) {
     /* check for duped id */
     if (nullptr != this->tryGetCategoryById(category.getCategoryID())) {
@@ -188,6 +201,7 @@ void TransactionManager::addCategory(const Category& category) {
         return;
     }
 
+    this->usedCategoryIds.push_back(this->getNextCategoryId());
     this->categories.push_back(std::make_unique<std::decay_t<Category>>(category));
 }
 
