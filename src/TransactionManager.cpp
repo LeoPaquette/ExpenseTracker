@@ -92,6 +92,11 @@ static bool insensitive_equals(std::string a, std::string b) {
 }
 
 
+int extractNumber(const std::string& input) {
+    return std::stoi(input.substr(4));  // skip "CAT-", convert the rest
+}
+
+
 Category* TransactionManager::tryGetCategoryById(const string& id) {
     /* Find matching element */
     const auto elem = std::ranges::find_if(
@@ -190,19 +195,20 @@ unsigned int TransactionManager::getNextCategoryId() {
 }
 
 
-void TransactionManager::addCategory(const Category& category) {
+bool TransactionManager::addCategory(const Category& category) {
     /* check for duped id */
     if (nullptr != this->tryGetCategoryById(category.getCategoryID())) {
-        return;
+        return false;
     }
 
     /* check for duped name */
     if (nullptr != this->tryGetCategoryByName(category.getName())) {
-        return;
+        return false;
     }
 
-    this->usedCategoryIds.push_back(this->getNextCategoryId());
+    this->usedCategoryIds.push_back(extractNumber(category.getCategoryID()));
     this->categories.push_back(std::make_unique<std::decay_t<Category>>(category));
+    return true;
 }
 
 
@@ -384,4 +390,13 @@ std::expected<int, DataManager::DataReadWriteError> TransactionManager::save(con
     }
 
     return transactions.size() + categories.size();
+}
+
+
+void TransactionManager::refreshUsedCategoryIds() {
+    this->usedCategoryIds.clear();
+
+    for (const auto& c : this->categories) {
+        this->usedCategoryIds.push_back(extractNumber(c->getCategoryID()));
+    }
 }

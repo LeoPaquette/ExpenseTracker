@@ -134,12 +134,14 @@ public:
      */
     unsigned int getNextCategoryId();
 
+    void refreshUsedCategoryIds();
+
     /**
      * @brief Stores a copy of the provided category in memory.
      *
      * @param category The category to store.
      */
-    void addCategory(const Category& category);
+    bool addCategory(const Category& category);
 
     /**
      * @brief Updates the provided category based on its ID.
@@ -161,12 +163,18 @@ public:
      * @param transaction The transaction to store.
      */
     template <typename T>
-    void addTransaction(const T& transaction) {
+    bool addTransaction(const T& transaction) {
         assert_template_derives_transaction();
+
+        if (nullptr != this->tryGetTransactionById(transaction.getTransactionID())) {
+            return false;
+        }
 
         this->transactions.push_back(
             std::make_unique<std::decay_t<T>>(transaction)
         );
+
+        return true;
     }
 
     /**
