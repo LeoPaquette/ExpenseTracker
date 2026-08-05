@@ -3,9 +3,9 @@
 #include <algorithm>
 #include <ranges>
 #include <regex>
+#include <unordered_set>
 
 #include "include/Expense.h"
-#include "include/Income.h"
 
 static const regex DATE_PATTERN(R"(^(\d{4})-(\d{2})-(\d{2})$)");
 static const int DAYS_IN_MONTH[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -94,6 +94,29 @@ static bool insensitive_equals(std::string a, std::string b) {
 
 int extractNumber(const std::string& input) {
     return std::stoi(input.substr(4));  // skip "CAT-", convert the rest
+}
+
+
+static bool hasDuplicateTransactionIds(const std::vector<std::unique_ptr<Transaction>>& transactions) {
+    std::unordered_set<std::string> seen;
+    for (const auto& t : transactions) {
+        /* insert returns false in .second if the id was already present */
+        if (!seen.insert(t->getTransactionID()).second) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+static bool hasDuplicateCategoryIds(const std::vector<std::unique_ptr<Category>>& categories) {
+    std::unordered_set<std::string> seen;
+    for (const auto& c : categories) {
+        if (!seen.insert(c->getCategoryID()).second) {
+            return true;
+        }
+    }
+    return false;
 }
 
 
@@ -370,11 +393,27 @@ exit:
 
 
 std::expected<int, DataManager::DataReadWriteError> TransactionManager::load(const DataManager& dataManager) {
+    // Store current data
+    std::vector<std::unique_ptr<Transaction>> previousTransactions = std::move(this->transactions);
+    std::vector<std::unique_ptr<Category>> previousCategories = std::move(this->categories);
+    this->transactions.clear();
+    this->categories.clear();
+
     if (
         const auto status = dataManager.loadData(transactions, categories);
         status.has_value()
     ) {
+        // Load failed: restore the previous storage untouched.
+        this->transactions = std::move(previousTransactions);
+        this->categories = std::move(previousCategories);
         return std::unexpected(status.value());
+    }
+
+    // If duped data exists, restore old data
+    if (hasDuplicateTransactionIds(transactions) || hasDuplicateCategoryIds(categories)) {
+        this->transactions = std::move(previousTransactions);
+        this->categories = std::move(previousCategories);
+        return std::unexpected(DataManager::DataReadWriteError::DUPLICATE_RECORDS);
     }
 
     refreshUsedCategoryIds();

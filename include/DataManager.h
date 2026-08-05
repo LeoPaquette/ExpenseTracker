@@ -35,6 +35,9 @@ public:
 
         /** @brief Indicates on read, that the file specified for categories does not exist. */
         NO_SUCH_CATEGORY_FILE,
+
+        /** @brief Indicates on read, that the loaded data contained duplicate record IDs. */
+        DUPLICATE_RECORDS,
     };
 
     /**
