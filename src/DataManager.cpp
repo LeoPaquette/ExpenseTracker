@@ -45,16 +45,23 @@ std::optional<DataManager::DataReadWriteError> DataManager::saveData(
          const std::vector<std::unique_ptr<Transaction>>& transactions,
          const std::vector<std::unique_ptr<Category>>& categories
 ) const {
-    std::ofstream transactionsFile(this->transactionFilePath);
+    std::ofstream transactionsFile(this->transactionFilePath, std::ios::app);
     if (!transactionsFile.is_open()) {
         return DataReadWriteError::CANNOT_OPEN_FILE;
     }
 
-    std::ofstream categoriesFile(this->categoriesFilePath);
+    std::ofstream categoriesFile(this->categoriesFilePath, std::ios::app);
     if (!categoriesFile.is_open()) {
         transactionsFile.close();
         return DataReadWriteError::CANNOT_OPEN_FILE;
     }
+
+    // Both files are open, so it's now safe to truncate them. Reopen each with
+    // std::ios::trunc to clear the previous contents before writing.
+    transactionsFile.close();
+    categoriesFile.close();
+    transactionsFile.open(this->transactionFilePath, std::ios::trunc);
+    categoriesFile.open(this->categoriesFilePath, std::ios::trunc);
 
     json transactionsJson;
     for (int i = 0; i < transactions.size(); i++) {

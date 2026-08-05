@@ -377,6 +377,8 @@ std::expected<int, DataManager::DataReadWriteError> TransactionManager::load(con
         return std::unexpected(status.value());
     }
 
+    refreshUsedCategoryIds();
+
     return transactions.size() + categories.size();
 }
 
