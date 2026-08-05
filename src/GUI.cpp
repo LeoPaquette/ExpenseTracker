@@ -400,6 +400,8 @@ void GUI::onSearchTransactionsClicked() {
     populateTransactionsTable(searchResult.value());
 }
 
+// picks the transactions file through a file dialog. an empty path means the user cancelled,
+// in which case we leave whatever was already selected alone
 void GUI::onBrowseTransactionsClicked() {
     QString path = QFileDialog::getOpenFileName(this, "Select Transactions File", QString(), "JSON files (*.json);;All Files (*)");
     if (!path.isEmpty()) {
@@ -407,12 +409,13 @@ void GUI::onBrowseTransactionsClicked() {
     }
 }
 
+// picks the categories file the same way the transactions one is picked
 void GUI::onBrowseCategoriesClicked() {
-        QString path = QFileDialog::getOpenFileName(this, "Select Categories File", QString(), "JSON files (*.json);;All Files (*)");
-        if (!path.isEmpty()) {
-            ui->inputCategoriesFilePath->setText(path);
-        }
+    QString path = QFileDialog::getOpenFileName(this, "Select Categories File", QString(), "JSON files (*.json);;All Files (*)");
+    if (!path.isEmpty()) {
+        ui->inputCategoriesFilePath->setText(path);
     }
+}
 
 // recalculates the analytics tab from the currently loaded data
 void GUI::onRefreshAnalyticsClicked() {

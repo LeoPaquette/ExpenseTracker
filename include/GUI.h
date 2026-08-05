@@ -26,7 +26,14 @@ public:
     ~GUI() override;
 
 protected:
-    // asks the user what to do about unsaved changes before the window actually closes
+    /**
+     * @brief Asks the user what to do about unsaved changes before the window actually closes.
+     *
+     * Closes immediately when nothing is pending. Otherwise offers Save, Discard or Cancel, and
+     * keeps the window open if the save itself fails.
+     *
+     * @param event The close request, accepted to let the window close or ignored to keep it open.
+     */
     void closeEvent(QCloseEvent* event) override;
 
 private slots:
@@ -40,9 +47,18 @@ private slots:
     void onEditTransactionClicked();
     // builds a category from the category form and adds it
     void onSaveCategoryClicked();
-    // recalculates the analytics tab whenever the user switches to it
+    /**
+     * @brief Recalculates the analytics tab whenever the user switches to it.
+     *
+     * @param index The index of the tab that just became current; ignored unless it is Analytics.
+     */
     void onTabChanged(int index);
-    // relabels the extra field to match the selected transaction type
+
+    /**
+     * @brief Relabels the extra field to match the selected transaction type.
+     *
+     * @param type The newly selected type, either @c "Expense" or @c "Income".
+     */
     void onTypeChanged(const QString& type) const;
     // wiring the Browse files button for Transactions in the main tab
     void onBrowseTransactionsClicked();
@@ -66,7 +82,15 @@ private slots:
 private:
     // fills the main tab table from everything currently loaded
     void refreshTransactionsTable();
-    // fills the main tab table with whichever transactions it gets handed
+    /**
+     * @brief Fills the main tab table with whichever transactions it gets handed.
+     *
+     * Shared by the full refresh and by a filtered search so both build rows the same way. The
+     * amount cell also carries its raw value in @c Qt::UserRole, since its display text is money
+     * formatted and the edit form needs the number back.
+     *
+     * @param transactions The transactions to show, in the order they should appear.
+     */
     void populateTransactionsTable(const std::vector<const Transaction*>& transactions) const;
     // fills the category tab table from everything currently loaded
     void refreshCategoriesTable();
@@ -74,13 +98,26 @@ private:
     void clearTransactionForm();
     // resets the category form back to its default state
     void clearCategoryForm() const;
-    // reads both data files listed on the main tab, optionally announcing how many records arrived
+    /**
+     * @brief Reads both data files listed on the main tab into the transaction manager.
+     *
+     * The tables are rebuilt whether or not the read succeeded, because @c DataManager::loadData
+     * empties its output vectors before parsing and a bad file therefore changes what is held.
+     *
+     * @param showSuccessMessage Whether to report the record count on success. The Load Data button
+     *                           passes @c true; the startup reload passes @c false so launching the
+     *                           application does not open behind a message box.
+     */
     void loadDataFiles(bool showSuccessMessage);
+
     // stores the current file paths so the next launch can reopen them
     void rememberDataFilePaths() const;
 
+    // the widget tree built from the Designer layout, owned by this window
     Ui::ExpenseTrackerWindow* ui;
+    // the in memory store every tab reads from and writes to
     TransactionManager transactionManager;
+    // computes the totals and budget usage shown on the analytics tab
     AnalyticsEngine<> analyticsEngine;
 
     // empty while adding a new transaction, holds the target id while editing an existing one
