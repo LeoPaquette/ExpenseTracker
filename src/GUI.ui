@@ -17,7 +17,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="Tab_Main">
       <attribute name="title">
@@ -50,7 +50,7 @@
         <item>
          <widget class="QPushButton" name="btnDeleteTransaction">
           <property name="text">
-           <string>Delete Transactions</string>
+           <string>Delete Transaction</string>
           </property>
          </widget>
         </item>

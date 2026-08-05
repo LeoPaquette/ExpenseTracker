@@ -3,12 +3,39 @@
 #include <QHeaderView>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSettings>
 #include "include/Expense.h"
 #include "include/Income.h"
+
+// the two budget thresholds the spec asks us to warn on
+static constexpr double BUDGET_WARNING_PERCENT = 80.0;
+static constexpr double BUDGET_OVER_PERCENT = 100.0;
+
+// the single transaction size worth confirming before it gets saved
+static constexpr double SPENDING_ALERT_THRESHOLD = 1000.0;
+
+// where QSettings keeps the file paths we reopen on the next launch
+static const QString SETTINGS_ORGANIZATION = "CST8219";
+static const QString SETTINGS_APPLICATION = "ExpenseTracker";
+static const QString SETTINGS_KEY_TRANSACTIONS = "transactionsFile";
+static const QString SETTINGS_KEY_CATEGORIES = "categoriesFile";
 
 // formats a monetary value the way the analytics tab displays it
 static QString formatCurrency(double value) {
     return QString("$%1").arg(value, 0, 'f', 2);
+}
+
+// spells out the budget warning next to the percentage so it reads as a warning, not just a colour
+static QString budgetUsageText(double usagePercent) {
+    QString percent = QString::number(usagePercent, 'f', 1) + "%";
+
+    if (usagePercent > BUDGET_OVER_PERCENT) {
+        return percent + "  OVER BUDGET";
+    }
+    if (usagePercent > BUDGET_WARNING_PERCENT) {
+        return percent + "  WARNING";
+    }
+    return percent;
 }
 
 // turns a data manager error code into something worth showing the user
@@ -49,6 +76,13 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     ui->inputDate->setMaximumDate(QDate::currentDate());
     ui->inputDate->setDate(QDate::currentDate());
 
+    // select the whole row rather than one cell so Edit/Delete have an obvious target
+    ui->tableTransactions->setSelectionBehavior(QAbstractItemView::SelectRows);
+    // the tables only display data, typing into a cell wouldnt reach the transaction manager
+    ui->tableTransactions->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableCategories->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->tableBudgetUsage->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
     // https://stackoverflow.com/questions/15686501/how-to-resize-qtablewidget-columns
     // stretch table columns evenly across the full table width
     ui->tableTransactions->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
@@ -68,10 +102,27 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     connect(ui->btnCancelCategory, &QPushButton::clicked, this, &GUI::onCancelCategoryClicked);
     connect(ui->btnClearFilters, &QPushButton::clicked, this, &GUI::onClearFiltersClicked);
     connect(ui->btnSearchTransactions, &QPushButton::clicked, this, &GUI::onSearchTransactionsClicked);
+    connect(ui->btnDeleteTransaction, &QPushButton::clicked, this, &GUI::onDeleteTransactionClicked);
+    connect(ui->btnSaveTransaction, &QPushButton::clicked, this, &GUI::onSaveTransactionClicked);
+    connect(ui->btnSaveCategory, &QPushButton::clicked, this, &GUI::onSaveCategoryClicked);
+    connect(ui->btnEditTransaction, &QPushButton::clicked, this, &GUI::onEditTransactionClicked);
+    connect(ui->tabWidget, &QTabWidget::currentChanged, this, &GUI::onTabChanged);
+    // the row detail popups are still unconnected. they need the Transaction object itself to call
+    // displayTransaction() on, and TransactionManager keeps its by-id lookup private
     // the date filter is opt in so we check for a toggled signal, then enable the date slot.
     connect(ui->chkFilterDate, &QCheckBox::toggled, ui->inputFilterDate, &QDateEdit::setEnabled);
     ui->inputFilterDate->setEnabled(false);
     ui->inputFilterDate->setDate(QDate::currentDate());
+
+    // the spec wants previous data back on startup. rather than hardcoding the data/ folder we
+    // reopen whichever files were last used, which QSettings remembered for us on the way out
+    const QSettings settings(SETTINGS_ORGANIZATION, SETTINGS_APPLICATION);
+    ui->inputTransactionsFilePath->setText(settings.value(SETTINGS_KEY_TRANSACTIONS).toString());
+    ui->inputCategoriesFilePath->setText(settings.value(SETTINGS_KEY_CATEGORIES).toString());
+
+    if (!ui->inputTransactionsFilePath->text().isEmpty() && !ui->inputCategoriesFilePath->text().isEmpty()) {
+        loadDataFiles(false); // quietly, nobody wants a popup just for opening the app
+    }
 }
 
 // free ui class mem
@@ -79,31 +130,45 @@ GUI::~GUI() {
     delete ui;
 }
 
-// jumps to the transaction form tab
-void GUI::onAddTransactionClicked() const {
+// jumps to the transaction form tab with a blank form, so Add never inherits an edit in progress
+void GUI::onAddTransactionClicked() {
+    clearTransactionForm();
     ui->tabWidget->setCurrentWidget(ui->Tab_TransactionForm);
 }
 
 // returns to the main tab without saving, discarding whatever was typed
-void GUI::onCancelTransactionClicked() const {
+void GUI::onCancelTransactionClicked() {
     clearTransactionForm();
     ui->tabWidget->setCurrentWidget(ui->Tab_Main);
 }
 
-// resets the transaction form back to its default state
-void GUI::clearTransactionForm() const {
+// resets the transaction form back to a blank add-mode state
+void GUI::clearTransactionForm() {
     ui->inputTransactionID->clear();
     ui->inputDate->setDate(QDate::currentDate());
     ui->inputAmount->clear();
     ui->inputCategory->clear();
     ui->inputDescription->clear();
     ui->inputExtra->clear();
+
+    // back to adding, so the id and the type become the user's to pick again
+    editingTransactionId.clear();
+    ui->inputTransactionID->setReadOnly(false);
+    ui->comboType->setEnabled(true);
 }
 
 // resets the category form back to its default state
 void GUI::clearCategoryForm() const {
     ui->inputCategoryName->clear();
     ui->inputMonthlyBudget->clear();
+}
+
+// recalculates the analytics tab whenever the user switches to it, so the totals cant sit there
+// stale after an add or a delete on another tab
+void GUI::onTabChanged(const int index) {
+    if (ui->tabWidget->widget(index) == ui->tab_Analytics) {
+        onRefreshAnalyticsClicked();
+    }
 }
 
 // relabels the extra field to match the selected transaction type
@@ -117,6 +182,143 @@ void GUI::onCancelCategoryClicked() const {
     ui->tabWidget->setCurrentWidget(ui->Tab_Main);
 }
 
+// loads whichever transaction is selected in the main tab table into the form for editing
+void GUI::onEditTransactionClicked() {
+    const int row = ui->tableTransactions->currentRow(); // -1 when nothing is selected
+    if (row < 0) {
+        QMessageBox::information(this, "Edit Transaction", "Select a transaction in the table first.");
+        return;
+    }
+
+    // every field the form needs is already sitting in the row, so theres nothing to look up.
+    // setting the type first lets the existing onTypeChanged slot relabel the extra field for us
+    ui->comboType->setCurrentText(ui->tableTransactions->item(row, 5)->text());
+    ui->inputTransactionID->setText(ui->tableTransactions->item(row, 0)->text());
+    ui->inputDate->setDate(QDate::fromString(ui->tableTransactions->item(row, 1)->text(), "yyyy-MM-dd"));
+    ui->inputAmount->setText(
+        QString::number(ui->tableTransactions->item(row, 2)->data(Qt::UserRole).toDouble(), 'f', 2));
+    ui->inputCategory->setText(ui->tableTransactions->item(row, 3)->text());
+    ui->inputDescription->setText(ui->tableTransactions->item(row, 4)->text());
+    ui->inputExtra->setText(ui->tableTransactions->item(row, 6)->text());
+
+    // editTransaction finds its target by id, and throws if the type changed under it, so we lock both
+    editingTransactionId = ui->tableTransactions->item(row, 0)->text();
+    ui->inputTransactionID->setReadOnly(true);
+    ui->comboType->setEnabled(false);
+
+    ui->tabWidget->setCurrentWidget(ui->Tab_TransactionForm);
+}
+
+// builds a category from the category form and adds it
+void GUI::onSaveCategoryClicked() {
+    // toDouble reports failure through ok, so a non number gets its own message instead of
+    // reaching the constructor as a perfectly valid looking 0
+    bool ok = false;
+    const double monthlyBudget = ui->inputMonthlyBudget->text().trimmed().toDouble(&ok);
+    if (!ok) {
+        QMessageBox::warning(this, "Save Category", "The monthly budget has to be a number.");
+        return;
+    }
+
+    const QString name = ui->inputCategoryName->text().trimmed();
+
+    try {
+        // the manager hands out the number, we only pad it into the CAT-0000 shape its regex wants
+        const QString categoryID =
+            QString("CAT-%1").arg(transactionManager.getNextCategoryId(), 4, 10, QChar('0'));
+
+        // the Category constructor owns every field rule and throws naming whichever one failed
+        const Category category(categoryID.toStdString(), name.toStdString(), monthlyBudget);
+
+        // false means the id or the name was already taken, which is the category half of Feature 2
+        if (!transactionManager.addCategory(category)) {
+            QMessageBox::warning(this, "Save Category",
+                QString("A category named \"%1\" already exists.").arg(name));
+            return;
+        }
+    } catch (const std::exception& e) {
+        QMessageBox::warning(this, "Save Category", e.what());
+        return;
+    }
+
+    hasUnsavedChanges = true;
+
+    // stay on this tab so the new row appears in the table right below the form
+    clearCategoryForm();
+    refreshCategoriesTable();
+    onRefreshAnalyticsClicked();
+}
+
+// builds a transaction from the form and either adds it or updates the one being edited
+void GUI::onSaveTransactionClicked() {
+    // toDouble reports failure through ok rather than throwing, and the constructor cant catch this
+    // for us because a non number comes through as a perfectly valid looking 0
+    bool ok = false;
+    const double amount = ui->inputAmount->text().trimmed().toDouble(&ok);
+    if (!ok) {
+        QMessageBox::warning(this, "Save Transaction", "The amount has to be a number.");
+        return;
+    }
+
+    const QString transactionID = ui->inputTransactionID->text().trimmed();
+    const bool isExpense = ui->comboType->currentText() == "Expense";
+
+    // one unusually large transaction is worth a second look before it lands in the table
+    if (amount > SPENDING_ALERT_THRESHOLD) {
+        const auto confirmed = QMessageBox::question(this, "Spending Alert",
+            QString("This transaction exceeds %1.\nAre you sure you want to continue?")
+                .arg(formatCurrency(SPENDING_ALERT_THRESHOLD)));
+        if (confirmed != QMessageBox::Yes) {
+            return;
+        }
+    }
+
+    // whether we are adding or updating only changes which manager call the new object goes to.
+    // addTransaction returns false when the id is already taken, editTransaction is meant to reuse one
+    const auto store = [this](const auto& transaction) {
+        if (editingTransactionId.isEmpty()) {
+            return transactionManager.addTransaction(transaction);
+        }
+
+        transactionManager.editTransaction(transaction);
+        return true;
+    };
+
+    // every field rule already lives in the constructors, so building the object IS the validation.
+    // an invalid field throws with a message naming that field, which is what we show the user
+    bool stored = false;
+    try {
+        const std::string date = ui->inputDate->date().toString("yyyy-MM-dd").toStdString();
+        const std::string category = ui->inputCategory->text().toStdString();
+        const std::string description = ui->inputDescription->text().toStdString();
+        const std::string extra = ui->inputExtra->text().toStdString(); // payment method or source
+
+        if (isExpense) {
+            stored = store(Expense(transactionID.toStdString(), date, amount, category, description, extra));
+        } else {
+            stored = store(Income(transactionID.toStdString(), date, amount, category, description, extra));
+        }
+    } catch (const std::exception& e) {
+        QMessageBox::warning(this, "Save Transaction", e.what());
+        return;
+    }
+
+    // the manager rejected it, which for an add can only mean the id is already in use
+    if (!stored) {
+        QMessageBox::warning(this, "Save Transaction",
+            QString("Transaction %1 already exists.").arg(transactionID));
+        return;
+    }
+
+    hasUnsavedChanges = true;
+
+    // clearing the form empties the id, so a second rapid click is rejected by the constructor
+    clearTransactionForm();
+    refreshTransactionsTable();
+    onRefreshAnalyticsClicked();
+    ui->tabWidget->setCurrentWidget(ui->Tab_Main);
+}
+
 // clears the filters on the main tab and puts every transaction back in the table
 void GUI::onClearFiltersClicked() {
     ui->chkFilterDate->setChecked(false);
@@ -125,6 +327,30 @@ void GUI::onClearFiltersClicked() {
     ui->inputFilterAmount->clear();
 
     refreshTransactionsTable();
+}
+
+// deletes whichever transaction is selected in the main tab table
+void GUI::onDeleteTransactionClicked() {
+    const int row = ui->tableTransactions->currentRow(); // -1 when nothing is selected
+    if (row < 0) {
+        QMessageBox::information(this, "Delete Transaction", "Select a transaction in the table first.");
+        return;
+    }
+
+    const QString transactionID = ui->tableTransactions->item(row, 0)->text(); // column 0 holds the id
+
+    // deleting cant be undone, so make the user confirm before we touch the manager
+    const auto confirmed = QMessageBox::question(this, "Delete Transaction",
+        QString("Delete transaction %1?").arg(transactionID));
+    if (confirmed != QMessageBox::Yes) {
+        return;
+    }
+
+    transactionManager.deleteTransaction(transactionID.toStdString());
+    hasUnsavedChanges = true;
+
+    refreshTransactionsTable();
+    onRefreshAnalyticsClicked();
 }
 
 // filters the main tab table down to the transactions matching whichever filters are filled in
@@ -212,7 +438,15 @@ void GUI::onRefreshAnalyticsClicked() {
         ui->tableBudgetUsage->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(row.categoryName)));
         ui->tableBudgetUsage->setItem(i, 1, new QTableWidgetItem(formatCurrency(row.budget)));
         ui->tableBudgetUsage->setItem(i, 2, new QTableWidgetItem(formatCurrency(row.spent)));
-        ui->tableBudgetUsage->setItem(i, 3, new QTableWidgetItem(QString::number(row.usagePercent, 'f', 1) + "%"));
+        ui->tableBudgetUsage->setItem(i, 3, new QTableWidgetItem(budgetUsageText(row.usagePercent)));
+
+        // only the rows actually in trouble get recoloured, so everything else keeps the theme colour
+        if (row.usagePercent > BUDGET_WARNING_PERCENT) {
+            const QColor warning = (row.usagePercent > BUDGET_OVER_PERCENT) ? QColor(255, 0, 0) : QColor(255, 140, 0);
+            for (int column = 0; column < ui->tableBudgetUsage->columnCount(); column++) {
+                ui->tableBudgetUsage->item(i, column)->setForeground(warning);
+            }
+        }
     }
 }
 
@@ -245,10 +479,15 @@ void GUI::populateTransactionsTable(const std::vector<const Transaction*>& trans
             extra = QString::fromStdString(income->getSource());
         }
 
+        // the amount is the one column whose display text isnt its value, so we keep the raw number
+        // on the item as well. that way Edit can read it straight back instead of unpicking "$120.50"
+        auto* amountItem = new QTableWidgetItem(formatCurrency(t->getAmount()));
+        amountItem->setData(Qt::UserRole, t->getAmount());
+
         // populate data in each visible column in the main tab
         ui->tableTransactions->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(t->getTransactionID())));
         ui->tableTransactions->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(t->getDate())));
-        ui->tableTransactions->setItem(i, 2, new QTableWidgetItem(formatCurrency(t->getAmount())));
+        ui->tableTransactions->setItem(i, 2, amountItem);
         ui->tableTransactions->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(t->getCategory())));
         ui->tableTransactions->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(t->getDescription())));
         ui->tableTransactions->setItem(i, 5, new QTableWidgetItem(type));
@@ -271,8 +510,21 @@ void GUI::refreshCategoriesTable() {
 }
 
 
+// stores the current file paths so the next launch can reopen them
+void GUI::rememberDataFilePaths() const {
+    QSettings settings(SETTINGS_ORGANIZATION, SETTINGS_APPLICATION);
+    settings.setValue(SETTINGS_KEY_TRANSACTIONS, ui->inputTransactionsFilePath->text());
+    settings.setValue(SETTINGS_KEY_CATEGORIES, ui->inputCategoriesFilePath->text());
+}
+
 // reads both data files listed on the main tab into the transaction manager
 void GUI::onLoadDataClicked() {
+    loadDataFiles(true); // the user asked for this one, so tell them how it went
+}
+
+// reads both data files listed on the main tab, optionally announcing how many records arrived.
+// startup calls this quietly, the Load Data button calls it with the message
+void GUI::loadDataFiles(const bool showSuccessMessage) {
     const QString transactionsPath = ui->inputTransactionsFilePath->text(); // load transaction file from this location
     const QString categoriesPath = ui->inputCategoriesFilePath->text(); // load category file from this location
 
@@ -283,23 +535,36 @@ void GUI::onLoadDataClicked() {
     }
 
     const DataManager dataManager(transactionsPath.toStdString(), categoriesPath.toStdString());
+    bool loaded = false;
     try {
-        const auto result = transactionManager.load(dataManager);
-        if (!result.has_value()) {
-            QMessageBox::warning(this, "Load Data", dataErrorMessage(result.error()));
-            return;
-        }
+        if (const auto result = transactionManager.load(dataManager); result.has_value()) {
+            loaded = true;
 
-        QMessageBox::information(this, "Load Data", QString("Loaded %1 records.").arg(result.value())); // total num of transactions & categories
+            if (showSuccessMessage) {
+                QMessageBox::information(this, "Load Data", QString("Loaded %1 records.").arg(result.value())); // total num of transactions & categories
+            }
+        } else {
+            QMessageBox::warning(this, "Load Data", dataErrorMessage(result.error()));
+        }
     } catch (const std::exception& e) {
         QMessageBox::critical(this, "Load Data", QString("Failed to read the data files:\n%1").arg(e.what()));
-        return;
     }
 
-
+    // even a failed load can leave the manager holding something different than before, because
+    // loadData empties its output vectors before it starts parsing. so we rebuild from whatever the
+    // manager actually holds either way, otherwise the tables would keep showing rows that are gone
+    transactionManager.refreshUsedCategoryIds();
     refreshTransactionsTable();
     refreshCategoriesTable();
     onRefreshAnalyticsClicked();
+
+    if (!loaded) {
+        return;
+    }
+
+    // only a clean load means memory matches the files, so only then is there nothing to warn about
+    hasUnsavedChanges = false;
+    rememberDataFilePaths();
 }
 
 // writes everything currently in memory out to both data files listed on the main tab
@@ -325,5 +590,40 @@ void GUI::onSaveDataClicked() {
         QMessageBox::information(this, "Save Data", QString("Saved %1 records.").arg(result.value())); // total num of transactions & categories
     } catch (const std::exception& e) {
         QMessageBox::critical(this, "Save Data", QString("Failed to write the data files:\n%1").arg(e.what()));
+        return;
     }
+
+    // everything in memory is on disk now, so closing the window is safe again
+    hasUnsavedChanges = false;
+    rememberDataFilePaths();
+}
+
+// asks the user what to do about unsaved changes before the window actually closes
+void GUI::closeEvent(QCloseEvent* event) {
+    if (!hasUnsavedChanges) {
+        event->accept();
+        return;
+    }
+
+    const auto choice = QMessageBox::question(this, "Unsaved Changes",
+        "You have unsaved changes.\nDo you want to save before exiting?",
+        QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+
+    if (choice == QMessageBox::Cancel) {
+        event->ignore();
+        return;
+    }
+
+    if (choice == QMessageBox::Save) {
+        onSaveDataClicked();
+
+        // saving still fails on a read only or locked file, and onSaveDataClicked only clears the
+        // flag once the write actually worked. so if its still set, stay open rather than lose the data
+        if (hasUnsavedChanges) {
+            event->ignore();
+            return;
+        }
+    }
+
+    event->accept();
 }
