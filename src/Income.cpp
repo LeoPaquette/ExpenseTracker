@@ -41,6 +41,16 @@ bool Income::computeImpact() const {
     return false;
 }
 
+// Extends Transaction::equals with the source. operator== has already confirmed 'other' is
+// actually an Income before this runs, so the downcast is safe
+bool Income::equals(const Transaction& other) const {
+    if (!Transaction::equals(other)) {
+        return false;
+    }
+    const auto& o = static_cast<const Income&>(other);
+    return source == o.source;
+}
+
 // Returns a human-readable summary of the income's fields, built from Transaction::displayTransaction
 string Income::displayTransaction() const {
     return "[Income]  " + Transaction::displayTransaction() + ", Source: " + source;

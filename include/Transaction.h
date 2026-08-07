@@ -27,6 +27,20 @@ protected:
     // Helper function for trimming strings
     static string trim(const string& s);
 
+    /**
+     * @brief Compares this transaction's fields against another of the same concrete type.
+     *
+     * Only ever called by operator==, which checks the runtime type of both sides first, so an
+     * override is safe to static_cast @p other down to its own type. Subclasses override this
+     * and chain to the base implementation to extend the comparison with their own fields.
+     *
+     * @param other The transaction to compare against; guaranteed to share this object's
+     *              concrete (most-derived) type.
+     *
+     * @return true if every field this level of the hierarchy owns matches.
+     */
+    virtual bool equals(const Transaction& other) const;
+
 public:
     // Constructor validating and trimming all fields before assignment
     Transaction(const string& id, const string& date, double amount, const string& category, const string& description);
@@ -61,7 +75,8 @@ public:
     // Returns a human-readable summary of the transaction's fields, built from operator<<
     virtual string displayTransaction() const;
 
-    // Equality compares all shared fields
+    // Equality requires both sides to share the same concrete type, then delegates the field
+    // comparison to equals(), which is virtual so a subclass's own fields are included
     bool operator==(const Transaction& other) const;
     // Friend so it can write the protected fields directly to any stream
     friend ostream& operator<<(ostream& os, const Transaction& t);

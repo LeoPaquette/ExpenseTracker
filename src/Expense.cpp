@@ -39,6 +39,16 @@ bool Expense::computeImpact() const{
     return true;
 }
 
+// Extends Transaction::equals with the payment method. operator== has already confirmed 'other'
+// is actually an Expense before this runs, so the downcast is safe
+bool Expense::equals(const Transaction& other) const {
+    if (!Transaction::equals(other)) {
+        return false;
+    }
+    const auto& o = static_cast<const Expense&>(other);
+    return paymentMethod == o.paymentMethod;
+}
+
 // Returns a human-readable summary of the expense's fields, built from Transaction::displayTransaction
 string Expense::displayTransaction() const {
     return Transaction::displayTransaction() + ", Payment Method: " + paymentMethod;

@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <cctype>
+#include <typeinfo>
 
 #include "../include/Expense.h"
 #include "../include/Income.h"
@@ -194,8 +195,15 @@ string Transaction::displayTransaction() const {
     return oss.str();
 }
 
-// Equality compares all shared fields
+// Equality requires both sides to be the same concrete type before comparing any fields, so an
+// Expense and an Income with identical base fields are never reported equal
 bool Transaction::operator==(const Transaction& other) const {
+    return typeid(*this) == typeid(other) && equals(other);
+}
+
+// Compares the fields every transaction shares. Virtual so Expense/Income can override it,
+// chaining back here for the shared fields and then checking their own on top
+bool Transaction::equals(const Transaction& other) const {
     return transactionID == other.transactionID
         && date == other.date
         && amount == other.amount

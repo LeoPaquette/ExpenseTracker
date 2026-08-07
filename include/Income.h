@@ -14,6 +14,9 @@ protected:
     // Helper function for checking source
     static bool isValidSource(const string& src);
 
+    // Extends Transaction::equals with the source
+    bool equals(const Transaction& other) const override;
+
 public:
     // Constructor validating the source before delegating to Transaction
     Income(const string& id, const string& date, double amount, const string& category, const string& description, const string& source);

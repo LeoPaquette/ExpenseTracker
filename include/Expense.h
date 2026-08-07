@@ -13,6 +13,9 @@ protected:
     string paymentMethod;
     // Helper function for checking payment method
     static bool isValidPaymentMethod(const string& method);
+
+    // Extends Transaction::equals with the payment method
+    bool equals(const Transaction& other) const override;
 public:
     // Constructor validating the payment method before delegating to Transaction
     Expense(const string& id, const string& date, double amount, const string& category, const string& description, const string& paymentMethod);
