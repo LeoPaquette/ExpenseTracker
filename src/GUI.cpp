@@ -11,9 +11,6 @@
 static constexpr double BUDGET_WARNING_PERCENT = 80.0;
 static constexpr double BUDGET_OVER_PERCENT = 100.0;
 
-// the single transaction size worth confirming before it gets saved
-static constexpr double SPENDING_ALERT_THRESHOLD = 1000.0;
-
 // where QSettings keeps the file paths we reopen on the next launch
 static const QString SETTINGS_ORGANIZATION = "CST8219";
 static const QString SETTINGS_APPLICATION = "ExpenseTracker";
@@ -47,6 +44,8 @@ static QString dataErrorMessage(DataManager::DataReadWriteError error) {
             return "The categories file could not be found.";
         case DataManager::DataReadWriteError::CANNOT_OPEN_FILE:
             return "The file couldn't be opened.";
+        case DataManager::DataReadWriteError::DUPLICATE_RECORDS:
+            return "The data files contain duplicate IDs, so nothing was loaded.";
         default:
             return "An unknown error occurred while reading the data.";
     }
@@ -107,8 +106,10 @@ GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
     connect(ui->btnSaveCategory, &QPushButton::clicked, this, &GUI::onSaveCategoryClicked);
     connect(ui->btnEditTransaction, &QPushButton::clicked, this, &GUI::onEditTransactionClicked);
     connect(ui->tabWidget, &QTabWidget::currentChanged, this, &GUI::onTabChanged);
-    // the row detail popups are still unconnected. they need the Transaction object itself to call
-    // displayTransaction() on, and TransactionManager keeps its by-id lookup private
+    // double clicking a row pops up the detail view. cellDoubleClicked also hands over the column,
+    // which we dont care about, and qt lets a slot drop trailing arguments it doesnt want
+    connect(ui->tableTransactions, &QTableWidget::cellDoubleClicked, this, &GUI::onTransactionRowDoubleClicked);
+    connect(ui->tableCategories, &QTableWidget::cellDoubleClicked, this, &GUI::onCategoryRowDoubleClicked);
     // the date filter is opt in so we check for a toggled signal, then enable the date slot.
     connect(ui->chkFilterDate, &QCheckBox::toggled, ui->inputFilterDate, &QDateEdit::setEnabled);
     ui->inputFilterDate->setEnabled(false);
@@ -263,11 +264,13 @@ void GUI::onSaveTransactionClicked() {
     const QString transactionID = ui->inputTransactionID->text().trimmed();
     const bool isExpense = ui->comboType->currentText() == "Expense";
 
-    // one unusually large transaction is worth a second look before it lands in the table
-    if (amount > SPENDING_ALERT_THRESHOLD) {
+    // one unusually large expense is worth a second look before it lands in the table. the threshold
+    // is the users to set, and income is exempt because a big paycheque isnt what this is here to catch
+    const double spendingThreshold = ui->inputSpendingThreshold->value();
+    if (isExpense && amount > spendingThreshold) {
         const auto confirmed = QMessageBox::question(this, "Spending Alert",
-            QString("This transaction exceeds %1.\nAre you sure you want to continue?")
-                .arg(formatCurrency(SPENDING_ALERT_THRESHOLD)));
+            QString("This expense exceeds %1.\nAre you sure you want to continue?")
+                .arg(formatCurrency(spendingThreshold)));
         if (confirmed != QMessageBox::Yes) {
             return;
         }
@@ -291,12 +294,12 @@ void GUI::onSaveTransactionClicked() {
         const std::string date = ui->inputDate->date().toString("yyyy-MM-dd").toStdString();
         const std::string category = ui->inputCategory->text().toStdString();
         const std::string description = ui->inputDescription->text().toStdString();
-        const std::string extra = ui->inputExtra->text().toStdString(); // payment method or source
+        const std::string methodOrSource = ui->inputExtra->text().toStdString(); // whichever the type wants
 
         if (isExpense) {
-            stored = store(Expense(transactionID.toStdString(), date, amount, category, description, extra));
+            stored = store(Expense(transactionID.toStdString(), date, amount, category, description, methodOrSource));
         } else {
-            stored = store(Income(transactionID.toStdString(), date, amount, category, description, extra));
+            stored = store(Income(transactionID.toStdString(), date, amount, category, description, methodOrSource));
         }
     } catch (const std::exception& e) {
         QMessageBox::warning(this, "Save Transaction", e.what());
@@ -351,6 +354,55 @@ void GUI::onDeleteTransactionClicked() {
 
     refreshTransactionsTable();
     onRefreshAnalyticsClicked();
+}
+
+// shows the full details of whichever transaction row was double clicked
+void GUI::onTransactionRowDoubleClicked(int row) {
+    const auto searchResult = transactionManager.getAllTransactions();
+    if (!searchResult.has_value()) {
+        QMessageBox::warning(this, "Transaction Details", "Could not read the loaded transactions.");
+        return;
+    }
+
+    const QString transactionID = ui->tableTransactions->item(row, 0)->text(); // column 0 holds the id
+
+    // the row only carries display text, and displayTransaction lives on the transaction itself. its
+    // virtual, so finding the stored object is what gets us the Expense or the Income wording rather
+    // than the base one. no else branch because the table was built from this same vector
+    for (const Transaction* t : searchResult.value()) {
+        if (QString::fromStdString(t->getTransactionID()) == transactionID) {
+            QMessageBox::information(this, "Transaction Details",
+                QString::fromStdString(t->displayTransaction()));
+            return;
+        }
+    }
+}
+
+// shows the budget summary of whichever category row was double clicked
+void GUI::onCategoryRowDoubleClicked(int row) {
+    const auto searchResult = transactionManager.getAllTransactions();
+    if (!searchResult.has_value()) {
+        QMessageBox::warning(this, "Category Details", "Could not read the loaded transactions.");
+        return;
+    }
+
+    // displayCategorySummary wants the amount spent, which only the analytics engine works out
+    const auto spending = analyticsEngine.computeCategorySpending(searchResult.value());
+
+    const QString categoryName = ui->tableCategories->item(row, 0)->text(); // column 0 holds the name
+
+    for (const Category* c : transactionManager.getAllCategories()) {
+        if (QString::fromStdString(c->getName()) == categoryName) {
+            // the map only has the categories something was actually spent against, so a category
+            // nobody has spent on is missing from it rather than sitting in there as a zero
+            const auto spent = spending.find(c->getName());
+            const double amountSpent = (spent != spending.end()) ? spent->second : 0.0;
+
+            QMessageBox::information(this, "Category Details",
+                QString::fromStdString(c->displayCategorySummary(amountSpent)));
+            return;
+        }
+    }
 }
 
 // filters the main tab table down to the transactions matching whichever filters are filled in
@@ -473,13 +525,13 @@ void GUI::populateTransactionsTable(const std::vector<const Transaction*>& trans
         const Transaction* t = transactions.at(i);
 
         QString type;
-        QString extra; // wheere extra is just the payment method
+        QString methodOrSource; // one column for two different fields, whichever the type carries
         if (const auto* expense = dynamic_cast<const Expense*>(t)) { //downcast, find out if transaction* is actually pointing at an expense
             type = "Expense";
-            extra = QString::fromStdString(expense->getPaymentMethod());
+            methodOrSource = QString::fromStdString(expense->getPaymentMethod());
         } else if (const auto* income = dynamic_cast<const Income*>(t)) {
             type = "Income";
-            extra = QString::fromStdString(income->getSource());
+            methodOrSource = QString::fromStdString(income->getSource());
         }
 
         // the amount is the one column whose display text isnt its value, so we keep the raw number
@@ -494,7 +546,7 @@ void GUI::populateTransactionsTable(const std::vector<const Transaction*>& trans
         ui->tableTransactions->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(t->getCategory())));
         ui->tableTransactions->setItem(i, 4, new QTableWidgetItem(QString::fromStdString(t->getDescription())));
         ui->tableTransactions->setItem(i, 5, new QTableWidgetItem(type));
-        ui->tableTransactions->setItem(i, 6, new QTableWidgetItem(extra));
+        ui->tableTransactions->setItem(i, 6, new QTableWidgetItem(methodOrSource));
     }
 }
 
@@ -553,9 +605,9 @@ void GUI::loadDataFiles(const bool showSuccessMessage) {
         QMessageBox::critical(this, "Load Data", QString("Failed to read the data files:\n%1").arg(e.what()));
     }
 
-    // even a failed load can leave the manager holding something different than before, because
-    // loadData empties its output vectors before it starts parsing. so we rebuild from whatever the
-    // manager actually holds either way, otherwise the tables would keep showing rows that are gone
+    // load() puts the previous data back when it returns an error, but a malformed file throws out of
+    // it instead, and that path leaves the manager holding whatever was parsed before the throw. so we
+    // rebuild from whatever it actually holds either way, rather than trusting the tables to be current
     transactionManager.refreshUsedCategoryIds();
     refreshTransactionsTable();
     refreshCategoriesTable();

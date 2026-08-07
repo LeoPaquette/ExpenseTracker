@@ -78,6 +78,18 @@ private slots:
     void onSearchTransactionsClicked();
     // deletes whichever transaction is selected in the main tab table
     void onDeleteTransactionClicked();
+    /**
+     * @brief Shows the full details of whichever transaction row was double clicked.
+     *
+     * @param row The double clicked row in the main tab table.
+     */
+    void onTransactionRowDoubleClicked(int row);
+    /**
+     * @brief Shows the budget summary of whichever category row was double clicked.
+     *
+     * @param row The double clicked row in the category tab table.
+     */
+    void onCategoryRowDoubleClicked(int row);
 
 private:
     // fills the main tab table from everything currently loaded
@@ -101,8 +113,9 @@ private:
     /**
      * @brief Reads both data files listed on the main tab into the transaction manager.
      *
-     * The tables are rebuilt whether or not the read succeeded, because @c DataManager::loadData
-     * empties its output vectors before parsing and a bad file therefore changes what is held.
+     * The tables are rebuilt whether or not the read succeeded. @c TransactionManager::load restores
+     * the previous data when it returns an error, but a malformed file throws out of it instead and
+     * leaves the manager holding however much was parsed before the throw.
      *
      * @param showSuccessMessage Whether to report the record count on success. The Load Data button
      *                           passes @c true; the startup reload passes @c false so launching the

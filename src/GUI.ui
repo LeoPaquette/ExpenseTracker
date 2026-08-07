@@ -106,7 +106,7 @@
        </column>
        <column>
         <property name="text">
-         <string>Payment Method</string>
+         <string>Method/Source</string>
         </property>
        </column>
       </widget>
@@ -437,7 +437,33 @@
           </property>
          </widget>
         </item>
+        <item row="7" column="0">
+         <widget class="QLabel" name="labelSpendingThreshold">
+          <property name="text">
+           <string>Alert Above:</string>
+          </property>
+         </widget>
+        </item>
         <item row="7" column="1">
+         <widget class="QDoubleSpinBox" name="inputSpendingThreshold">
+          <property name="toolTip">
+           <string>Warn before saving an expense larger than this</string>
+          </property>
+          <property name="prefix">
+           <string>$</string>
+          </property>
+          <property name="decimals">
+           <number>2</number>
+          </property>
+          <property name="maximum">
+           <double>1000000.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>1000.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item row="8" column="1">
          <layout class="QHBoxLayout" name="layoutFormButtons">
           <item>
            <widget class="QPushButton" name="btnSaveTransaction">
