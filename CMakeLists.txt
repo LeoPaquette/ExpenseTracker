@@ -30,7 +30,10 @@ add_executable(ExpenseTracker
         src/GUI.cpp
         src/GUI.ui
         include/JSON.h
-        resources/resources.qrc)
+        resources/resources.qrc
+        include/Util.h
+        src/Util.cpp
+)
 
 target_link_libraries(ExpenseTracker Qt6::Widgets nlohmann_json::nlohmann_json)
 target_include_directories(ExpenseTracker PRIVATE .)

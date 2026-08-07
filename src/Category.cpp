@@ -5,6 +5,8 @@
 #include <string>
 #include <iomanip>
 
+#include "include/Util.h"
+
 using namespace std;
 
 // Helper function for checking category ID
@@ -153,7 +155,7 @@ json Category::toJSON() const {
 // Equality compares all fields
 bool Category::operator==(const Category& other) const {
     return categoryID == other.categoryID
-        && name == other.name
+        && util::insensitive_equals(name, other.name)
         && monthlyBudget == other.monthlyBudget;
 }
 
