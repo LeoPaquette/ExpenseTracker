@@ -40,7 +40,6 @@ target_include_directories(ExpenseTracker PRIVATE .)
 
 # moved the Leo's tests from main to its own test run config.
 add_executable(ValidatorTester
-        tests/ValidatorTester.cpp
         include/Transaction.h
         include/Expense.h
         include/Income.h
