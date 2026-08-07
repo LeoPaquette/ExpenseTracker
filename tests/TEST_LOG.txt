@@ -1,54 +1,45 @@
 EXPENSE TRACKER - TEST LOG
 CST8219 - Personal Expense Tracker and Budget Management System
-
 Date: 2026-08-06
-Scope: the edge cases listed in spec section V, plus section VII step 7.
-        All executed through the running application.
 
 
 GUI EDGE CASES
 -------------------------------------------------------------------------------
 #  CASE                          RESULT  WHAT HAPPENED
 -------------------------------------------------------------------------------
-1  Pressing Save multiple times  PASS    Double-clicked Save. One record created
-   rapidly                               (TRX-0300), confirmed by search.
+1  Pressing Save multiple times  PASS    One record created.
 -------------------------------------------------------------------------------
 2  Editing while another dialog  PASS    With a message box open, clicking the
-   is open                               Analytics tab did nothing. Dialogs are
-                                         modal, so the window is not reachable.
+   is open                               Analytics tab did nothing.
 -------------------------------------------------------------------------------
 3  Closing with unsaved changes  PASS    "You have unsaved changes. Do you want
-                                         to save before exiting?" Save/Discard/
-                                         Cancel. Cancel kept the window open.
+                                         to save before exiting?"
 -------------------------------------------------------------------------------
 4  Edit without selecting a      PASS    "Select a transaction in the table
-   transaction                           first." Stayed on the Main tab.
+   transaction                           first."
 -------------------------------------------------------------------------------
 5  Delete without selecting a    PASS    "Select a transaction in the table
-   transaction                           first." Table unchanged.
+   transaction                           first."
 -------------------------------------------------------------------------------
 
 DATA EDGE CASES
 -------------------------------------------------------------------------------
 #  CASE                          RESULT  WHAT HAPPENED
 -------------------------------------------------------------------------------
-6  Thousands of transactions     PASS    5000-record file loaded: "Loaded 5004
-                                         records." No stall.
+6  Thousands of transactions     PASS    "Loaded 5006 records."
 -------------------------------------------------------------------------------
-7  Very large transaction        PASS    999,999.99 and exactly 1,000,000.00 both
-   amounts                               accepted. Above the cap is rejected with
-                                         "Invalid amount. Must be a number
-                                         between 0 and 1,000,000."
+7  Very large transaction        PASS    "Invalid amount. Must be a number
+                                          between 0 and 1,000,000."
+
 -------------------------------------------------------------------------------
 8  Extremely long descriptions   PASS    100 characters accepted, 650 rejected
                                          with "Invalid description. Must be 5-100
                                          characters and contain a letter."
 -------------------------------------------------------------------------------
 9  Duplicate transactions        PASS    "The data files contain duplicate IDs,
-   loaded from files                     so nothing was loaded." Nothing loaded.
+   loaded from files                     so nothing was loaded."
 -------------------------------------------------------------------------------
-10 Categories without budgets    PASS    A category with monthlyBudget 0.0 is
-                                         rejected on load: "Invalid monthly
+10 Categories without budgets    PASS    "Invalid monthly
                                          budget. Must be a number between 0 and
                                          1,000,000."
 -------------------------------------------------------------------------------
@@ -56,19 +47,17 @@ DATA EDGE CASES
 FILE EDGE CASES
 -------------------------------------------------------------------------------
 #  CASE                          RESULT  WHAT HAPPENED
+-------------------------------------------------------------------------------
 11 Missing file                  PASS    "The transactions file could not be
-                                         found." Previously loaded data kept.
+                                         found."
 -------------------------------------------------------------------------------
-12 Empty file                    PASS    Parse error reported in an error box.
-                                         No crash.
+12 Empty file                    PASS    Doesnt crash.
 -------------------------------------------------------------------------------
-13 Read-only file                PASS    Saving to a read-only file: "The file
+13 Saving to a Read-only file    PASS    Saving to a read-only file: "The file
                                          couldn't be opened." Both target files
                                          byte-identical afterwards, no data lost.
 -------------------------------------------------------------------------------
-14 Corrupted JSON file           PASS    Parse error reported in an error box.
-                                         No crash.
+14 Corrupted JSON file           PASS    Doesnt crash.
 -------------------------------------------------------------------------------
-15 Invalid character encoding    PASS    A UTF-16 encoded file reported a parse
-                                         error. No crash, no garbage records.
+15 Invalid character encoding    PASS    Doesnt crash.
 -------------------------------------------------------------------------------

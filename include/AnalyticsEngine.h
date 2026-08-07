@@ -1,3 +1,10 @@
+/*
+* CST8219 - Personal Expense Tracker and Budget Management System
+ * This file drives the analytics for our expense tracker, calling the respective functions in other classes
+ * as necessary.
+ * @author Wesley Deir
+*/
+
 #ifndef EXPENSETRACKER_ANALYTICSENGINE_H
 #define EXPENSETRACKER_ANALYTICSENGINE_H
 

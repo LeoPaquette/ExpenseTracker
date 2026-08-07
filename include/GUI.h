@@ -1,3 +1,9 @@
+/*
+* CST8219 - Personal Expense Tracker and Budget Management System
+ * This file declares all the slots and required declarations for GUI.cpp
+ * @author Wesley Deir
+*/
+
 #ifndef EXPENSETRACKER_GUI_H
 #define EXPENSETRACKER_GUI_H
 

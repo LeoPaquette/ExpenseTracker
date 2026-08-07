@@ -1,3 +1,8 @@
+/*
+ * CST8219 - Personal Expense Tracker and Budget Management System
+ * This files handles all GUI logic.
+ * @author Wesley Deir
+*/
 #include "include/GUI.h"
 #include "ui_GUI.h"
 #include <QHeaderView>
