@@ -9,6 +9,11 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSettings>
+#include <QApplication>
+#include <QStyleFactory>
+#include <QFile>
+#include <QProgressBar>
+#include <algorithm>
 #include "include/Expense.h"
 #include "include/Income.h"
 
@@ -21,6 +26,95 @@ static const QString SETTINGS_ORGANIZATION = "CST8219";
 static const QString SETTINGS_APPLICATION = "ExpenseTracker";
 static const QString SETTINGS_KEY_TRANSACTIONS = "transactionsFile";
 static const QString SETTINGS_KEY_CATEGORIES = "categoriesFile";
+
+// the theme colours the code has to know about. item foregrounds and cell widgets are built in
+// c++, and neither can be reached from the stylesheet, so these have to match dark.qss by hand
+static const QString COLOR_POSITIVE = "#34d399";
+static const QString COLOR_WARNING = "#fbbf24";
+static const QString COLOR_OVER = "#f87171";
+
+// deeper versions of the same three, for the budget bars. the percentage is printed over the top
+// of the fill, and the bright shades above are too light to read pale text against
+static const QString FILL_POSITIVE = "#15803d";
+static const QString FILL_WARNING = "#a16207";
+static const QString FILL_OVER = "#b91c1c";
+
+/**
+ * @brief Builds a table cell for a money value.
+ *
+ * Right aligned and monospaced, both of which are needed for the decimal points to line up down
+ * a column. Proportional digits are different widths, so right alignment on its own still leaves
+ * $1200.00 and $112.45 ragged. A column of figures you can compare at a glance is most of what
+ * separates a table of money from a table of text.
+ *
+ * @param text The already formatted value, e.g. @c "$120.50".
+ * @return A cell ready to hand to @c setItem.
+ */
+static QTableWidgetItem* moneyItem(const QString& text) {
+    // built once. the size follows whatever the application font is using so it sits on the same
+    // baseline as the rest of the row
+    static const QFont figures = [] {
+        QFont font("Consolas");
+        font.setStyleHint(QFont::Monospace);
+        font.setPointSize(QApplication::font().pointSize());
+        return font;
+    }();
+
+    auto* item = new QTableWidgetItem(text);
+    item->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    item->setFont(figures);
+    return item;
+}
+
+/**
+ * @brief Puts the application into the dark theme.
+ *
+ * Three things have to happen together. Fusion replaces the native windows style, which paints
+ * half of these widgets itself and ignores most of a stylesheet. The palette covers everything
+ * the stylesheet doesnt name, so scroll bars and the calendar popup dont open in light grey.
+ * The stylesheet itself then does the borders, the rounding and the hover states.
+ *
+ * Applied to the whole application rather than just this window so message boxes and tooltips,
+ * which arent part of our widget tree, get themed too.
+ *
+ * https://doc.qt.io/qt-6/qpalette.html
+ *   the colour roles below. Window is the widget background, Base is the background of anything
+ *   you type into, Highlight is the selection colour. read it to see why setting Text alone
+ *   isnt enough.
+ * https://doc.qt.io/qt-6/qstylefactory.html
+ *   where "Fusion" comes from. qt picks the native windows style by default, and that one draws
+ *   a lot of widgets itself and quietly ignores most of a stylesheet.
+ * https://doc.qt.io/qt-6/resources.html
+ *   the ":/styles/dark.qss" path and the AUTORCC line in CMakeLists.txt. the prefix is set in
+ *   resources/resources.qrc.
+ */
+static void applyTheme() {
+    QApplication::setStyle(QStyleFactory::create("Fusion"));
+
+    QPalette dark;
+    dark.setColor(QPalette::Window, QColor("#111418"));
+    dark.setColor(QPalette::WindowText, QColor("#e6e9ec"));
+    dark.setColor(QPalette::Base, QColor("#181c21"));
+    dark.setColor(QPalette::AlternateBase, QColor("#1c2126"));
+    dark.setColor(QPalette::Text, QColor("#e6e9ec"));
+    dark.setColor(QPalette::Button, QColor("#20252b"));
+    dark.setColor(QPalette::ButtonText, QColor("#e6e9ec"));
+    dark.setColor(QPalette::Highlight, QColor("#2dd4a7"));
+    dark.setColor(QPalette::HighlightedText, QColor("#0d1013"));
+    dark.setColor(QPalette::ToolTipBase, QColor("#20252b"));
+    dark.setColor(QPalette::ToolTipText, QColor("#e6e9ec"));
+    dark.setColor(QPalette::PlaceholderText, QColor("#7d858f"));
+    dark.setColor(QPalette::Disabled, QPalette::Text, QColor("#545b64"));
+    dark.setColor(QPalette::Disabled, QPalette::ButtonText, QColor("#545b64"));
+    QApplication::setPalette(dark);
+
+    // compiled in by AUTORCC, so theres no file next to the exe that can go missing
+    QFile styleFile(":/styles/dark.qss");
+    if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
+        qApp->setStyleSheet(QString::fromUtf8(styleFile.readAll()));
+    }
+    // if it somehow didnt open we still have the palette, so the app is dark either way
+}
 
 // formats a monetary value the way the analytics tab displays it
 static QString formatCurrency(double value) {
@@ -74,7 +168,22 @@ static QString searchErrorMessage(TransactionManager::SearchError error) {
 
 // builds the widget tree
 GUI::GUI(QWidget* parent) : QWidget(parent), ui(new Ui::ExpenseTrackerWindow) {
+    applyTheme();
     ui->setupUi(this);
+
+    // the tables read much better banded once theres a surface colour behind them, and once
+    // theyre banded the grid lines are a second way of saying the same thing. one is enough
+    for (QTableWidget* table : {ui->tableTransactions, ui->tableCategories, ui->tableBudgetUsage}) {
+        table->setAlternatingRowColors(true);
+        table->setShowGrid(false);
+    }
+
+    // the money cells are right aligned, so a centred heading over them sits off to one side of
+    // its own column. these are the columns moneyItem() fills
+    ui->tableTransactions->horizontalHeaderItem(2)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ui->tableCategories->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ui->tableBudgetUsage->horizontalHeaderItem(1)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ui->tableBudgetUsage->horizontalHeaderItem(2)->setTextAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     // dont allow future dated transactions
     ui->inputDate->setMaximumDate(QDate::currentDate());
@@ -487,7 +596,7 @@ void GUI::onRefreshAnalyticsClicked() {
 
     ui->valueTotalIncome->setText(formatCurrency(analyticsEngine.computeTotalIncome(transactions)));
     ui->valueTotalExpenses->setText(formatCurrency(analyticsEngine.computeTotalExpenses(transactions)));
-    const QString color = (analyticsEngine.computeSavings(transactions) < 0) ? "#FF0000" : "#008000";
+    const QString color = (analyticsEngine.computeSavings(transactions) < 0) ? COLOR_OVER : COLOR_POSITIVE;
     ui->valueSavings->setText("<font color='" + color + "'>" + formatCurrency(analyticsEngine.computeSavings(transactions)) + "</font>");
     const auto rows = analyticsEngine.computeBudgetUsage(transactions, categories);
 
@@ -496,16 +605,34 @@ void GUI::onRefreshAnalyticsClicked() {
         const auto& row = rows.at(i);
 
         ui->tableBudgetUsage->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(row.categoryName)));
-        ui->tableBudgetUsage->setItem(i, 1, new QTableWidgetItem(formatCurrency(row.budget)));
-        ui->tableBudgetUsage->setItem(i, 2, new QTableWidgetItem(formatCurrency(row.spent)));
-        ui->tableBudgetUsage->setItem(i, 3, new QTableWidgetItem(budgetUsageText(row.usagePercent)));
+        ui->tableBudgetUsage->setItem(i, 1, moneyItem(formatCurrency(row.budget)));
+        ui->tableBudgetUsage->setItem(i, 2, moneyItem(formatCurrency(row.spent)));
 
-        // only the rows actually in trouble get recoloured, so everything else keeps the theme colour
+        // whichever of the three bands the row is in. the bright shade labels the category, the
+        // deep one fills the bar behind the percentage
+        const bool isOver = row.usagePercent > BUDGET_OVER_PERCENT;
+        const QString usageColor = isOver ? COLOR_OVER
+                                 : (row.usagePercent > BUDGET_WARNING_PERCENT) ? COLOR_WARNING
+                                 : COLOR_POSITIVE;
+        const QString usageFill = isOver ? FILL_OVER
+                                : (row.usagePercent > BUDGET_WARNING_PERCENT) ? FILL_WARNING
+                                : FILL_POSITIVE;
+
+        // a bar rather than a number. the figure tells you what the usage is, the bar tells you how
+        // close to the edge it is without having to read anything, which is the actual question
+        auto* usageBar = new QProgressBar();
+        usageBar->setRange(0, 100);
+        usageBar->setValue(static_cast<int>(std::min(row.usagePercent, 100.0))); // 125% still fills it, no more
+        usageBar->setFormat(budgetUsageText(row.usagePercent)); // the exact figure stays, printed on the bar
+        usageBar->setAlignment(Qt::AlignCenter);
+        // everything else about the bar is in the stylesheet. only the fill changes per row
+        usageBar->setStyleSheet("QProgressBar::chunk { background-color: " + usageFill + "; border-radius: 4px; }");
+        ui->tableBudgetUsage->setCellWidget(i, 3, usageBar);
+
+        // the bar already carries the warning, so the text says it once more and quietly. colouring
+        // all four columns on top of a coloured bar is the same alarm going off twice
         if (row.usagePercent > BUDGET_WARNING_PERCENT) {
-            const QColor warning = (row.usagePercent > BUDGET_OVER_PERCENT) ? QColor(255, 0, 0) : QColor(255, 140, 0);
-            for (int column = 0; column < ui->tableBudgetUsage->columnCount(); column++) {
-                ui->tableBudgetUsage->item(i, column)->setForeground(warning);
-            }
+            ui->tableBudgetUsage->item(i, 0)->setForeground(QColor(usageColor));
         }
     }
 }
@@ -539,10 +666,17 @@ void GUI::populateTransactionsTable(const std::vector<const Transaction*>& trans
             methodOrSource = QString::fromStdString(income->getSource());
         }
 
+        // income is the exception in a table thats almost entirely expenses, so its the only thing
+        // that gets a sign and a colour. marking every expense red instead would turn the whole
+        // table into a warning and stop any of it meaning anything
+        const bool isIncome = (type == "Income");
         // the amount is the one column whose display text isnt its value, so we keep the raw number
         // on the item as well. that way Edit can read it straight back instead of unpicking "$120.50"
-        auto* amountItem = new QTableWidgetItem(formatCurrency(t->getAmount()));
+        QTableWidgetItem* amountItem = moneyItem((isIncome ? "+" : "") + formatCurrency(t->getAmount()));
         amountItem->setData(Qt::UserRole, t->getAmount());
+        if (isIncome) {
+            amountItem->setForeground(QColor(COLOR_POSITIVE));
+        }
 
         // populate data in each visible column in the main tab
         ui->tableTransactions->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(t->getTransactionID())));
@@ -565,7 +699,7 @@ void GUI::refreshCategoriesTable() {
         const Category* c = categories.at(i);
 
         ui->tableCategories->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(c->getName())));
-        ui->tableCategories->setItem(i, 1, new QTableWidgetItem(formatCurrency(c->getMonthlyBudget())));
+        ui->tableCategories->setItem(i, 1, moneyItem(formatCurrency(c->getMonthlyBudget())));
     }
 }
 

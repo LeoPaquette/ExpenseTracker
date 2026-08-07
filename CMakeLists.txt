@@ -4,6 +4,7 @@ project(ExpenseTracker)
 set(CMAKE_CXX_STANDARD 23) # spec says to use at least 17, but 23 is what we're being taught
 set(CMAKE_AUTOMOC ON) # qt
 set(CMAKE_AUTOUIC ON) # qt
+set(CMAKE_AUTORCC ON) # bakes resources/dark.qss into the exe so the theme cant go missing at runtime
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 include(FetchContent)
@@ -28,7 +29,8 @@ add_executable(ExpenseTracker
         src/DataManager.cpp
         src/GUI.cpp
         src/GUI.ui
-        include/JSON.h)
+        include/JSON.h
+        resources/resources.qrc)
 
 target_link_libraries(ExpenseTracker Qt6::Widgets nlohmann_json::nlohmann_json)
 target_include_directories(ExpenseTracker PRIVATE .)

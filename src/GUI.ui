@@ -6,14 +6,32 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>858</width>
-    <height>720</height>
+    <width>900</width>
+    <height>760</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>780</width>
+    <height>620</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Expense Tracker</string>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout_2">
+   <property name="leftMargin">
+    <number>10</number>
+   </property>
+   <property name="topMargin">
+    <number>10</number>
+   </property>
+   <property name="rightMargin">
+    <number>10</number>
+   </property>
+   <property name="bottomMargin">
+    <number>10</number>
+   </property>
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
@@ -23,735 +41,930 @@
       <attribute name="title">
        <string>Main</string>
       </attribute>
-      <widget class="QWidget" name="actionButtonsWidget">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>20</y>
-         <width>781</width>
-         <height>35</height>
-        </rect>
+      <layout class="QVBoxLayout" name="layoutMainTab">
+       <property name="spacing">
+        <number>12</number>
        </property>
-       <layout class="QHBoxLayout" name="layoutActionButtons">
-        <item>
-         <widget class="QPushButton" name="btnAddTransaction">
-          <property name="text">
-           <string>Add Transaction(s)</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnEditTransaction">
-          <property name="text">
-           <string>Edit Transactions</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnDeleteTransaction">
-          <property name="text">
-           <string>Delete Transaction</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QTableWidget" name="tableTransactions">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>140</y>
-         <width>781</width>
-         <height>380</height>
-        </rect>
+       <property name="leftMargin">
+        <number>16</number>
        </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+       <property name="topMargin">
+        <number>16</number>
        </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+       <property name="rightMargin">
+        <number>16</number>
        </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+       <property name="bottomMargin">
+        <number>16</number>
        </property>
-       <column>
-        <property name="text">
-         <string>ID</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Date</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Amount</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Category</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Description</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Type</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Method/Source</string>
-        </property>
-       </column>
-      </widget>
-      <widget class="QGroupBox" name="groupSearchFilter">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>65</y>
-         <width>781</width>
-         <height>61</height>
-        </rect>
-       </property>
-       <property name="title">
-        <string>Search / Filter</string>
-       </property>
-       <layout class="QHBoxLayout" name="layoutSearchFilter">
-        <item>
-         <widget class="QCheckBox" name="chkFilterDate">
-          <property name="toolTip">
-           <string>Check to filter by date</string>
+       <item>
+        <layout class="QHBoxLayout" name="layoutActionButtons">
+         <item>
+          <widget class="QPushButton" name="btnAddTransaction">
+           <property name="text">
+            <string>Add Transaction(s)</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnEditTransaction">
+           <property name="text">
+            <string>Edit Transactions</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnDeleteTransaction">
+           <property name="text">
+            <string>Delete Transaction</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupSearchFilter">
+         <property name="title">
+          <string>Search / Filter</string>
+         </property>
+         <layout class="QHBoxLayout" name="layoutSearchFilter">
+          <property name="leftMargin">
+           <number>12</number>
           </property>
-          <property name="text">
-           <string>Date:</string>
+          <property name="topMargin">
+           <number>14</number>
           </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QDateEdit" name="inputFilterDate">
-          <property name="enabled">
-           <bool>false</bool>
+          <property name="rightMargin">
+           <number>12</number>
           </property>
-          <property name="displayFormat">
-           <string>yyyy-MM-dd</string>
+          <property name="bottomMargin">
+           <number>12</number>
           </property>
-          <property name="calendarPopup">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="labelFilterCategory">
-          <property name="text">
-           <string>Category:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="inputFilterCategory">
-          <property name="placeholderText">
-           <string>Any</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLabel" name="labelFilterAmount">
-          <property name="text">
-           <string>Amount:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QLineEdit" name="inputFilterAmount">
-          <property name="placeholderText">
-           <string>Any</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnSearchTransactions">
-          <property name="text">
-           <string>Search</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnClearFilters">
-          <property name="text">
-           <string>Clear</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QGroupBox" name="groupDataFiles">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>530</y>
-         <width>781</width>
-         <height>111</height>
-        </rect>
-       </property>
-       <property name="title">
-        <string>Data Files</string>
-       </property>
-       <layout class="QGridLayout" name="gridDataFiles">
-        <item row="0" column="0">
-         <widget class="QLabel" name="labelTransactionsFile">
-          <property name="text">
-           <string>Transactions File:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="inputTransactionsFilePath">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-          <property name="placeholderText">
-           <string>No file selected</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="2">
-         <widget class="QPushButton" name="btnBrowseTransactionsFile">
-          <property name="text">
-           <string>Browse...</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="labelCategoriesFile">
-          <property name="text">
-           <string>Categories File:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="inputCategoriesFilePath">
-          <property name="readOnly">
-           <bool>true</bool>
-          </property>
-          <property name="placeholderText">
-           <string>No file selected</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="2">
-         <widget class="QPushButton" name="btnBrowseCategoriesFile">
-          <property name="text">
-           <string>Browse...</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1" colspan="2">
-         <layout class="QHBoxLayout" name="layoutDataButtons">
           <item>
-           <spacer name="spacerDataButtons">
-            <property name="orientation">
-             <enum>Qt::Orientation::Horizontal</enum>
+           <widget class="QCheckBox" name="chkFilterDate">
+            <property name="toolTip">
+             <string>Check to filter by date</string>
             </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="btnSaveData">
             <property name="text">
-             <string>Save Data</string>
+             <string>Date:</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btnLoadData">
-            <property name="text">
-             <string>Load Data</string>
+           <widget class="QDateEdit" name="inputFilterDate">
+            <property name="enabled">
+             <bool>false</bool>
             </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="Tab_TransactionForm">
-      <attribute name="title">
-       <string>Transaction Form</string>
-      </attribute>
-      <widget class="QGroupBox" name="groupTransactionDetails">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>30</y>
-         <width>610</width>
-         <height>330</height>
-        </rect>
-       </property>
-       <property name="title">
-        <string>Transaction Details</string>
-       </property>
-       <layout class="QFormLayout" name="formLayout">
-        <item row="0" column="0">
-         <widget class="QLabel" name="typeLabel">
-          <property name="text">
-           <string>Type:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QComboBox" name="comboType">
-          <property name="toolTip">
-           <string>Expense reduces your budget, income adds to it</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>Expense</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Income</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="labelTransactionID">
-          <property name="text">
-           <string>Transaction ID:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="inputTransactionID">
-          <property name="toolTip">
-           <string>Must be unique. Format: TRX-0001</string>
-          </property>
-          <property name="placeholderText">
-           <string>TRX-0001</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLabel" name="labelDate">
-          <property name="text">
-           <string>Date:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QDateEdit" name="inputDate">
-          <property name="toolTip">
-           <string>Date of the transaction (future dates not allowed)</string>
-          </property>
-          <property name="displayFormat">
-           <string>yyyy-MM-dd</string>
-          </property>
-          <property name="calendarPopup">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="labelAmount">
-          <property name="text">
-           <string>Amount:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="1">
-         <widget class="QLineEdit" name="inputAmount">
-          <property name="toolTip">
-           <string>Positive number, max $1,000,000</string>
-          </property>
-          <property name="placeholderText">
-           <string>100.50</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLabel" name="labelCategory">
-          <property name="text">
-           <string>Category:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QLineEdit" name="inputCategory">
-          <property name="toolTip">
-           <string>Max 30 characters. Duplicates are matched case-insensitively</string>
-          </property>
-          <property name="placeholderText">
-           <string>e.g. Food, Rent, Transport</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QLabel" name="labelDescription">
-          <property name="text">
-           <string>Description:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="1">
-         <widget class="QLineEdit" name="inputDescription">
-          <property name="toolTip">
-           <string>5 to 100 characters, must contain at least one letter</string>
-          </property>
-          <property name="whatsThis">
-           <string/>
-          </property>
-          <property name="placeholderText">
-           <string/>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="labelExtra">
-          <property name="text">
-           <string>Payment Method:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QLineEdit" name="inputExtra">
-          <property name="toolTip">
-           <string>Payment method for expenses, source for income</string>
-          </property>
-          <property name="placeholderText">
-           <string>e.g. Debit, Credit, Cash</string>
-          </property>
-          <property name="clearButtonEnabled">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="labelSpendingThreshold">
-          <property name="text">
-           <string>Alert Above:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
-         <widget class="QDoubleSpinBox" name="inputSpendingThreshold">
-          <property name="toolTip">
-           <string>Warn before saving an expense larger than this</string>
-          </property>
-          <property name="prefix">
-           <string>$</string>
-          </property>
-          <property name="decimals">
-           <number>2</number>
-          </property>
-          <property name="maximum">
-           <double>1000000.000000000000000</double>
-          </property>
-          <property name="value">
-           <double>1000.000000000000000</double>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="1">
-         <layout class="QHBoxLayout" name="layoutFormButtons">
-          <item>
-           <widget class="QPushButton" name="btnSaveTransaction">
-            <property name="styleSheet">
-             <string>background-color: #2e7d32; color: white; padding: 6px;</string>
+            <property name="displayFormat">
+             <string>yyyy-MM-dd</string>
             </property>
-            <property name="text">
-             <string>Save</string>
-            </property>
-            <property name="default">
+            <property name="calendarPopup">
              <bool>true</bool>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="btnCancelTransaction">
+           <widget class="QLabel" name="labelFilterCategory">
             <property name="text">
-             <string>Cancel</string>
+             <string>Category:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="inputFilterCategory">
+            <property name="placeholderText">
+             <string>Any</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="labelFilterAmount">
+            <property name="text">
+             <string>Amount:</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="inputFilterAmount">
+            <property name="placeholderText">
+             <string>Any</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnSearchTransactions">
+            <property name="text">
+             <string>Search</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnClearFilters">
+            <property name="text">
+             <string>Clear</string>
             </property>
            </widget>
           </item>
          </layout>
-        </item>
-       </layout>
-      </widget>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="tableTransactions">
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+         </property>
+         <column>
+          <property name="text">
+           <string>ID</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Date</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Amount</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Category</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Description</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Type</string>
+          </property>
+         </column>
+         <column>
+          <property name="text">
+           <string>Method/Source</string>
+          </property>
+         </column>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupDataFiles">
+         <property name="title">
+          <string>Data Files</string>
+         </property>
+         <layout class="QGridLayout" name="gridDataFiles">
+          <property name="leftMargin">
+           <number>12</number>
+          </property>
+          <property name="topMargin">
+           <number>14</number>
+          </property>
+          <property name="rightMargin">
+           <number>12</number>
+          </property>
+          <property name="bottomMargin">
+           <number>12</number>
+          </property>
+          <item row="0" column="0">
+           <widget class="QLabel" name="labelTransactionsFile">
+            <property name="text">
+             <string>Transactions File:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLineEdit" name="inputTransactionsFilePath">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>No file selected</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="btnBrowseTransactionsFile">
+            <property name="text">
+             <string>Browse...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="labelCategoriesFile">
+            <property name="text">
+             <string>Categories File:</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLineEdit" name="inputCategoriesFilePath">
+            <property name="readOnly">
+             <bool>true</bool>
+            </property>
+            <property name="placeholderText">
+             <string>No file selected</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="2">
+           <widget class="QPushButton" name="btnBrowseCategoriesFile">
+            <property name="text">
+             <string>Browse...</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2">
+           <layout class="QHBoxLayout" name="layoutDataButtons">
+            <item>
+             <spacer name="spacerDataButtons">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnSaveData">
+              <property name="text">
+               <string>Save Data</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="btnLoadData">
+              <property name="text">
+               <string>Load Data</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="Tab_TransactionForm">
+      <attribute name="title">
+       <string>Transaction Form</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="layoutTransactionFormTab">
+       <property name="spacing">
+        <number>12</number>
+       </property>
+       <property name="leftMargin">
+        <number>16</number>
+       </property>
+       <property name="topMargin">
+        <number>16</number>
+       </property>
+       <property name="rightMargin">
+        <number>16</number>
+       </property>
+       <property name="bottomMargin">
+        <number>16</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="layoutTransactionFormCentering">
+         <item>
+          <spacer name="spacerTransactionFormLeft">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupTransactionDetails">
+           <property name="minimumSize">
+            <size>
+             <width>620</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="title">
+            <string>Transaction Details</string>
+           </property>
+           <layout class="QFormLayout" name="formLayout">
+            <property name="horizontalSpacing">
+             <number>12</number>
+            </property>
+            <property name="verticalSpacing">
+             <number>10</number>
+            </property>
+            <property name="leftMargin">
+             <number>16</number>
+            </property>
+            <property name="topMargin">
+             <number>18</number>
+            </property>
+            <property name="rightMargin">
+             <number>16</number>
+            </property>
+            <property name="bottomMargin">
+             <number>16</number>
+            </property>
+            <item row="0" column="0">
+             <widget class="QLabel" name="typeLabel">
+              <property name="text">
+               <string>Type:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="QComboBox" name="comboType">
+              <property name="toolTip">
+               <string>Expense reduces your budget, income adds to it</string>
+              </property>
+              <item>
+               <property name="text">
+                <string>Expense</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Income</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="labelTransactionID">
+              <property name="text">
+               <string>Transaction ID:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <widget class="QLineEdit" name="inputTransactionID">
+              <property name="toolTip">
+               <string>Must be unique. Format: TRX-0001</string>
+              </property>
+              <property name="placeholderText">
+               <string>TRX-0001</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLabel" name="labelDate">
+              <property name="text">
+               <string>Date:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QDateEdit" name="inputDate">
+              <property name="toolTip">
+               <string>Date of the transaction (future dates not allowed)</string>
+              </property>
+              <property name="displayFormat">
+               <string>yyyy-MM-dd</string>
+              </property>
+              <property name="calendarPopup">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="labelAmount">
+              <property name="text">
+               <string>Amount:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLineEdit" name="inputAmount">
+              <property name="toolTip">
+               <string>Positive number, max $1,000,000</string>
+              </property>
+              <property name="placeholderText">
+               <string>100.50</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLabel" name="labelCategory">
+              <property name="text">
+               <string>Category:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QLineEdit" name="inputCategory">
+              <property name="toolTip">
+               <string>Max 30 characters. Duplicates are matched case-insensitively</string>
+              </property>
+              <property name="placeholderText">
+               <string>e.g. Food, Rent, Transport</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="labelDescription">
+              <property name="text">
+               <string>Description:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLineEdit" name="inputDescription">
+              <property name="toolTip">
+               <string>5 to 100 characters, must contain at least one letter</string>
+              </property>
+              <property name="whatsThis">
+               <string/>
+              </property>
+              <property name="placeholderText">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="labelExtra">
+              <property name="text">
+               <string>Payment Method:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="1">
+             <widget class="QLineEdit" name="inputExtra">
+              <property name="toolTip">
+               <string>Payment method for expenses, source for income</string>
+              </property>
+              <property name="placeholderText">
+               <string>e.g. Debit, Credit, Cash</string>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="labelSpendingThreshold">
+              <property name="text">
+               <string>Alert Above:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="1">
+             <widget class="QDoubleSpinBox" name="inputSpendingThreshold">
+              <property name="toolTip">
+               <string>Warn before saving an expense larger than this</string>
+              </property>
+              <property name="prefix">
+               <string>$</string>
+              </property>
+              <property name="decimals">
+               <number>2</number>
+              </property>
+              <property name="maximum">
+               <double>1000000.000000000000000</double>
+              </property>
+              <property name="value">
+               <double>1000.000000000000000</double>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="1">
+             <layout class="QHBoxLayout" name="layoutFormButtons">
+              <property name="topMargin">
+               <number>6</number>
+              </property>
+              <item>
+               <widget class="QPushButton" name="btnSaveTransaction">
+                <property name="text">
+                 <string>Save</string>
+                </property>
+                <property name="default">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="btnCancelTransaction">
+                <property name="text">
+                 <string>Cancel</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <spacer name="spacerTransactionFormRight">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <spacer name="spacerTransactionFormBottom">
+         <property name="orientation">
+          <enum>Qt::Orientation::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_CategoryBudgetForm">
       <attribute name="title">
        <string>Category/Budget Form</string>
       </attribute>
-      <widget class="QWidget" name="formLayoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>200</x>
-         <y>30</y>
-         <width>431</width>
-         <height>61</height>
-        </rect>
+      <layout class="QVBoxLayout" name="layoutCategoryTab">
+       <property name="spacing">
+        <number>12</number>
        </property>
-       <layout class="QFormLayout" name="formLayout_2">
-        <item row="0" column="0">
-         <widget class="QLabel" name="labelCategoryName">
+       <property name="leftMargin">
+        <number>16</number>
+       </property>
+       <property name="topMargin">
+        <number>16</number>
+       </property>
+       <property name="rightMargin">
+        <number>16</number>
+       </property>
+       <property name="bottomMargin">
+        <number>16</number>
+       </property>
+       <item>
+        <layout class="QHBoxLayout" name="layoutCategoryFormCentering">
+         <item>
+          <spacer name="spacerCategoryFormLeft">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <layout class="QFormLayout" name="formLayout_2">
+           <property name="horizontalSpacing">
+            <number>12</number>
+           </property>
+           <property name="verticalSpacing">
+            <number>10</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="labelCategoryName">
+             <property name="text">
+              <string>Category Name:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="inputCategoryName">
+             <property name="minimumSize">
+              <size>
+               <width>340</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Max 30 characters. Duplicates are matched case-insensitively</string>
+             </property>
+             <property name="placeholderText">
+              <string>e.g. Food, Rent, Transport</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="labelMonthlyBudget">
+             <property name="text">
+              <string>Monthly Budget:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="inputMonthlyBudget">
+             <property name="minimumSize">
+              <size>
+               <width>340</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>Positive number, max $1,000,000</string>
+             </property>
+             <property name="placeholderText">
+              <string>500.00</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <spacer name="spacerCategoryFormRight">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <spacer name="spacerCategoryButtons">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnSaveCategory">
+           <property name="text">
+            <string>Save</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnCancelCategory">
+           <property name="text">
+            <string>Cancel</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="tableCategories">
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+         </property>
+         <attribute name="verticalHeaderVisible">
+          <bool>false</bool>
+         </attribute>
+         <column>
           <property name="text">
-           <string>Category Name:</string>
+           <string>Category</string>
           </property>
-         </widget>
-        </item>
-        <item row="0" column="1">
-         <widget class="QLineEdit" name="inputCategoryName"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="labelMonthlyBudget">
+         </column>
+         <column>
           <property name="text">
-           <string>Monthly Budget:</string>
+           <string>Monthly Budget</string>
           </property>
-         </widget>
-        </item>
-        <item row="1" column="1">
-         <widget class="QLineEdit" name="inputMonthlyBudget"/>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="horizontalLayoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>110</y>
-         <width>781</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout">
-        <item>
-         <widget class="QPushButton" name="btnSaveCategory">
-          <property name="text">
-           <string>Save</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="btnCancelCategory">
-          <property name="text">
-           <string>Cancel</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QTableWidget" name="tableCategories">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>170</y>
-         <width>781</width>
-         <height>471</height>
-        </rect>
-       </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
-       </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
-       </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
-       </property>
-       <attribute name="verticalHeaderVisible">
-        <bool>false</bool>
-       </attribute>
-       <column>
-        <property name="text">
-         <string>Category</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Monthly Budget</string>
-        </property>
-       </column>
-      </widget>
+         </column>
+        </widget>
+       </item>
+      </layout>
      </widget>
      <widget class="QWidget" name="tab_Analytics">
       <attribute name="title">
        <string>Analytics</string>
       </attribute>
-      <widget class="QTableWidget" name="tableBudgetUsage">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>170</y>
-         <width>811</width>
-         <height>471</height>
-        </rect>
+      <layout class="QVBoxLayout" name="layoutAnalyticsTab">
+       <property name="spacing">
+        <number>12</number>
        </property>
-       <property name="layoutDirection">
-        <enum>Qt::LayoutDirection::LeftToRight</enum>
+       <property name="leftMargin">
+        <number>16</number>
        </property>
-       <property name="editTriggers">
-        <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+       <property name="topMargin">
+        <number>16</number>
        </property>
-       <property name="selectionMode">
-        <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+       <property name="rightMargin">
+        <number>16</number>
        </property>
-       <property name="selectionBehavior">
-        <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+       <property name="bottomMargin">
+        <number>16</number>
        </property>
-       <column>
-        <property name="text">
-         <string>Category</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Budget</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Spent</string>
-        </property>
-       </column>
-       <column>
-        <property name="text">
-         <string>Usage %</string>
-        </property>
-       </column>
-      </widget>
-      <widget class="QPushButton" name="btnRefreshAnalytics">
-       <property name="geometry">
-        <rect>
-         <x>660</x>
-         <y>135</y>
-         <width>161</width>
-         <height>26</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Refresh Analytics</string>
-       </property>
-      </widget>
-      <widget class="QWidget" name="layoutWidget">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>20</y>
-         <width>811</width>
-         <height>101</height>
-        </rect>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <widget class="QGroupBox" name="groupIncome">
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-            <bold>true</bold>
-           </font>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <property name="spacing">
+          <number>12</number>
+         </property>
+         <item>
+          <widget class="QGroupBox" name="groupIncome">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>110</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="title">
+            <string>Total Income</string>
+           </property>
+           <layout class="QGridLayout" name="gridIncome">
+            <item row="0" column="0">
+             <widget class="QLabel" name="valueTotalIncome">
+              <property name="font">
+               <font>
+                <pointsize>20</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>$0.00</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupExpenses">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>110</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="title">
+            <string>Total Expenses</string>
+           </property>
+           <layout class="QGridLayout" name="gridExpenses">
+            <item row="0" column="0">
+             <widget class="QLabel" name="valueTotalExpenses">
+              <property name="font">
+               <font>
+                <pointsize>20</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>$0.00</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupSavings">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>110</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <pointsize>12</pointsize>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="title">
+            <string>Savings</string>
+           </property>
+           <layout class="QGridLayout" name="gridSavings">
+            <item row="0" column="0">
+             <widget class="QLabel" name="valueSavings">
+              <property name="font">
+               <font>
+                <pointsize>20</pointsize>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>$0.00</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="layoutAnalyticsActions">
+         <item>
+          <spacer name="spacerAnalyticsActions">
+           <property name="orientation">
+            <enum>Qt::Orientation::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnRefreshAnalytics">
+           <property name="text">
+            <string>Refresh Analytics</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QTableWidget" name="tableBudgetUsage">
+         <property name="layoutDirection">
+          <enum>Qt::LayoutDirection::LeftToRight</enum>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
+         </property>
+         <property name="selectionMode">
+          <enum>QAbstractItemView::SelectionMode::SingleSelection</enum>
+         </property>
+         <property name="selectionBehavior">
+          <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
+         </property>
+         <column>
+          <property name="text">
+           <string>Category</string>
           </property>
-          <property name="title">
-           <string>Total Income</string>
+         </column>
+         <column>
+          <property name="text">
+           <string>Budget</string>
           </property>
-          <layout class="QGridLayout" name="gridIncome">
-           <item row="0" column="0">
-            <widget class="QLabel" name="valueTotalIncome">
-             <property name="font">
-              <font>
-               <pointsize>20</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>$0.00</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupExpenses">
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-            <bold>true</bold>
-           </font>
+         </column>
+         <column>
+          <property name="text">
+           <string>Spent</string>
           </property>
-          <property name="title">
-           <string>Total Expenses</string>
+         </column>
+         <column>
+          <property name="text">
+           <string>Usage %</string>
           </property>
-          <layout class="QGridLayout" name="gridExpenses">
-           <item row="0" column="0">
-            <widget class="QLabel" name="valueTotalExpenses">
-             <property name="font">
-              <font>
-               <pointsize>20</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>$0.00</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupSavings">
-          <property name="font">
-           <font>
-            <pointsize>12</pointsize>
-            <bold>true</bold>
-           </font>
-          </property>
-          <property name="title">
-           <string>Savings</string>
-          </property>
-          <layout class="QGridLayout" name="gridSavings">
-           <item row="0" column="0">
-            <widget class="QLabel" name="valueSavings">
-             <property name="font">
-              <font>
-               <pointsize>20</pointsize>
-               <bold>true</bold>
-              </font>
-             </property>
-             <property name="styleSheet">
-              <string>color: #2e7d32;</string>
-             </property>
-             <property name="text">
-              <string>$0.00</string>
-             </property>
-             <property name="alignment">
-              <set>Qt::AlignmentFlag::AlignCenter</set>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+         </column>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </widget>
    </item>
@@ -765,6 +978,7 @@
   <tabstop>inputCategory</tabstop>
   <tabstop>inputDescription</tabstop>
   <tabstop>inputExtra</tabstop>
+  <tabstop>inputSpendingThreshold</tabstop>
   <tabstop>btnSaveTransaction</tabstop>
   <tabstop>btnCancelTransaction</tabstop>
  </tabstops>

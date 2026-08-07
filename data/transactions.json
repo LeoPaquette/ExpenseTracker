@@ -4,7 +4,7 @@
         "amount": 1200.00,
         "category": "Rent",
         "date": "2026-07-01",
-        "description": "Monthly apartment rent",
+        "description": "Monthly rent payment",
         "paymentMethod": "Bank Transfer",
         "transactionId": "TRX-0001"
     },
@@ -13,16 +13,16 @@
         "amount": 112.45,
         "category": "Food",
         "date": "2026-07-02",
-        "description": "Weekly grocery run",
+        "description": "Groceries for the next 1-2 weeks",
         "paymentMethod": "Debit",
         "transactionId": "TRX-0002"
     },
     {
         "__type": 1,
-        "amount": 128.00,
+        "amount": 63.49,
         "category": "Transport",
         "date": "2026-07-03",
-        "description": "Monthly transit pass",
+        "description": "Gas and cigs",
         "paymentMethod": "Debit",
         "transactionId": "TRX-0003"
     },
@@ -31,7 +31,7 @@
         "amount": 21.50,
         "category": "Entertainment",
         "date": "2026-07-05",
-        "description": "Streaming service subscription",
+        "description": "Netflix subscription",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0004"
     },
@@ -58,16 +58,16 @@
         "amount": 98.20,
         "category": "Food",
         "date": "2026-07-09",
-        "description": "Groceries and household items",
+        "description": "Groceries and chocolate milk",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0007"
     },
     {
         "__type": 1,
-        "amount": 74.30,
+        "amount": 64.30,
         "category": "Transport",
         "date": "2026-07-11",
-        "description": "Fuel for the weekend trip",
+        "description": "Fuel for the week",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0008"
     },
@@ -77,7 +77,7 @@
         "category": "Salary",
         "date": "2026-07-15",
         "description": "Biweekly payroll deposit",
-        "source": "Algonquin College",
+        "source": "John Defence",
         "transactionId": "TRX-0009"
     },
     {
@@ -85,7 +85,7 @@
         "amount": 44.75,
         "category": "Food",
         "date": "2026-07-16",
-        "description": "Lunch with the team",
+        "description": "Lunch with the fellas",
         "paymentMethod": "Cash",
         "transactionId": "TRX-0010"
     },
@@ -103,7 +103,7 @@
         "amount": 38.50,
         "category": "Transport",
         "date": "2026-07-19",
-        "description": "Rideshare home from downtown",
+        "description": "Uber home from a long night of drinking and gambling my college fund",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0012"
     },
@@ -112,8 +112,8 @@
         "amount": 480.00,
         "category": "Freelance",
         "date": "2026-07-22",
-        "description": "Website maintenance invoice",
-        "source": "Freelance Client",
+        "description": "Motion Monday",
+        "source": "Freelance Clients",
         "transactionId": "TRX-0013"
     },
     {
@@ -127,10 +127,10 @@
     },
     {
         "__type": 1,
-        "amount": 72.00,
+        "amount": 127.00,
         "category": "Transport",
         "date": "2026-07-27",
-        "description": "Parking garage downtown",
+        "description": "Parking pass for school",
         "paymentMethod": "Debit",
         "transactionId": "TRX-0015"
     },
@@ -139,7 +139,7 @@
         "amount": 60.35,
         "category": "Food",
         "date": "2026-07-30",
-        "description": "Coffee beans and pastries",
+        "description": "Beans and marmite",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0016"
     },
@@ -149,7 +149,16 @@
         "category": "Salary",
         "date": "2026-07-31",
         "description": "Biweekly payroll deposit",
-        "source": "Algonquin College",
+        "source": "Jeffery ISED",
         "transactionId": "TRX-0017"
+    },
+    {
+        "__type": 1,
+        "amount": 98.20,
+        "category": "Health",
+        "date": "2026-07-09",
+        "description": "Cigarettes and big macs",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0018"
     }
 ]

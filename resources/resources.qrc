@@ -1,0 +1,11 @@
+﻿<!--
+  Bundles the theme into the executable. The prefix and the file name together make the path
+  GUI.cpp opens, ":/styles/dark.qss". Format is documented at
+  https://doc.qt.io/qt-6/resources.html - CMAKE_AUTORCC in CMakeLists.txt compiles this.
+-->
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource prefix="/styles">
+        <file>dark.qss</file>
+    </qresource>
+</RCC>

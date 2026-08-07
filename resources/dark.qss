@@ -1,0 +1,265 @@
+/*
+ * CST8219 - Personal Expense Tracker and Budget Management System
+ * Dark theme. Loaded from the qt resource system by GUI::applyTheme().
+ * @author Wesley Deir
+ *
+ * Two ideas run through this file.
+ *
+ * Depth comes from surface colour, not from outlines. Base sits at the back, panels a step
+ * lighter, controls a step lighter again. Almost nothing has a border, and the ones that do
+ * are earning it - a focused input, a header rule. Outlining every box makes an interface
+ * look busy and cheap, which is what most first attempts at a dark theme end up doing.
+ *
+ * Colour means something. Mint is the accent and appears on exactly one thing at a time,
+ * whatever the user is acting on. Green, amber and red are reserved for money going the
+ * right or wrong way. Nothing else gets to be colourful.
+ *
+ * This file only says what the palette in GUI.cpp cant. Every plain background, every text
+ * colour, the selection colours and the tooltips all come from there, which is why theres no
+ * rule here for scroll bars or the calendar grid and they still come out dark. Anything this
+ * file repeats back at the palette would be dead weight, so it doesnt.
+ *
+ * palette:
+ *   #111418  base          #e6e9ec  text
+ *   #181c21  panel         #7d858f  muted
+ *   #20252b  control       #2dd4a7  accent (mint)
+ *   #0d1013  inset         #34d399  positive
+ *   #262c33  divider       #fbbf24  warning
+ *                          #f87171  over
+ *
+ * sources:
+ *   https://doc.qt.io/qt-6/stylesheet-reference.html
+ *     the list of which widgets take which properties, and every ::sub-control and :state name
+ *     used below. worth a skim if you want to know why its ::indicator on a checkbox but
+ *     ::section on a header.
+ *   https://doc.qt.io/qt-6/stylesheet-examples.html
+ *     where the QGroupBox title idiom came from. the margin-top / subcontrol-origin: margin
+ *     pairing is their example, our numbers. same for the QTabBar::tab block.
+ *   https://doc.qt.io/qt-6/stylesheet-syntax.html
+ *     read this for the cascade rules. its what told us a widgets own styleSheet property beats
+ *     the application sheet, which is why the two inline ones in GUI.ui had to come out.
+ *   https://doc.qt.io/qt-6/qpalette.html
+ *     the other half of the theme, and the reason this file is as short as it is.
+ *   https://github.com/ColinDuquesnoy/QDarkStyleSheet
+ *     a full dark theme for qt. didnt use it, its far bigger than we need and pulls in its own
+ *     resource bundle, but it was a useful reference for which widgets you end up having to
+ *     style by hand. our colours are our own.
+ */
+
+/* font family only. a size here would flatten the 20pt figures on the analytics tab, since a
+   stylesheet font beats the one the designer set on the widget. the colour comes from the palette */
+QWidget {
+    font-family: "Segoe UI", "Noto Sans", sans-serif;
+}
+
+/* ---- tabs ---- */
+
+/* no box around the tab strip. the selected tab is marked by a mint underline and nothing else.
+   the pane is left at base level so the panels laid on top of it - group boxes, tables - are a
+   step lighter and read as raised */
+QTabWidget::pane {
+    border: none;
+    border-radius: 8px;
+    top: -1px;
+}
+
+QTabBar::tab {
+    background-color: transparent;
+    color: #7d858f;
+    border: none;
+    border-bottom: 2px solid transparent;
+    padding: 8px 18px;
+    margin-right: 4px;
+}
+
+QTabBar::tab:hover {
+    color: #e6e9ec;
+}
+
+QTabBar::tab:selected {
+    color: #e6e9ec;
+    border-bottom: 2px solid #2dd4a7;
+}
+
+/* ---- group boxes ---- */
+
+/* a filled panel rather than an outlined one. margin-top leaves room for the title to sit above
+   the panel rather than inside it */
+QGroupBox {
+    background-color: #181c21;
+    border: none;
+    border-radius: 8px;
+    margin-top: 9px;
+    padding-top: 2px;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left;
+    left: 4px;
+    padding: 0 4px;
+    color: #7d858f;
+}
+
+/* ---- buttons ---- */
+
+QPushButton {
+    background-color: #20252b;
+    border: none;
+    border-radius: 6px;
+    padding: 5px 14px;
+}
+
+QPushButton:hover {
+    background-color: #2a3138;
+}
+
+QPushButton:pressed {
+    background-color: #171b20;
+}
+
+QPushButton:disabled {
+    background-color: #181c21;
+}
+
+/* the one primary action in the app. mint on near black rather than another grey button, so
+   theres never a question which control finishes the job. this used to be an inline styleSheet
+   property in GUI.ui, which outranks an application sheet and would have stayed light-mode green */
+QPushButton#btnSaveTransaction {
+    background-color: #2dd4a7;
+    color: #0d1013;
+    font-weight: bold;
+}
+
+QPushButton#btnSaveTransaction:hover {
+    background-color: #3ee0b4;
+}
+
+QPushButton#btnSaveTransaction:pressed {
+    background-color: #24b28d;
+}
+
+/* ---- inputs ---- */
+
+/* inset rather than raised - typing targets read as recessed wells. the border is there in the
+   resting state only so focus doesnt change the widgets size and shuffle the layout */
+QLineEdit, QDateEdit, QComboBox, QDoubleSpinBox {
+    background-color: #0d1013;
+    border: 1px solid #232a31;
+    border-radius: 6px;
+    padding: 4px 8px;
+}
+
+QLineEdit:hover, QDateEdit:hover, QComboBox:hover, QDoubleSpinBox:hover {
+    border-color: #2f373f;
+}
+
+QLineEdit:focus, QDateEdit:focus, QComboBox:focus, QDoubleSpinBox:focus {
+    border-color: #2dd4a7;
+}
+
+/* the two data file fields are readOnly, so they read as labels rather than inviting typing */
+QLineEdit:read-only {
+    background-color: #14181d;
+    color: #7d858f;
+}
+
+QLineEdit:disabled, QDateEdit:disabled {
+    background-color: #14181d;
+}
+
+/* the spin box buttons are deliberately left unstyled. the moment you set any property on
+   ::up-button the style stops drawing its arrow into it and you have to supply the glyph
+   yourself, which means shipping images for two controls nobody clicks */
+
+/* the type dropdown. only the frame needs saying, the fill and the selection are palette work */
+QComboBox QAbstractItemView {
+    border: 1px solid #262c33;
+    border-radius: 6px;
+    outline: none;
+}
+
+/* ---- tables ---- */
+
+/* the fill and the row banding are palette work, and grid lines are switched off in GUI.cpp.
+   the bands separate rows on their own, and two overlapping ways of dividing the same rows is
+   one too many */
+QTableWidget {
+    border: none;
+    border-radius: 8px;
+    outline: none;
+}
+
+/* the vertical padding is the point. money tables are read by scanning down a column, and rows
+   packed tight enough to touch are what makes that hard */
+QTableWidget::item {
+    padding: 8px 10px;
+    border: none;
+}
+
+QHeaderView::section {
+    background-color: #181c21;
+    color: #7d858f;
+    border: none;
+    border-bottom: 1px solid #262c33;
+    padding: 8px 10px;
+    font-weight: bold;
+}
+
+/* the empty square above the row numbers. it isnt a header section, so it doesnt inherit the rule
+   above, and left alone it sits a shade lighter and breaks the header strip in half */
+QTableCornerButton::section {
+    background-color: #181c21;
+    border: none;
+    border-bottom: 1px solid #262c33;
+}
+
+/* ---- budget usage bars ---- */
+
+/* one per row on the analytics tab. the trough is darker than either row band so the bar reads
+   as sunk into the row. the fill colour is the one thing set per row from GUI.cpp, because it
+   depends on how far over budget that category is.
+
+   min-height is load bearing - without it the bar collapses to a few pixels inside the table
+   cell and the percentage prints across it like a strikethrough */
+QProgressBar {
+    background-color: #0d1013;
+    border: none;
+    border-radius: 4px;
+    text-align: center;
+    min-height: 22px;
+    margin: 0px 10px;
+}
+
+QProgressBar::chunk {
+    border-radius: 4px;
+}
+
+/* ---- checkbox ---- */
+
+QCheckBox::indicator {
+    width: 14px;
+    height: 14px;
+    border: 1px solid #2f373f;
+    border-radius: 4px;
+    background-color: #0d1013;
+}
+
+QCheckBox::indicator:hover {
+    border-color: #2dd4a7;
+}
+
+QCheckBox::indicator:checked {
+    background-color: #2dd4a7;
+    border-color: #2dd4a7;
+}
+
+/* ---- calendar popup ---- */
+
+/* the grid itself comes from the palette. only the header needs saying, because a calendar paints
+   it with the Highlight colour and a full strip of mint is far too loud.
+   qt_calendar_navigationbar is the name qt gives that strip internally */
+QCalendarWidget QWidget#qt_calendar_navigationbar {
+    background-color: #20252b;
+    border-bottom: 1px solid #262c33;
+}
