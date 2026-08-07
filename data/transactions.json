@@ -1,56 +1,155 @@
 [
     {
         "__type": 1,
-        "amount": 120.5,
-        "category": "Food",
+        "amount": 1200.00,
+        "category": "Rent",
         "date": "2026-07-01",
-        "description": "groceries",
-        "paymentMethod": "Debit",
+        "description": "Monthly apartment rent",
+        "paymentMethod": "Bank Transfer",
         "transactionId": "TRX-0001"
     },
     {
         "__type": 1,
-        "amount": 100.69,
+        "amount": 112.45,
         "category": "Food",
-        "date": "2026-07-05",
-        "description": "Dinner with wife",
-        "paymentMethod": "Credit",
+        "date": "2026-07-02",
+        "description": "Weekly grocery run",
+        "paymentMethod": "Debit",
         "transactionId": "TRX-0002"
     },
     {
         "__type": 1,
-        "amount": 675.0,
-        "category": "Rent",
-        "date": "2026-07-01",
-        "description": "July rent payment",
-        "paymentMethod": "Bank Transfer",
+        "amount": 128.00,
+        "category": "Transport",
+        "date": "2026-07-03",
+        "description": "Monthly transit pass",
+        "paymentMethod": "Debit",
         "transactionId": "TRX-0003"
     },
     {
-        "__type": 2,
-        "amount": 2553.67,
-        "category": "Salary",
-        "date": "2026-07-01",
-        "description": "Monthly stimmy cheque",
-        "source": "Government",
-        "transactionId": "TRX-0004"
-    },
-    {
         "__type": 1,
-        "amount": 167.54,
-        "category": "Anthropic",
-        "date": "2026-07-26",
-        "description": "August second hand thinking payment so I can complete schoolwork",
+        "amount": 21.50,
+        "category": "Entertainment",
+        "date": "2026-07-05",
+        "description": "Streaming service subscription",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0004"
     },
     {
         "__type": 1,
-        "amount": 1200.69,
-        "category": "Adult",
-        "date": "2026-07-26",
-        "description": "Monthly OnlyFans subscriptions",
-        "paymentMethod": "Credit",
+        "amount": 96.42,
+        "category": "Utilities",
+        "date": "2026-07-08",
+        "description": "Hydro bill for June",
+        "paymentMethod": "Bank Transfer",
         "transactionId": "TRX-0005"
+    },
+    {
+        "__type": 1,
+        "amount": 118.30,
+        "category": "Utilities",
+        "date": "2026-07-08",
+        "description": "Internet and phone bundle",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0006"
+    },
+    {
+        "__type": 1,
+        "amount": 98.20,
+        "category": "Food",
+        "date": "2026-07-09",
+        "description": "Groceries and household items",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0007"
+    },
+    {
+        "__type": 1,
+        "amount": 74.30,
+        "category": "Transport",
+        "date": "2026-07-11",
+        "description": "Fuel for the weekend trip",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0008"
+    },
+    {
+        "__type": 2,
+        "amount": 1420.00,
+        "category": "Salary",
+        "date": "2026-07-15",
+        "description": "Biweekly payroll deposit",
+        "source": "Algonquin College",
+        "transactionId": "TRX-0009"
+    },
+    {
+        "__type": 1,
+        "amount": 44.75,
+        "category": "Food",
+        "date": "2026-07-16",
+        "description": "Lunch with the team",
+        "paymentMethod": "Cash",
+        "transactionId": "TRX-0010"
+    },
+    {
+        "__type": 1,
+        "amount": 75.00,
+        "category": "Entertainment",
+        "date": "2026-07-18",
+        "description": "Concert tickets for two",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0011"
+    },
+    {
+        "__type": 1,
+        "amount": 38.50,
+        "category": "Transport",
+        "date": "2026-07-19",
+        "description": "Rideshare home from downtown",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0012"
+    },
+    {
+        "__type": 2,
+        "amount": 480.00,
+        "category": "Freelance",
+        "date": "2026-07-22",
+        "description": "Website maintenance invoice",
+        "source": "Freelance Client",
+        "transactionId": "TRX-0013"
+    },
+    {
+        "__type": 1,
+        "amount": 105.60,
+        "category": "Food",
+        "date": "2026-07-23",
+        "description": "Weekly grocery run",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0014"
+    },
+    {
+        "__type": 1,
+        "amount": 72.00,
+        "category": "Transport",
+        "date": "2026-07-27",
+        "description": "Parking garage downtown",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0015"
+    },
+    {
+        "__type": 1,
+        "amount": 60.35,
+        "category": "Food",
+        "date": "2026-07-30",
+        "description": "Coffee beans and pastries",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0016"
+    },
+    {
+        "__type": 2,
+        "amount": 1420.00,
+        "category": "Salary",
+        "date": "2026-07-31",
+        "description": "Biweekly payroll deposit",
+        "source": "Algonquin College",
+        "transactionId": "TRX-0017"
     }
 ]
