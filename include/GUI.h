@@ -98,8 +98,22 @@ private slots:
     void onCategoryRowDoubleClicked(int row);
 
 private:
-    // fills the main tab table from everything currently loaded
+    // fills the main tab table, keeping whatever filters the user has set
     void refreshTransactionsTable();
+    /**
+     * @brief Rebuilds the main tab table from whatever the filter widgets currently say.
+     *
+     * The one place the filters are read, so a save or a delete cant put every transaction back
+     * into a table the user had narrowed down.
+     *
+     * @param reportErrors Whether an unusable filter raises a message box. The Search button passes
+     *                     @c true, a rebuild after some other action passes @c false.
+     *
+     * @return @c true if the table was filled, @c false if a filter was unusable.
+     */
+    bool applyCurrentFilters(bool reportErrors);
+    // empties the filter widgets on the main tab without touching the table
+    void clearFilterInputs() const;
     /**
      * @brief Fills the main tab table with whichever transactions it gets handed.
      *

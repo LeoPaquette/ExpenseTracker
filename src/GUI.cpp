@@ -436,13 +436,18 @@ void GUI::onSaveTransactionClicked() {
     ui->tabWidget->setCurrentWidget(ui->Tab_Main);
 }
 
-// clears the filters on the main tab and puts every transaction back in the table
-void GUI::onClearFiltersClicked() {
+// empties the filter widgets without touching the table. loading a new file needs this too, but
+// rebuilds the table itself
+void GUI::clearFilterInputs() const {
     ui->chkFilterDate->setChecked(false);
     ui->inputFilterDate->setDate(QDate::currentDate());
     ui->inputFilterCategory->clear();
     ui->inputFilterAmount->clear();
+}
 
+// clears the filters on the main tab and puts every transaction back in the table
+void GUI::onClearFiltersClicked() {
+    clearFilterInputs();
     refreshTransactionsTable();
 }
 
@@ -519,9 +524,17 @@ void GUI::onCategoryRowDoubleClicked(int row) {
     }
 }
 
-// filters the main tab table down to the transactions matching whichever filters are filled in
+// filters the main tab table down to the transactions matching whichever filters are filled in.
+// the user pressed the button, so an unusable filter is worth telling them about
 void GUI::onSearchTransactionsClicked() {
-    // a filter left blank stays as nullopt, which searchTransactions treats as "dont filter on this"
+    applyCurrentFilters(true);
+}
+
+// rebuilds the main tab table from whatever the filter widgets currently say
+bool GUI::applyCurrentFilters(const bool reportErrors) {
+    // a filter left blank stays as nullopt, which searchTransactions treats as "dont filter on this".
+    // it takes pointers, so the locals below have to still be alive when it runs. thats why reading
+    // the widgets and searching happen together here
     const std::string date = ui->inputFilterDate->date().toString("yyyy-MM-dd").toStdString();
     const std::optional<const std::string*> dateFilter =
         ui->chkFilterDate->isChecked() ? std::optional(&date) : std::nullopt;
@@ -539,8 +552,10 @@ void GUI::onSearchTransactionsClicked() {
         }
 
         if (!categoryFilter.has_value()) {
-            QMessageBox::warning(this, "Search", QString("There's no category named \"%1\".").arg(categoryName));
-            return;
+            if (reportErrors) {
+                QMessageBox::warning(this, "Search", QString("There's no category named \"%1\".").arg(categoryName));
+            }
+            return false;
         }
     }
 
@@ -551,19 +566,24 @@ void GUI::onSearchTransactionsClicked() {
         bool ok = false;
         const double amount = amountText.toDouble(&ok);
         if (!ok) {
-            QMessageBox::warning(this, "Search", "The amount filter has to be a number.");
-            return;
+            if (reportErrors) {
+                QMessageBox::warning(this, "Search", "The amount filter has to be a number.");
+            }
+            return false;
         }
         amountFilter = amount;
     }
 
     const auto searchResult = transactionManager.searchTransactions(dateFilter, categoryFilter, amountFilter);
     if (!searchResult.has_value()) {
-        QMessageBox::warning(this, "Search", searchErrorMessage(searchResult.error()));
-        return;
+        if (reportErrors) {
+            QMessageBox::warning(this, "Search", searchErrorMessage(searchResult.error()));
+        }
+        return false;
     }
 
     populateTransactionsTable(searchResult.value());
+    return true;
 }
 
 // picks the transactions file through a file dialog. an empty path means the user cancelled,
@@ -637,9 +657,19 @@ void GUI::onRefreshAnalyticsClicked() {
     }
 }
 
-// fills the main tab table from everything currently loaded. private helper so theres no slot that ->
-// needs to be allocated for it since its called through onLoadDataClicked
+// rebuilds the main tab table after something changed the data. private helper so theres no slot
+// that needs to be allocated for it since its called through onLoadDataClicked
+//
+// it goes back through the filters rather than straight to getAllTransactions, because the filter
+// widgets keep their text across an add or a delete. putting every transaction back into a table
+// the user had narrowed down leaves the boxes claiming a filter thats no longer applied
 void GUI::refreshTransactionsTable() {
+    // quietly, since the user changed the data rather than pressing Search
+    if (applyCurrentFilters(false)) {
+        return;
+    }
+
+    // the filters didnt resolve, so show everything rather than leave the table as it was
     const auto searchResult = transactionManager.getAllTransactions();
     if (!searchResult.has_value()) {
         QMessageBox::warning(this, "Transactions", "Could not read the loaded transactions.");
@@ -748,6 +778,11 @@ void GUI::loadDataFiles(const bool showSuccessMessage) {
     // it instead, and that path leaves the manager holding whatever was parsed before the throw. so we
     // rebuild from whatever it actually holds either way, rather than trusting the tables to be current
     transactionManager.refreshUsedCategoryIds();
+
+    // a filter set against the old file has no business surviving into a new one, and the refresh
+    // below reapplies whatever is still set
+    clearFilterInputs();
+
     refreshTransactionsTable();
     refreshCategoriesTable();
     onRefreshAnalyticsClicked();
