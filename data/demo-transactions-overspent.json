@@ -1,0 +1,137 @@
+[
+    {
+        "__type": 1,
+        "amount": 1200.0,
+        "category": "Rent",
+        "date": "2026-07-01",
+        "description": "Monthly apartment rent",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0001"
+    },
+    {
+        "__type": 1,
+        "amount": 145.5,
+        "category": "Food",
+        "date": "2026-07-02",
+        "description": "Weekly grocery run",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0002"
+    },
+    {
+        "__type": 1,
+        "amount": 180.0,
+        "category": "Transport",
+        "date": "2026-07-03",
+        "description": "Car repair and new tires",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0003"
+    },
+    {
+        "__type": 1,
+        "amount": 145.0,
+        "category": "Entertainment",
+        "date": "2026-07-05",
+        "description": "Concert tickets for two",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0004"
+    },
+    {
+        "__type": 1,
+        "amount": 158.4,
+        "category": "Utilities",
+        "date": "2026-07-08",
+        "description": "Hydro bill for June",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0005"
+    },
+    {
+        "__type": 1,
+        "amount": 132.25,
+        "category": "Food",
+        "date": "2026-07-09",
+        "description": "Groceries and household items",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0006"
+    },
+    {
+        "__type": 1,
+        "amount": 96.5,
+        "category": "Transport",
+        "date": "2026-07-11",
+        "description": "Fuel for the weekend trip",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0007"
+    },
+    {
+        "__type": 2,
+        "amount": 1800.0,
+        "category": "Salary",
+        "date": "2026-07-15",
+        "description": "Monthly payroll deposit",
+        "source": "Algonquin College",
+        "transactionId": "TRX-0008"
+    },
+    {
+        "__type": 1,
+        "amount": 118.75,
+        "category": "Food",
+        "date": "2026-07-16",
+        "description": "Restaurant dinner with family",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0009"
+    },
+    {
+        "__type": 1,
+        "amount": 115.0,
+        "category": "Entertainment",
+        "date": "2026-07-18",
+        "description": "Streaming and game purchases",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0010"
+    },
+    {
+        "__type": 1,
+        "amount": 116.6,
+        "category": "Utilities",
+        "date": "2026-07-20",
+        "description": "Internet and phone bundle",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0011"
+    },
+    {
+        "__type": 1,
+        "amount": 121.0,
+        "category": "Food",
+        "date": "2026-07-23",
+        "description": "Weekly grocery run",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0012"
+    },
+    {
+        "__type": 1,
+        "amount": 63.5,
+        "category": "Transport",
+        "date": "2026-07-27",
+        "description": "Parking garage downtown",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0013"
+    },
+    {
+        "__type": 1,
+        "amount": 180.0,
+        "category": "Health",
+        "date": "2026-07-28",
+        "description": "Dental checkup and cleaning",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0014"
+    },
+    {
+        "__type": 1,
+        "amount": 102.5,
+        "category": "Food",
+        "date": "2026-07-30",
+        "description": "Coffee beans and pastries",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0015"
+    }
+]

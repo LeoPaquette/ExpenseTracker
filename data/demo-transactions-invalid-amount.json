@@ -1,0 +1,20 @@
+[
+    {
+        "__type": 1,
+        "amount": 120.5,
+        "category": "Food",
+        "date": "2026-07-01",
+        "description": "Weekly grocery run",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0001"
+    },
+    {
+        "__type": 1,
+        "amount": 2000000.0,
+        "category": "Rent",
+        "date": "2026-07-02",
+        "description": "Amount above the one million cap",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0002"
+    }
+]

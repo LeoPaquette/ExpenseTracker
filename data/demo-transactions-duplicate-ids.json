@@ -1,0 +1,29 @@
+[
+    {
+        "__type": 1,
+        "amount": 120.5,
+        "category": "Food",
+        "date": "2026-07-01",
+        "description": "Weekly grocery run",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0001"
+    },
+    {
+        "__type": 1,
+        "amount": 88.0,
+        "category": "Food",
+        "date": "2026-07-04",
+        "description": "Restaurant dinner",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0002"
+    },
+    {
+        "__type": 1,
+        "amount": 45.25,
+        "category": "Transport",
+        "date": "2026-07-06",
+        "description": "Rideshare home from downtown",
+        "paymentMethod": "Credit",
+        "transactionId": "TRX-0001"
+    }
+]
