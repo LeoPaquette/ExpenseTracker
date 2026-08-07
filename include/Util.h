@@ -19,7 +19,9 @@ bool parseDate(const std::string& value, int* outYear, int* outMonth, int* outDa
 
 int compareDates(const std::string& a, const std::string& b);
 
-inline bool insensitive_equals(std::string a, std::string b);
+bool insensitive_equals(std::string a, std::string b);
+
+std::string str_to_lower(std::string str);
 
 }
 

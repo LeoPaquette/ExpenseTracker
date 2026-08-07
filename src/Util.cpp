@@ -90,4 +90,13 @@ bool insensitive_equals(std::string a, std::string b) {
     );
 }
 
+std::string str_to_lower(std::string str) {
+    std::ranges::transform(str, str.begin(), [](unsigned char c) {
+        return std::tolower(c);
+    });
+
+    return str;
+}
+
+
 }
