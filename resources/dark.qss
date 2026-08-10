@@ -52,7 +52,7 @@ QWidget {
     font-family: "Segoe UI", "Noto Sans", sans-serif;
 }
 
-/* ---- tabs ---- */
+/*  tabs  */
 
 /* no box around the tab strip. the selected tab is marked by a mint underline and nothing else.
    the pane is left at base level so the panels laid on top of it - group boxes, tables - are a
@@ -81,7 +81,7 @@ QTabBar::tab:selected {
     border-bottom: 2px solid #2dd4a7;
 }
 
-/* ---- group boxes ---- */
+/*  group boxes  */
 
 /* a filled panel rather than an outlined one. margin-top leaves room for the title to sit above
    the panel rather than inside it */
@@ -101,7 +101,7 @@ QGroupBox::title {
     color: #7d858f;
 }
 
-/* ---- buttons ---- */
+/*  buttons  */
 
 QPushButton {
     background-color: #20252b;
@@ -139,7 +139,7 @@ QPushButton#btnSaveTransaction:pressed {
     background-color: #24b28d;
 }
 
-/* ---- inputs ---- */
+/*  inputs  */
 
 /* inset rather than raised - typing targets read as recessed wells. the border is there in the
    resting state only so focus doesnt change the widgets size and shuffle the layout */
@@ -179,7 +179,7 @@ QComboBox QAbstractItemView {
     outline: none;
 }
 
-/* ---- tables ---- */
+/*  tables  */
 
 /* the fill and the row banding are palette work, and grid lines are switched off in GUI.cpp.
    the bands separate rows on their own, and two overlapping ways of dividing the same rows is
@@ -214,7 +214,7 @@ QTableCornerButton::section {
     border-bottom: 1px solid #262c33;
 }
 
-/* ---- budget usage bars ---- */
+/*  budget usage bars  */
 
 /* one per row on the analytics tab. the trough is darker than either row band so the bar reads
    as sunk into the row. the fill colour is the one thing set per row from GUI.cpp, because it
@@ -235,7 +235,7 @@ QProgressBar::chunk {
     border-radius: 4px;
 }
 
-/* ---- checkbox ---- */
+/*  checkbox  */
 
 QCheckBox::indicator {
     width: 14px;
@@ -254,7 +254,7 @@ QCheckBox::indicator:checked {
     border-color: #2dd4a7;
 }
 
-/* ---- calendar popup ---- */
+/*  calendar popup  */
 
 /* the grid itself comes from the palette. only the header needs saying, because a calendar paints
    it with the Highlight colour and a full strip of mint is far too loud.
