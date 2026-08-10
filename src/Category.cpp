@@ -1,5 +1,6 @@
 #include "../include/Category.h"
 
+#include <memory>
 #include <regex>
 #include <sstream>
 #include <string>
@@ -139,7 +140,7 @@ std::unique_ptr<Category> Category::fromJSON(const json& json) {
         throw invalid_argument("Invalid monthly budget. Must be a float/double.");
     }
 
-    return std::unique_ptr<Category>(new Category(categoryId, name, monthlyBudget.get<double>()));
+    return std::make_unique<Category>(categoryId, name, monthlyBudget.get<double>());
 }
 
 json Category::toJSON() const {

@@ -1,4 +1,5 @@
 #include "../include/Income.h"
+#include <memory>
 #include <stdexcept>
 #include <string>
 
@@ -92,14 +93,14 @@ std::unique_ptr<Income> Income::fromJSON(const json& json) {
         throw invalid_argument("Invalid source. Must be a string.");
     }
 
-    return std::unique_ptr<Income>(new Income(
+    return std::make_unique<Income>(
         transactionId,
         date,
         amount.get<double>(),
         category,
         description,
         source
-    ));
+    );
 }
 
 json Income::toJSON() const {

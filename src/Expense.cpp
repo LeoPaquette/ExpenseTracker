@@ -1,5 +1,6 @@
 #include "../include/Expense.h"
 
+#include <memory>
 #include <string>
 using namespace std;
 
@@ -90,14 +91,14 @@ std::unique_ptr<Expense> Expense::fromJSON(const json& json) {
         throw invalid_argument("Invalid payment method. Must be a string.");
     }
 
-    return std::unique_ptr<Expense>(new Expense(
+    return std::make_unique<Expense>(
         transactionId,
         date,
         amount.get<double>(),
         category,
         description,
         paymentMethod
-    ));
+    );
 }
 
 json Expense::toJSON() const {
