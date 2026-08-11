@@ -16,6 +16,7 @@
 #include <algorithm>
 #include "include/Expense.h"
 #include "include/Income.h"
+#include "include/Util.h"
 
 // the two budget thresholds the spec asks us to warn on
 static constexpr double BUDGET_WARNING_PERCENT = 80.0;
@@ -513,8 +514,10 @@ void GUI::onCategoryRowDoubleClicked(int row) {
     for (const Category* c : transactionManager.getAllCategories()) {
         if (QString::fromStdString(c->getName()) == categoryName) {
             // the map only has the categories something was actually spent against, so a category
-            // nobody has spent on is missing from it rather than sitting in there as a zero
-            const auto spent = spending.find(c->getName());
+            // nobody has spent on is missing from it rather than sitting in there as a zero.
+            // it is keyed lower-cased so that casing differences between a category and the
+            // transactions filed under it still match
+            const auto spent = spending.find(util::str_to_lower(c->getName()));
             const double amountSpent = (spent != spending.end()) ? spent->second : 0.0;
 
             QMessageBox::information(this, "Category Details",

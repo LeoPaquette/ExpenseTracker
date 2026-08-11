@@ -12,6 +12,7 @@
 #include <map>
 #include "Transaction.h"
 #include "Category.h"
+#include "Util.h"
 
 /**
  * @brief Calculates the financial summaries shown on the analytics tab.
@@ -83,13 +84,17 @@ public:
      *
      * @param transactions The transactions to group.
      *
-     * @return A map of category name to the amount spent in it.
+     * Keys are lower-cased, so a category typed as "Food" on one transaction and "food" on another
+     * adds up as one entry. Every other category comparison in the project is case insensitive, so
+     * look up with util::str_to_lower rather than the raw name.
+     *
+     * @return A map of lower-cased category name to the amount spent in it.
      */
     std::map<std::string, T> computeCategorySpending(const std::vector<const Transaction*>& transactions) const {
         std::map<std::string, T> spending;
         for (const Transaction* t : transactions) {
             if (t->computeImpact()) {
-                spending[t->getCategory()] += static_cast<T>(t->getAmount());
+                spending[util::str_to_lower(t->getCategory())] += static_cast<T>(t->getAmount());
             }
         }
         return spending;
@@ -146,8 +151,9 @@ public:
 
 private:
     // returns the amount spent in a category, or zero if it has no expenses.
+    // the map is keyed lower-cased, so the name has to be folded the same way before looking it up
     T spentIn(const std::map<std::string, T>& spending, const std::string& categoryName) const {
-        const auto it = spending.find(categoryName);
+        const auto it = spending.find(util::str_to_lower(categoryName));
         return (it != spending.end()) ? it->second : T{};
     }
 
