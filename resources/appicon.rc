@@ -1,0 +1,5 @@
+// Windows resource script for the executable icon. windres compiles this and links the
+// result into the exe, which is what Explorer, the taskbar and Qt's default window icon read.
+// The path is relative to this file. IDI_ICON1 is the conventional name Qt documents:
+// https://doc.qt.io/qt-6/appicon.html
+IDI_ICON1 ICON "gangspong.ico"

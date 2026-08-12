@@ -16,6 +16,7 @@
 #include <algorithm>
 #include "include/Expense.h"
 #include "include/Income.h"
+#include <QWindow>
 #include "include/Util.h"
 
 // the two budget thresholds the spec asks us to warn on

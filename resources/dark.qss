@@ -193,7 +193,7 @@ QTableWidget {
 /* the vertical padding is the point. money tables are read by scanning down a column, and rows
    packed tight enough to touch are what makes that hard */
 QTableWidget::item {
-    padding: 8px 10px;
+    padding: 10px 10px;
     border: none;
 }
 
@@ -227,7 +227,7 @@ QProgressBar {
     border: none;
     border-radius: 4px;
     text-align: center;
-    min-height: 22px;
+    min-height: 18px;
     margin: 0px 10px;
 }
 

@@ -11,6 +11,12 @@ include(FetchContent)
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz)
 FetchContent_MakeAvailable(json)
 
+# Windows app icon. windres compiles the .rc, which points at resources/gangspong.ico.
+# Empty on other platforms, so the source list below just expands to nothing there.
+if (WIN32)
+    set(app_icon_resource_windows "${CMAKE_CURRENT_SOURCE_DIR}/resources/appicon.rc")
+endif ()
+
 add_executable(ExpenseTracker
         src/main.cpp
         include/Transaction.h
@@ -33,11 +39,11 @@ add_executable(ExpenseTracker
         resources/resources.qrc
         include/Util.h
         src/Util.cpp
+        ${app_icon_resource_windows}
 )
 
 target_link_libraries(ExpenseTracker Qt6::Widgets nlohmann_json::nlohmann_json)
 target_include_directories(ExpenseTracker PRIVATE .)
-
 # moved the Leo's tests from main to its own test run config.
 add_executable(ValidatorTester
         include/Transaction.h
