@@ -1,7 +1,7 @@
 [
     {
         "__type": 1,
-        "amount": 1200.00,
+        "amount": 1200.0,
         "category": "Rent",
         "date": "2026-07-01",
         "description": "Monthly rent payment",
@@ -28,7 +28,7 @@
     },
     {
         "__type": 1,
-        "amount": 21.50,
+        "amount": 21.5,
         "category": "Entertainment",
         "date": "2026-07-05",
         "description": "Netflix subscription",
@@ -46,7 +46,7 @@
     },
     {
         "__type": 1,
-        "amount": 118.30,
+        "amount": 118.3,
         "category": "Utilities",
         "date": "2026-07-08",
         "description": "Internet and phone bundle",
@@ -55,7 +55,7 @@
     },
     {
         "__type": 1,
-        "amount": 98.20,
+        "amount": 98.2,
         "category": "Food",
         "date": "2026-07-09",
         "description": "Groceries and chocolate milk",
@@ -64,7 +64,7 @@
     },
     {
         "__type": 1,
-        "amount": 64.30,
+        "amount": 64.3,
         "category": "Transport",
         "date": "2026-07-11",
         "description": "Fuel for the week",
@@ -73,7 +73,7 @@
     },
     {
         "__type": 2,
-        "amount": 1420.00,
+        "amount": 1420.0,
         "category": "Salary",
         "date": "2026-07-15",
         "description": "Biweekly payroll deposit",
@@ -91,7 +91,7 @@
     },
     {
         "__type": 1,
-        "amount": 75.00,
+        "amount": 75.0,
         "category": "Entertainment",
         "date": "2026-07-18",
         "description": "Concert tickets for two",
@@ -99,17 +99,26 @@
         "transactionId": "TRX-0011"
     },
     {
+        "__type": 2,
+        "amount": 38.5,
+        "category": "OSAP",
+        "date": "2026-07-19",
+        "description": "Got paid for being a student.",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0012"
+    },
+    {
         "__type": 1,
-        "amount": 38.50,
+        "amount": 38.5,
         "category": "Transport",
         "date": "2026-07-19",
-        "description": "Uber home from a long night of drinking and gambling my college fund",
+        "description": "Uber home from a long night of drinking and gambling away my college fund",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0012"
     },
     {
         "__type": 2,
-        "amount": 480.00,
+        "amount": 480.0,
         "category": "Freelance",
         "date": "2026-07-22",
         "description": "Motion Monday",
@@ -118,21 +127,12 @@
     },
     {
         "__type": 1,
-        "amount": 105.60,
+        "amount": 105.6,
         "category": "Food",
         "date": "2026-07-23",
         "description": "Weekly grocery run",
         "paymentMethod": "Debit",
         "transactionId": "TRX-0014"
-    },
-    {
-        "__type": 1,
-        "amount": 127.00,
-        "category": "Transport",
-        "date": "2026-07-27",
-        "description": "Parking pass for school",
-        "paymentMethod": "Debit",
-        "transactionId": "TRX-0015"
     },
     {
         "__type": 1,
@@ -145,7 +145,7 @@
     },
     {
         "__type": 2,
-        "amount": 1420.00,
+        "amount": 1420.0,
         "category": "Salary",
         "date": "2026-07-31",
         "description": "Biweekly payroll deposit",
@@ -154,11 +154,74 @@
     },
     {
         "__type": 1,
-        "amount": 98.20,
+        "amount": 98.2,
         "category": "Health",
         "date": "2026-07-09",
         "description": "Beer and cigs",
         "paymentMethod": "Credit",
         "transactionId": "TRX-0018"
+    },
+    {
+        "__type": 1,
+        "amount": 15000.0,
+        "category": "Court Order Payments",
+        "date": "2026-07-22",
+        "description": "Bail payment",
+        "paymentMethod": "Cash",
+        "transactionId": "TRX-0019"
+    },
+    {
+        "__type": 1,
+        "amount": 700.68,
+        "category": "Court Order Payments",
+        "date": "2026-07-09",
+        "description": "Child Support",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0020"
+    },
+    {
+        "__type": 1,
+        "amount": 834.22,
+        "category": "Court Order Payments",
+        "date": "2026-07-11",
+        "description": "Alimony",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0021"
+    },
+    {
+        "__type": 1,
+        "amount": 834.22,
+        "category": "Court Order Payments",
+        "date": "2026-08-11",
+        "description": "Alimony",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0022"
+    },
+    {
+        "__type": 1,
+        "amount": 700.68,
+        "category": "Court Order Payments",
+        "date": "2026-08-09",
+        "description": "Child Support",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0023"
+    },
+    {
+        "__type": 1,
+        "amount": 15000.0,
+        "category": "Court Order Payments",
+        "date": "2026-07-06",
+        "description": "Bail payment",
+        "paymentMethod": "Cash",
+        "transactionId": "TRX-0024"
+    },
+    {
+        "__type": 1,
+        "amount": 75000.0,
+        "category": "Court Order Payments",
+        "date": "2026-07-11",
+        "description": "Class action settlement payout",
+        "paymentMethod": "Loan Shark",
+        "transactionId": "TRX-0025"
     }
 ]

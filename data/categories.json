@@ -1,32 +1,42 @@
 [
     {
         "categoryId": "CAT-0001",
-        "monthlyBudget": 500.00,
+        "monthlyBudget": 500.0,
         "name": "Food"
     },
     {
         "categoryId": "CAT-0002",
-        "monthlyBudget": 1200.00,
+        "monthlyBudget": 1200.0,
         "name": "Rent"
     },
     {
         "categoryId": "CAT-0003",
-        "monthlyBudget": 250.00,
+        "monthlyBudget": 250.0,
         "name": "Transport"
     },
     {
         "categoryId": "CAT-0004",
-        "monthlyBudget": 200.00,
+        "monthlyBudget": 200.0,
         "name": "Entertainment"
     },
     {
         "categoryId": "CAT-0005",
-        "monthlyBudget": 300.00,
+        "monthlyBudget": 300.0,
         "name": "Utilities"
     },
     {
         "categoryId": "CAT-0006",
-        "monthlyBudget": 150.00,
+        "monthlyBudget": 150.0,
         "name": "Health"
+    },
+    {
+        "categoryId": "CAT-0007",
+        "monthlyBudget": 90000.0,
+        "name": "Court Order Payments"
+    },
+    {
+        "categoryId": "CAT-0008",
+        "monthlyBudget": 2100.0,
+        "name": "OSAP"
     }
 ]
