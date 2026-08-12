@@ -38,5 +38,10 @@
         "categoryId": "CAT-0008",
         "monthlyBudget": 2100.0,
         "name": "OSAP"
+    },
+    {
+        "categoryId": "CAT-0009",
+        "monthlyBudget": 5000.0,
+        "name": "Lifestyle"
     }
 ]

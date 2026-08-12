@@ -100,12 +100,39 @@
     },
     {
         "__type": 2,
-        "amount": 38.5,
+        "amount": 2100.0,
         "category": "OSAP",
         "date": "2026-07-19",
         "description": "Got paid for being a student.",
-        "paymentMethod": "Bank Transfer",
+        "source": "Bank Transfer",
         "transactionId": "TRX-0012"
+    },
+    {
+        "__type": 2,
+        "amount": 670.30,
+        "category": "Lifestyle",
+        "date": "2026-07-19",
+        "description": "Hard Rock Casino",
+        "source": "Casino Chips",
+        "transactionId": "TRX-0013"
+    },
+    {
+        "__type": 1,
+        "amount": 65.20,
+        "category": "Health",
+        "date": "2026-07-19",
+        "description": "Hard Rock Casino Bar",
+        "paymentMethod": "Cash",
+        "transactionId": "TRX-0014"
+    },
+    {
+        "__type": 1,
+        "amount": 2467.44,
+        "category": "Lifestyle",
+        "date": "2026-07-19",
+        "description": "Hard Rock Casino",
+        "paymentMethod": "Cash",
+        "transactionId": "TRX-0015"
     },
     {
         "__type": 1,
@@ -114,7 +141,7 @@
         "date": "2026-07-19",
         "description": "Uber home from a long night of drinking and gambling away my college fund",
         "paymentMethod": "Credit",
-        "transactionId": "TRX-0012"
+        "transactionId": "TRX-0016"
     },
     {
         "__type": 2,
@@ -123,7 +150,7 @@
         "date": "2026-07-22",
         "description": "Motion Monday",
         "source": "Freelance Clients",
-        "transactionId": "TRX-0013"
+        "transactionId": "TRX-0017"
     },
     {
         "__type": 1,
@@ -132,7 +159,7 @@
         "date": "2026-07-23",
         "description": "Weekly grocery run",
         "paymentMethod": "Debit",
-        "transactionId": "TRX-0014"
+        "transactionId": "TRX-0018"
     },
     {
         "__type": 1,
@@ -141,7 +168,7 @@
         "date": "2026-07-30",
         "description": "Beans and marmite",
         "paymentMethod": "Credit",
-        "transactionId": "TRX-0016"
+        "transactionId": "TRX-0019"
     },
     {
         "__type": 2,
@@ -150,7 +177,7 @@
         "date": "2026-07-31",
         "description": "Biweekly payroll deposit",
         "source": "Jeffery ISED",
-        "transactionId": "TRX-0017"
+        "transactionId": "TRX-0020"
     },
     {
         "__type": 1,
@@ -159,52 +186,16 @@
         "date": "2026-07-09",
         "description": "Beer and cigs",
         "paymentMethod": "Credit",
-        "transactionId": "TRX-0018"
-    },
-    {
-        "__type": 1,
-        "amount": 15000.0,
-        "category": "Court Order Payments",
-        "date": "2026-07-22",
-        "description": "Bail payment",
-        "paymentMethod": "Cash",
-        "transactionId": "TRX-0019"
-    },
-    {
-        "__type": 1,
-        "amount": 700.68,
-        "category": "Court Order Payments",
-        "date": "2026-07-09",
-        "description": "Child Support",
-        "paymentMethod": "Bank Transfer",
-        "transactionId": "TRX-0020"
-    },
-    {
-        "__type": 1,
-        "amount": 834.22,
-        "category": "Court Order Payments",
-        "date": "2026-07-11",
-        "description": "Alimony",
-        "paymentMethod": "Debit",
         "transactionId": "TRX-0021"
     },
     {
         "__type": 1,
-        "amount": 834.22,
-        "category": "Court Order Payments",
-        "date": "2026-08-11",
-        "description": "Alimony",
-        "paymentMethod": "Debit",
+        "amount": 2300.0,
+        "category": "Lifestyle",
+        "date": "2026-06-26",
+        "description": "Lawyer Fees",
+        "paymentMethod": "Wire Transfer",
         "transactionId": "TRX-0022"
-    },
-    {
-        "__type": 1,
-        "amount": 700.68,
-        "category": "Court Order Payments",
-        "date": "2026-08-09",
-        "description": "Child Support",
-        "paymentMethod": "Bank Transfer",
-        "transactionId": "TRX-0023"
     },
     {
         "__type": 1,
@@ -213,7 +204,25 @@
         "date": "2026-07-06",
         "description": "Bail payment",
         "paymentMethod": "Cash",
+        "transactionId": "TRX-0023"
+    },
+    {
+        "__type": 1,
+        "amount": 700.68,
+        "category": "Court Order Payments",
+        "date": "2026-07-09",
+        "description": "Child Support",
+        "paymentMethod": "Bank Transfer",
         "transactionId": "TRX-0024"
+    },
+    {
+        "__type": 1,
+        "amount": 834.22,
+        "category": "Court Order Payments",
+        "date": "2026-07-11",
+        "description": "Alimony",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0025"
     },
     {
         "__type": 1,
@@ -222,6 +231,51 @@
         "date": "2026-07-11",
         "description": "Class action settlement payout",
         "paymentMethod": "Loan Shark",
-        "transactionId": "TRX-0025"
+        "transactionId": "TRX-0026"
+    },
+    {
+        "__type": 1,
+        "amount": 24000.0,
+        "category": "Court Order Payments",
+        "date": "2026-07-22",
+        "description": "Bail payment",
+        "paymentMethod": "Cash",
+        "transactionId": "TRX-0027"
+    },
+    {
+        "__type": 1,
+        "amount": 700.68,
+        "category": "Court Order Payments",
+        "date": "2026-08-09",
+        "description": "Child Support",
+        "paymentMethod": "Bank Transfer",
+        "transactionId": "TRX-0028"
+    },
+    {
+        "__type": 1,
+        "amount": 834.22,
+        "category": "Court Order Payments",
+        "date": "2026-08-11",
+        "description": "Alimony",
+        "paymentMethod": "Debit",
+        "transactionId": "TRX-0029"
+    },
+    {
+        "__type": 1,
+        "amount": 90000.00,
+        "category": "Lifestyle",
+        "date": "2026-08-12",
+        "description": "Extortion Payment",
+        "paymentMethod": "Collateral",
+        "transactionId": "TRX-0030"
+    },
+    {
+        "__type": 1,
+        "amount": 12.47,
+        "category": "Health",
+        "date": "2026-08-12",
+        "description": "Hospital Parking",
+        "paymentMethod": "Cash",
+        "transactionId": "TRX-0031"
     }
 ]
