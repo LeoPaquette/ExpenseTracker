@@ -31,12 +31,18 @@
  */
 class TransactionManager {
     /**
-     * TODO: Document
+     * @brief The numeric portion of every category ID currently in use.
+     *
+     * Kept in sync with @c categories via @c addCategory and @c refreshUsedCategoryIds, and
+     * consulted by @c getNextCategoryId to avoid handing out an ID that is already taken.
      */
     std::vector<unsigned int> usedCategoryIds = std::vector<unsigned int>();
 
     /**
-     * TODO: Document
+     * @brief The lowest numeric ID that has not yet been tried by @c getNextCategoryId.
+     *
+     * Acts as a starting point for the search performed by @c getNextCategoryId, so repeated
+     * calls do not have to rescan IDs already known to be taken.
      */
     unsigned int nextCategoryId = 0;
 
@@ -130,10 +136,19 @@ public:
     TransactionManager& operator=(const TransactionManager&) = default;
 
     /**
-     * TODO: Document
+     * @brief Returns the next unused category ID, marking it as used.
+     *
+     * Searches upward from the last known-free ID, skipping any already present in
+     * @c usedCategoryIds, and advances the internal counter past the value returned so
+     * subsequent calls do not return the same ID again.
+     *
+     * @return The next available category ID.
      */
     unsigned int getNextCategoryId();
 
+    /**
+     * @brief Rebuilds @c usedCategoryIds from the IDs of all stored categories.
+     */
     void refreshUsedCategoryIds();
 
     /**
